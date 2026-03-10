@@ -9,6 +9,8 @@
 .history
 .svn/
 migrate_working_dir/
+*.jks
+keystore.base64.txt
 
 # IntelliJ related
 *.iml
