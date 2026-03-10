@@ -16,6 +16,54 @@ class ComicRecommendView extends StatelessWidget {
       : controller = Get.put(ComicRecommendController()),
         super(key: key);
 
+  bool isBannerItem(ComicRecommendModel item) {
+    return item.title == "大图推荐" ||
+        item.categoryId == 95 ||
+        item.categoryId == 109;
+  }
+
+  bool isRecentRecommendItem(ComicRecommendModel item) {
+    return item.title == "近期必看" ||
+        item.categoryId == 47 ||
+        item.categoryId == 110;
+  }
+
+  bool isGuomanItem(ComicRecommendModel item) {
+    return item.title == "国漫也精彩" ||
+        item.categoryId == 52 ||
+        item.categoryId == 111;
+  }
+
+  bool isHotSerialItem(ComicRecommendModel item) {
+    return item.title == "热门连载" ||
+        item.categoryId == 54 ||
+        item.categoryId == 112;
+  }
+
+  bool isLatestItem(ComicRecommendModel item) {
+    return item.title == "最新上架" || item.categoryId == 56;
+  }
+
+  bool isGuessLikeItem(ComicRecommendModel item) {
+    return item.title == "猜你喜欢" || item.categoryId == 45;
+  }
+
+  bool isSpecialItem(ComicRecommendModel item) {
+    return item.title == "火热专题" || item.categoryId == 48;
+  }
+
+  bool isUsComicItem(ComicRecommendModel item) {
+    return item.title == "美漫大事件" || item.categoryId == 53;
+  }
+
+  bool isTiaoManItem(ComicRecommendModel item) {
+    return item.title == "条漫" || item.categoryId == 55;
+  }
+
+  bool isMasterItem(ComicRecommendModel item) {
+    return item.title == "大师" || item.categoryId == 51;
+  }
+
   @override
   Widget build(BuildContext context) {
     return KeepAliveWrapper(
@@ -28,7 +76,7 @@ class ComicRecommendView extends StatelessWidget {
         itemBuilder: (context, i) {
           var item = controller.list[i];
           //大图推荐
-          if (item.categoryId == 109) {
+          if (isBannerItem(item)) {
             return buildBanner(item);
           }
           //随便看看
@@ -49,20 +97,21 @@ class ComicRecommendView extends StatelessWidget {
               action: buildShowMore(onTap: controller.toMySubscribe),
             );
           }
-          //近期必看\国漫\热门连载\最新上架
-          if (item.categoryId == 110 ||
-              item.categoryId == 111 ||
-              item.categoryId == 112 ||
-              item.categoryId == 56) {
+          //近期必看\国漫\热门连载\最新上架\猜你喜欢
+          if (isRecentRecommendItem(item) ||
+              isGuomanItem(item) ||
+              isHotSerialItem(item) ||
+              isLatestItem(item) ||
+              isGuessLikeItem(item)) {
             Widget? action;
             //刷新国漫
-            if (item.categoryId == 110) {
+            if (isRecentRecommendItem(item)) {
               action = buildRefresh(onRefresh: controller.refreshRecommend);
             }
-            if (item.categoryId == 111) {
+            if (isGuomanItem(item)) {
               action = buildRefresh(onRefresh: controller.refreshGuoman);
             }
-            if (item.categoryId == 112) {
+            if (isHotSerialItem(item)) {
               action = buildRefresh(onRefresh: controller.refreshHot);
             }
             return buildCard(
@@ -73,20 +122,18 @@ class ComicRecommendView extends StatelessWidget {
             );
           }
           //火热专题\美漫大事件\条漫
-          if (item.categoryId == 48 ||
-              item.categoryId == 53 ||
-              item.categoryId == 55) {
+          if (isSpecialItem(item) || isUsComicItem(item) || isTiaoManItem(item)) {
             return buildCard(
               context,
               child: buildTwoColumnGridView(item.data),
               title: item.title.toString(),
-              action: item.categoryId == 48
+              action: isSpecialItem(item)
                   ? buildShowMore(onTap: controller.toSpecial)
                   : null,
             );
           }
           //大师
-          if (item.categoryId == 51) {
+          if (isMasterItem(item)) {
             return buildCard(
               context,
               child: buildAuthorGridView(item.data),
@@ -163,6 +210,9 @@ class ComicRecommendView extends StatelessWidget {
   }
 
   Widget buildBanner(ComicRecommendModel item) {
+    if (item.data.isEmpty) {
+      return const SizedBox.shrink();
+    }
     return Padding(
       padding: AppStyle.edgeInsetsB12,
       child: ClipRRect(

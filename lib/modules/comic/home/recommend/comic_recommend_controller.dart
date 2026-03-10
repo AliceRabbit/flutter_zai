@@ -16,6 +16,34 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   StreamSubscription<dynamic>? subLogin;
   StreamSubscription<dynamic>? subLogout;
 
+  int _findSectionIndex(String title, Set<int> categoryIds) {
+    return list.indexWhere(
+      (item) => item.title == title || categoryIds.contains(item.categoryId),
+    );
+  }
+
+  Future<void> _refreshSection(
+    String title,
+    Set<int> categoryIds, {
+    int size = 3,
+  }) async {
+    final index = _findSectionIndex(title, categoryIds);
+    if (index == -1) {
+      return;
+    }
+
+    final section = list[index];
+    final result = await request.refreshRecommend(
+      section.categoryId,
+      size: size,
+      page: section.page,
+    );
+
+    section.data = result;
+    section.page++;
+    list.refresh();
+  }
+
   @override
   void onInit() {
     subLogin = UserService.loginedStream.listen((event) {
@@ -68,15 +96,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   /// 刷新国漫
   Future<void> refreshGuoman() async {
     try {
-      var index = list.indexWhere((x) => x.categoryId == 111);
-      var result =
-          await request.refreshRecommend(111, size: 6, page: list[index].page);
-
-      if (index != -1) {
-        list[index].data = result;
-        list[index].page++;
-        list.refresh();
-      }
+      await _refreshSection("国漫也精彩", {52, 111}, size: 6);
     } catch (e) {
       Log.logPrint(e);
     }
@@ -85,15 +105,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   /// 刷新近期必看
   Future<void> refreshRecommend() async {
     try {
-      var index = list.indexWhere((x) => x.categoryId == 110);
-
-      var result = await request.refreshRecommend(110, page: list[index].page);
-
-      if (index != -1) {
-        list[index].data = result;
-        list[index].page++;
-        list.refresh();
-      }
+      await _refreshSection("近期必看", {47, 110});
     } catch (e) {
       Log.logPrint(e);
     }
@@ -117,15 +129,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   /// 刷新热门连载
   Future<void> refreshHot() async {
     try {
-      var index = list.indexWhere((x) => x.categoryId == 112);
-      var result =
-          await request.refreshRecommend(112, page: list[index].page, size: 6);
-
-      if (index != -1) {
-        list[index].data = result;
-        list[index].page++;
-        list.refresh();
-      }
+      await _refreshSection("热门连载", {54, 112}, size: 6);
     } catch (e) {
       Log.logPrint(e);
     }
