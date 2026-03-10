@@ -22,6 +22,7 @@ import 'package:flutter_dmzj/models/comic/update_item_model.dart';
 import 'package:flutter_dmzj/models/comic/view_point_model.dart';
 import 'package:flutter_dmzj/models/comic/web_search_model.dart';
 import 'package:flutter_dmzj/models/db/download_status.dart';
+import 'package:flutter_dmzj/requests/common/api.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
 import 'package:flutter_dmzj/services/comic_download_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
