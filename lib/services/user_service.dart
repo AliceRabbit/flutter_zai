@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/event_bus.dart';
 import 'package:flutter_dmzj/app/log.dart';
@@ -128,12 +127,6 @@ class UserService extends GetxService {
     try {
       if (!await login()) {
         return false;
-      }
-      if ((userProfile.value?.cookieVal ?? "").isEmpty) {
-        await refreshProfile(silent: false);
-      }
-      if ((userProfile.value?.cookieVal ?? "").isEmpty) {
-        throw AppError("签到失败：未能同步到登录 Cookie，请重新登录后重试");
       }
       await request.signIn();
       SmartDialog.showToast("签到成功");

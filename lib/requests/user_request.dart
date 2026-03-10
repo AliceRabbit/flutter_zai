@@ -73,21 +73,20 @@ class UserRequest {
 
   /// 每日签到
   Future<void> signIn() async {
-    var cookie = UserService.instance.userProfile.value?.cookieVal ?? "";
-    if (cookie.isEmpty) {
-      throw AppError("签到失败：缺少登录 Cookie");
+    var token = UserService.instance.dmzjToken;
+    if (token.isEmpty) {
+      throw AppError("签到失败：缺少登录 Token");
     }
 
     try {
       var result = await HttpClient.instance.dio.post(
-        "https://i.zaimanhua.com/lpi/v1/task/sign_in",
+        "${Api.BASE_URL_I}/v1/task/sign_in",
+        data: const <String, dynamic>{},
         options: Options(
           responseType: ResponseType.json,
           headers: {
-            "Authorization": "Bearer ${UserService.instance.dmzjToken}",
-            "Cookie": cookie,
-            "platform": "pc",
-            "Referer": "https://i.zaimanhua.com/",
+            "Authorization": "Bearer $token",
+            "Platform": "pc",
           },
         ),
       );

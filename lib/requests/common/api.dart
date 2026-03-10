@@ -20,6 +20,9 @@ class Api {
   /// 用户
   static const String BASE_URL_USER = "https://account-api.zaimanhua.com/v1";
 
+  /// Web 个人中心 API
+  static const String BASE_URL_I = "https://i.zaimanhua.com/lpi";
+
   /// Interface
   static const String BASE_URL_INTERFACE =
       "http://nninterface.$IDMZJ_DOMAIN_NAME";
