@@ -75,9 +75,54 @@ class UserHomePage extends GetView<UserHomeController> {
                             : UserService.instance.sign,
                         style: Get.textTheme.bodySmall,
                       ),
-                      trailing: IconButton(
-                        onPressed: controller.logout,
-                        icon: const Icon(Remix.logout_box_r_line),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Obx(
+                            () => ElevatedButton(
+                              onPressed: controller.signingIn.value
+                                  ? null
+                                  : controller.signIn,
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(0, 32),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                ),
+                                shape: const StadiumBorder(),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Visibility(
+                                    visible: controller.signingIn.value,
+                                    replacement: const Icon(
+                                      Remix.calendar_check_line,
+                                      size: 16,
+                                    ),
+                                    child: const SizedBox(
+                                      width: 16,
+                                      height: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  AppStyle.hGap4,
+                                  Text(
+                                    controller.signingIn.value ? "签到中" : "签到",
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          AppStyle.hGap4,
+                          IconButton(
+                            onPressed: controller.logout,
+                            icon: const Icon(Remix.logout_box_r_line),
+                          ),
+                        ],
                       ),
                     ),
                   ),

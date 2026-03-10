@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 
 class UserHomeController extends GetxController {
   final AppSettingsService settings = AppSettingsService.instance;
+  final RxBool signingIn = false.obs;
 
   @override
   void onInit() {
@@ -30,6 +31,18 @@ class UserHomeController extends GetxController {
     );
     if (result) {
       UserService.instance.logout();
+    }
+  }
+
+  Future<void> signIn() async {
+    if (signingIn.value) {
+      return;
+    }
+    signingIn.value = true;
+    try {
+      await UserService.instance.signIn();
+    } finally {
+      signingIn.value = false;
     }
   }
 

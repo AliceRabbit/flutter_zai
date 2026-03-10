@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/models/user/comic_history_model.dart';
@@ -67,6 +68,43 @@ class UserRequest {
     );
 
     return UserBindStatusModel.fromJson(result);
+  }
+
+  /// 每日签到
+  Future<void> signIn() async {
+    var cookie = UserService.instance.userProfile.value?.cookieVal ?? "";
+    if (cookie.isEmpty) {
+      throw AppError("签到失败：缺少登录 Cookie");
+    }
+
+    try {
+      var result = await HttpClient.instance.dio.post(
+        "https://i.zaimanhua.com/lpi/v1/task/sign_in",
+        options: Options(
+          responseType: ResponseType.json,
+          headers: {
+            "Authorization": "Bearer ${UserService.instance.dmzjToken}",
+            "Cookie": cookie,
+            "platform": "pc",
+            "Referer": "https://i.zaimanhua.com/",
+          },
+        ),
+      );
+
+      var data = result.data;
+      if (data is String) {
+        data = jsonDecode(data);
+      }
+      if (data is Map && data["errno"] == 0) {
+        return;
+      }
+      throw AppError((data is Map ? data["errmsg"] : null)?.toString() ?? "签到失败");
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.badResponse) {
+        throw AppError("签到失败:状态码：${e.response?.statusCode ?? -1}");
+      }
+      throw AppError("签到失败,请检查网络");
+    }
   }
 
   /// 我的漫画订阅

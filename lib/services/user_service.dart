@@ -118,6 +118,23 @@ class UserService extends GetxService {
     }
   }
 
+  Future<bool> signIn() async {
+    try {
+      if (!await login()) {
+        return false;
+      }
+      if ((userProfile.value?.cookieVal ?? "").isEmpty) {
+        await refreshProfile();
+      }
+      await request.signIn();
+      SmartDialog.showToast("签到成功");
+      return true;
+    } catch (e) {
+      SmartDialog.showToast(e.toString());
+      return false;
+    }
+  }
+
   /// 更新一下用户的历史记录
   void syncRemoteHistory() {
     if (!logined.value) {
