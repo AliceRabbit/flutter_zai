@@ -5,9 +5,9 @@ on:
     tags:
       - "zaix/*"
 jobs:
-  # MACOS 镜像
-  build-mac-ios-android:
-    runs-on: macos-latest
+  # Android 镜像
+  build-android:
+    runs-on: ubuntu-22.04
     permissions:
       contents: write
     steps:
@@ -41,35 +41,13 @@ jobs:
         with:
           flutter-version: "3.22.x"
           cache: true
-      - name: Enable Flutter Desktop
-        run: flutter config --enable-macos-desktop
       # 1.4 更新Flutter的packages
       - name: Restore Packages
         run: flutter pub get
-      # 1.5 安装appdmg npm install -g appdmg
-      - name: Install appdmg
-        run: npm install -g appdmg
-      # 1.6 设置flutter_distributor环境
-      - name: Install flutter_distributor
-        run: dart pub global activate flutter_distributor
-      # 1.7 build APK
+      # 1.5 build APK
       - name: Build APK
         run: flutter build apk --release
-      # 1.8 build IOS
-      - name: Build IPA
-        run: flutter build ios --release --no-codesign
-      # 1.9 创建一个未签名IPA
-      - name: Create IPA
-        run: |
-          mkdir build/ios/iphoneos/Payload
-          cp -R build/ios/iphoneos/Runner.app build/ios/iphoneos/Payload/Runner.app
-          cd build/ios/iphoneos/
-          zip -q -r ios_no_sign.ipa Payload
-          cd ../../..
-      # 1.10 build MAC ZIP\DMG
-      - name: Build MacOS
-        run: flutter_distributor package --platform macos --targets dmg,zip --skip-clean
-      # 1.11 上传APK\IPA\MAC DMG\ZIP
+      # 1.6 上传APK
       - name: Upload Release
         uses: softprops/action-gh-release@v1
         with:
@@ -77,52 +55,8 @@ jobs:
           token: ${{ github.token }}
           files: |
             build/app/outputs/flutter-apk/app-release.apk
-            build/ios/iphoneos/ios_no_sign.ipa
-            build/dist/*/*.dmg
-            build/dist/*/*.zip
         #完成
-      - run: echo "🍏 MacOS job's status is ${{ job.status }}."
-  # Linux 镜像
-  build-linux:
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: write
-    steps:
-      # 2.1 签出代码
-      - uses: actions/checkout@v3
-        with:
-          ref: main
-      # 2.2 设置Flutter环境
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.22.x"
-          cache: true
-      - name: Update apt-get
-        run: sudo apt-get update
-      - name: Install Dependencies
-        run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
-      - name: Enable Flutter Desktop
-        run: flutter config --enable-linux-desktop
-      - name: Restore Packages
-        run: flutter pub get
-      # 2.3 设置flutter_distributor环境
-      - name: Install flutter_distributor
-        run: dart pub global activate flutter_distributor
-      # 2.4 build Linux ZIP\DMG
-      - name: Build Linux
-        run: flutter_distributor package --platform linux --targets deb,zip --skip-clean
-      # 2.5 上传ZIP\DMG
-      - name: Upload Release
-        uses: softprops/action-gh-release@v1
-        with:
-          body_path: document/RELEASE.txt
-          token: ${{ github.token }}
-          files: |
-            build/dist/*/*.deb
-            build/dist/*/*.zip
-        #完成
-      - run: echo "🍏 Linux job's status is ${{ job.status }}."
+      - run: echo "Android job's status is ${{ job.status }}."
   # Windows 镜像
   build-windows:
     runs-on: windows-latest
@@ -159,4 +93,4 @@ jobs:
             build/dist/*/*.msix
             build/dist/*/*.zip
         #完成
-      - run: echo "🍏 Windows job's status is ${{ job.status }}."
+      - run: echo "Windows job's status is ${{ job.status }}."
