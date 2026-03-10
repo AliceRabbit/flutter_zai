@@ -1,4 +1,4 @@
-package com.xycz.zmhx
+package io.github.alicerabbit.zaix
 
 import io.flutter.embedding.android.FlutterActivity
 

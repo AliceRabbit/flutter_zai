@@ -14,7 +14,7 @@ jobs:
       # 1.1 签出代码
       - uses: actions/checkout@v3
         with:
-          ref: zaimanhua
+          ref: main
       # 1.2 写出相关签名
       - name: Get Android Keystore
         id: android_keystore
@@ -74,7 +74,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           body_path: document/RELEASE.txt
-          token: ${{secrets.TOKEN }}
+          token: ${{ github.token }}
           files: |
             build/app/outputs/flutter-apk/app-release.apk
             build/ios/iphoneos/ios_no_sign.ipa
@@ -91,7 +91,7 @@ jobs:
       # 2.1 签出代码
       - uses: actions/checkout@v3
         with:
-          ref: zaimanhua
+          ref: main
       # 2.2 设置Flutter环境
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -117,7 +117,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           body_path: document/RELEASE.txt
-          token: ${{secrets.TOKEN }}
+          token: ${{ github.token }}
           files: |
             build/dist/*/*.deb
             build/dist/*/*.zip
@@ -132,7 +132,7 @@ jobs:
       # 3.1 签出代码
       - uses: actions/checkout@v3
         with:
-          ref: zaimanhua
+          ref: main
       # 3.2 设置Flutter环境
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -154,7 +154,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           body_path: document/RELEASE.txt
-          token: ${{secrets.TOKEN }}
+          token: ${{ github.token }}
           files: |
             build/dist/*/*.msix
             build/dist/*/*.zip

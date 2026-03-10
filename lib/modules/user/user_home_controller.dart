@@ -59,7 +59,7 @@ class UserHomeController extends GetxController {
       ),
       applicationName: "ZAI-X",
       applicationVersion: "Ver ${Utils.packageInfo.version}",
-      applicationLegalese: "@xiaoyaocz",
+      applicationLegalese: "AliceRabbit · Based on xiaoyaocz/flutter_dmzj",
     ));
   }
 

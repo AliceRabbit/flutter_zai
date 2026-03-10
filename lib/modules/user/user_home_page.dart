@@ -290,7 +290,7 @@ class UserHomePage extends GetView<UserHomeController> {
                       ),
                       onTap: () {
                         launchUrlString(
-                          "https://github.com/xiaoyaocz/flutter_dmzj",
+                          "https://github.com/AliceRabbit/flutter_zai",
                           mode: LaunchMode.externalApplication,
                         );
                       },

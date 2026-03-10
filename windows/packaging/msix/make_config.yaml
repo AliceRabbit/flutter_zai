@@ -1,6 +1,6 @@
 display_name: ZAI-X
-publisher_display_name: xiaoyaocz
-identity_name: com.xycz.zmhx
+publisher_display_name: AliceRabbit
+identity_name: io.github.alicerabbit.zaix
 logo_path: assets/images/logo.png
 capabilities: internetClient
 languages: zh-cn

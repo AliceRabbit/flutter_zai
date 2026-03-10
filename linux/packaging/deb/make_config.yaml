@@ -1,8 +1,8 @@
 display_name: ZAI-X
-package_name: dmzjx
+package_name: zaix
 maintainer:
-  name: xiaoyaocz
-  email: xiaoyaocz@52uwp.com
+  name: AliceRabbit
+  email: alicerabbit@users.noreply.github.com
 priority: optional
 section: x11
 installed_size: 24400
@@ -10,8 +10,8 @@ essential: false
 icon: assets/images/logo.png
 
 keywords:
-  - 动漫之家
-  - DMZJ
+  - 再漫画
+  - ZAI-X
 
 generic_name: ZAI-X
 
