@@ -17,6 +17,16 @@ import 'package:flutter_dmzj/requests/common/http_client.dart';
 import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 
+class SubscribePageResult<T> {
+  const SubscribePageResult({
+    required this.items,
+    required this.total,
+  });
+
+  final List<T> items;
+  final int total;
+}
+
 class UserRequest {
   /// 登录
   /// - [nickname] 用户名
@@ -108,53 +118,97 @@ class UserRequest {
   }
 
   /// 我的漫画订阅
-  /// - [page] 页数从0开始
+  /// - [page] 页数从1开始
   /// - [subType] 全部=1，未读=2，已读=3，完结=4
   /// - [letter] all=全部
   Future<List<UserSubscribeComicItemModel>> comicSubscribes(
-      {required int subType, int page = 1, String letter = ""}) async {
+      {required int subType,
+      int page = 1,
+      int size = 20,
+      String letter = ""}) async {
+    final result = await comicSubscribesPage(
+      subType: subType,
+      page: page,
+      size: size,
+      letter: letter,
+    );
+    return result.items;
+  }
+
+  Future<SubscribePageResult<UserSubscribeComicItemModel>> comicSubscribesPage(
+      {required int subType,
+      int page = 1,
+      int size = 20,
+      String letter = ""}) async {
     var list = <UserSubscribeComicItemModel>[];
+    final status = subType == 1 ? "" : subType.toString();
     var result = await HttpClient.instance.getJson(
       '/comic/sub/list',
+      baseUrl: Api.BASE_URL_I_APP,
       queryParameters: {
-        //uid=$uid&sub_type=$subType&letter=$letter&dmzj_token=$token&page=$page&type=$type
-        "status": subType,
+        "status": status,
         "firstLetter": letter,
         "page": page,
-        "size": 20
+        "size": size
       },
+      withDefaultParameter: false,
       needLogin: true,
       checkCode: true,
     );
     for (var item in result["subList"]) {
       list.add(UserSubscribeComicItemModel.fromJson(item));
     }
-    return list;
+    return SubscribePageResult(
+      items: list,
+      total: int.tryParse(result["total"].toString()) ?? list.length,
+    );
   }
 
   /// 我的小说订阅
-  /// - [page] 页数从0开始
+  /// - [page] 页数从1开始
   /// - [subType] 全部=1，未读=2，已读=3，完结=4
   /// - [letter] all=全部
   Future<List<UserSubscribeNovelModel>> novelSubscribes(
-      {required int subType, int page = 0, String letter = "all"}) async {
+      {required int subType,
+      int page = 1,
+      int size = 20,
+      String letter = ""}) async {
+    final result = await novelSubscribesPage(
+      subType: subType,
+      page: page,
+      size: size,
+      letter: letter,
+    );
+    return result.items;
+  }
+
+  Future<SubscribePageResult<UserSubscribeNovelModel>> novelSubscribesPage(
+      {required int subType,
+      int page = 1,
+      int size = 20,
+      String letter = ""}) async {
     var list = <UserSubscribeNovelModel>[];
+    final status = subType == 1 ? "" : subType.toString();
     var result = await HttpClient.instance.getJson(
       '/novel/sub/list',
+      baseUrl: Api.BASE_URL_I_APP,
       queryParameters: {
-        //uid=$uid&sub_type=$subType&letter=$letter&dmzj_token=$token&page=$page&type=$type
-        "status": subType,
+        "status": status,
         "firstLetter": letter,
         "page": page,
-        "size": 20
+        "size": size
       },
+      withDefaultParameter: false,
       needLogin: true,
       checkCode: true,
     );
     for (var item in result["subList"]) {
       list.add(UserSubscribeNovelModel.fromJson(item));
     }
-    return list;
+    return SubscribePageResult(
+      items: list,
+      total: int.tryParse(result["total"].toString()) ?? list.length,
+    );
   }
 
   /// 我的新闻收藏

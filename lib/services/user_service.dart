@@ -33,6 +33,7 @@ class UserService extends GetxService {
   final LocalStorageService storage = Get.find<LocalStorageService>();
   final request = UserRequest();
   LoginResultModel? userAuthInfo;
+  Future<void>? _syncSubscribedIdsTask;
 
   Rx<UserProfileModel?> userProfile = Rx<UserProfileModel?>(null);
 
@@ -75,6 +76,7 @@ class UserService extends GetxService {
     logined.value = true;
     if (logined.value) {
       unawaited(refreshProfile());
+      unawaited(syncSubscribedIds());
     }
   }
 
@@ -86,12 +88,16 @@ class UserService extends GetxService {
     UserService.loginedStreamController.add(true);
     unawaited(refreshProfile());
     syncRemoteHistory();
+    unawaited(syncSubscribedIds(force: true));
   }
 
   void logout() {
     storage.removeValue(LocalStorageService.kUserAuthInfo);
     userProfile.value = null;
     logined.value = false;
+    subscribedComicIds.clear();
+    subscribedNovelIds.clear();
+    _syncSubscribedIdsTask = null;
     UserService.logoutStreamController.add(true);
   }
 
@@ -159,6 +165,92 @@ class UserService extends GetxService {
       await request.novelHistory();
     } catch (e) {
       Log.logPrint(e);
+    }
+  }
+
+  Future<void> syncSubscribedIds({bool force = false}) {
+    if (!logined.value) {
+      subscribedComicIds.clear();
+      subscribedNovelIds.clear();
+      return Future.value();
+    }
+    if (!force && _syncSubscribedIdsTask != null) {
+      return _syncSubscribedIdsTask!;
+    }
+
+    final task = _syncSubscribedIdsInternal();
+    _syncSubscribedIdsTask = task;
+    task.whenComplete(() {
+      if (identical(_syncSubscribedIdsTask, task)) {
+        _syncSubscribedIdsTask = null;
+      }
+    });
+    return task;
+  }
+
+  Future<void> _syncSubscribedIdsInternal() async {
+    try {
+      final comicIdsFuture = _loadAllComicSubscribedIds();
+      final novelIdsFuture = _loadAllNovelSubscribedIds();
+      final comicIds = await comicIdsFuture;
+      final novelIds = await novelIdsFuture;
+
+      subscribedComicIds
+        ..clear()
+        ..addAll(comicIds);
+      subscribedNovelIds
+        ..clear()
+        ..addAll(novelIds);
+    } catch (e) {
+      Log.logPrint(e);
+    }
+  }
+
+  Future<Set<int>> _loadAllComicSubscribedIds() async {
+    const int batchSize = 100;
+    const int maxPages = 500;
+    final ids = <int>{};
+    var page = 1;
+    var total = 0;
+    while (true) {
+      final result = await request.comicSubscribesPage(
+        subType: 1,
+        page: page,
+        size: batchSize,
+      );
+      ids.addAll(result.items.map((e) => e.id));
+      total = result.total;
+      if (ids.length >= total) {
+        return ids;
+      }
+      page++;
+      if (page > maxPages) {
+        return ids;
+      }
+    }
+  }
+
+  Future<Set<int>> _loadAllNovelSubscribedIds() async {
+    const int batchSize = 100;
+    const int maxPages = 500;
+    final ids = <int>{};
+    var page = 1;
+    var total = 0;
+    while (true) {
+      final result = await request.novelSubscribesPage(
+        subType: 1,
+        page: page,
+        size: batchSize,
+      );
+      ids.addAll(result.items.map((e) => e.id));
+      total = result.total;
+      if (ids.length >= total) {
+        return ids;
+      }
+      page++;
+      if (page > maxPages) {
+        return ids;
+      }
     }
   }
 

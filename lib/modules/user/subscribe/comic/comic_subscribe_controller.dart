@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 class ComicSubscribeController
     extends BasePageController<UserSubscribeComicItemModel> {
   ComicSubscribeController() {
+    pageSize = 20;
     for (var item in List.generate(
         26, (index) => String.fromCharCode(index + 65).toLowerCase())) {
       letters.addAll({item: "${item.toUpperCase()}开头"});
@@ -41,6 +42,7 @@ class ComicSubscribeController
       subType: type.value,
       letter: letter.value,
       page: page,
+      size: pageSize,
     );
     UserService.instance.subscribedComicIds.addAll(ls.map((e) => e.id));
     return ls;

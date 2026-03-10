@@ -59,9 +59,16 @@ class ComicRequest {
   Future<ComicRecommendModel> recommendSubscribe() async {
     var result = await HttpClient.instance.getJson(
       '/comic/sub/list',
+      baseUrl: Api.BASE_URL_I_APP,
       needLogin: true,
       checkCode: true,
-      queryParameters: {"status": 0, "firstLetter": "", "page": 1, "size": 3},
+      withDefaultParameter: false,
+      queryParameters: {
+        "status": "",
+        "firstLetter": "",
+        "page": 1,
+        "size": 3,
+      },
     );
 
     var list = <ComicRecommendItemModel>[];

@@ -90,6 +90,7 @@ class BasePageController<T> extends BaseController {
 
   Future refreshData() async {
     currentPage = 1;
+    canLoadMore.value = false;
     list.clear();
     await loadData();
   }
@@ -98,13 +99,19 @@ class BasePageController<T> extends BaseController {
     try {
       if (loadding) return;
       loadding = true;
+      final isFirstPage = currentPage == 1;
       pageError.value = false;
       pageEmpty.value = false;
       notLogin.value = false;
       error = null;
-      pageLoadding.value = currentPage == 1;
+      pageLoadding.value = isFirstPage;
 
       var result = await getData(currentPage, pageSize);
+      if (isFirstPage) {
+        list.value = result;
+      } else {
+        list.addAll(result);
+      }
       //是否可以加载更多
       if (result.isNotEmpty) {
         currentPage++;
@@ -112,15 +119,9 @@ class BasePageController<T> extends BaseController {
         pageEmpty.value = false;
       } else {
         canLoadMore.value = false;
-        if (currentPage == 1) {
+        if (isFirstPage) {
           pageEmpty.value = true;
         }
-      }
-      // 赋值数据
-      if (currentPage == 1) {
-        list.value = result;
-      } else {
-        list.addAll(result);
       }
     } catch (e) {
       handleError(e, showPageError: currentPage == 1);

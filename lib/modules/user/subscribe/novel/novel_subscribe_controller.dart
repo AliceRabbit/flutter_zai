@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 class NovelSubscribeController
     extends BasePageController<UserSubscribeNovelModel> {
   NovelSubscribeController() {
+    pageSize = 20;
     for (var item in List.generate(
         26, (index) => String.fromCharCode(index + 65).toLowerCase())) {
       letters.addAll({item: "${item.toUpperCase()}开头"});
@@ -35,7 +36,8 @@ class NovelSubscribeController
     var ls = await request.novelSubscribes(
       subType: type.value,
       letter: letter.value,
-      page: page - 1,
+      page: page,
+      size: pageSize,
     );
     UserService.instance.subscribedNovelIds.addAll(ls.map((e) => e.id));
     return ls;

@@ -36,48 +36,51 @@ class PageGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => Stack(
-        children: [
-          EasyRefresh(
-            header: const MaterialHeader(),
-            footer: loadMore
-                ? const MaterialFooter(
-                    clamping: false, infiniteOffset: 70, triggerOffset: 70)
-                : null,
-            controller: pageController.easyRefreshController,
-            refreshOnStart: firstRefresh,
-            onLoad: loadMore ? pageController.loadData : null,
-            onRefresh: pageController.refreshData,
-            child: MasonryGridView.count(
-              padding: padding ?? EdgeInsets.zero,
-              controller: pageController.scrollController,
-              itemCount: pageController.list.length,
-              itemBuilder: itemBuilder,
-              crossAxisCount: crossAxisCount,
-              crossAxisSpacing: crossAxisSpacing,
-              mainAxisSpacing: mainAxisSpacing,
+      () {
+        final enableLoadMore = loadMore && pageController.canLoadMore.value;
+        return Stack(
+          children: [
+            EasyRefresh(
+              header: const MaterialHeader(),
+              footer: enableLoadMore
+                  ? const MaterialFooter(
+                      clamping: false, infiniteOffset: 70, triggerOffset: 70)
+                  : null,
+              controller: pageController.easyRefreshController,
+              refreshOnStart: firstRefresh,
+              onLoad: enableLoadMore ? pageController.loadData : null,
+              onRefresh: pageController.refreshData,
+              child: MasonryGridView.count(
+                padding: padding ?? EdgeInsets.zero,
+                controller: pageController.scrollController,
+                itemCount: pageController.list.length,
+                itemBuilder: itemBuilder,
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: crossAxisSpacing,
+                mainAxisSpacing: mainAxisSpacing,
+              ),
             ),
-          ),
-          Offstage(
-            offstage: !pageController.pageEmpty.value,
-            child: AppEmptyWidget(
-              onRefresh: () => pageController.refreshData(),
+            Offstage(
+              offstage: !pageController.pageEmpty.value,
+              child: AppEmptyWidget(
+                onRefresh: () => pageController.refreshData(),
+              ),
             ),
-          ),
-          Offstage(
-            offstage: !(showPageLoadding && pageController.pageLoadding.value),
-            child: const AppLoaddingWidget(),
-          ),
-          Offstage(
-            offstage: !pageController.pageError.value,
-            child: AppErrorWidget(
-              errorMsg: pageController.errorMsg.value,
-              error: pageController.error,
-              onRefresh: () => pageController.refreshData(),
+            Offstage(
+              offstage: !(showPageLoadding && pageController.pageLoadding.value),
+              child: const AppLoaddingWidget(),
             ),
-          ),
-        ],
-      ),
+            Offstage(
+              offstage: !pageController.pageError.value,
+              child: AppErrorWidget(
+                errorMsg: pageController.errorMsg.value,
+                error: pageController.error,
+                onRefresh: () => pageController.refreshData(),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
