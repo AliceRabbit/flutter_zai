@@ -50,6 +50,7 @@ class UserRequest {
         "dmzj_token": UserService.instance.dmzjToken,
       },
       withDefaultParameter: true,
+      needLogin: true,
     );
 
     return UserProfileModel.fromJson(result);

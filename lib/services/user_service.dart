@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/event_bus.dart';
 import 'package:flutter_dmzj/app/log.dart';
@@ -74,7 +75,7 @@ class UserService extends GetxService {
     userAuthInfo = info;
     logined.value = true;
     if (logined.value) {
-      //syncRemoteHistory();
+      unawaited(refreshProfile());
     }
   }
 
@@ -84,7 +85,7 @@ class UserService extends GetxService {
     storage.setValue(LocalStorageService.kUserAuthInfo, info.toString());
     logined.value = true;
     UserService.loginedStreamController.add(true);
-    //refreshProfile();
+    unawaited(refreshProfile());
     syncRemoteHistory();
   }
 
@@ -105,16 +106,21 @@ class UserService extends GetxService {
   }
 
   /// 刷新个人资料
-  Future refreshProfile() async {
+  Future<UserProfileModel?> refreshProfile({bool silent = true}) async {
+    if (!logined.value) {
+      return null;
+    }
     try {
-      if (!logined.value) {
-        return;
-      }
       userProfile.value = await request.userProfile();
-      //updateCookie();
+      updateCookie();
       updateBindStatus();
+      return userProfile.value;
     } catch (e) {
       Log.logPrint(e);
+      if (!silent) {
+        rethrow;
+      }
+      return null;
     }
   }
 
@@ -124,7 +130,10 @@ class UserService extends GetxService {
         return false;
       }
       if ((userProfile.value?.cookieVal ?? "").isEmpty) {
-        await refreshProfile();
+        await refreshProfile(silent: false);
+      }
+      if ((userProfile.value?.cookieVal ?? "").isEmpty) {
+        throw AppError("签到失败：未能同步到登录 Cookie，请重新登录后重试");
       }
       await request.signIn();
       SmartDialog.showToast("签到成功");
