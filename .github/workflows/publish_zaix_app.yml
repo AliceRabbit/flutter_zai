@@ -62,7 +62,7 @@ jobs:
       - run: echo "Android job's status is ${{ job.status }}."
   # Windows 镜像
   build-windows:
-    runs-on: windows-2025
+    runs-on: windows-2022
     permissions:
       contents: write
     steps:

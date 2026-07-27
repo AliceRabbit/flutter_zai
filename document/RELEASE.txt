@@ -1,11 +1,20 @@
-## 再漫画X（ZAI-X）v1.0.9
+## 再漫画X（ZAI-X）v2.0.0
 
-### 修复
+### 主要更新
 
 - 修复漫画详情页点击作者后，作者作品列表始终为空的问题。
 - 正确展示没有作品的作者空状态。
+- 全面升级 Flutter、Dart 与应用依赖，清理旧版平台工程配置。
 
-### 工程
+### 平台升级
 
-- 固定 Flutter 与 Dart 版本，提升构建可复现性。
-- 增加静态分析、回归测试以及 Android、Windows 自动构建检查。
+- 升级至 Flutter 3.44.8、Dart 3.12.2。
+- Android 迁移至 API 36、Java 17 与新版 Gradle 构建体系。
+- Windows 与 Linux 桌面工程升级至当前 Flutter 项目结构。
+- iOS 与 macOS 原生依赖迁移至 Swift Package Manager。
+
+### 工程质量
+
+- 固定 SDK 与依赖锁文件，保证开发机和 CI 构建可复现。
+- 增加代码生成一致性、格式、静态分析与回归测试检查。
+- 增加 Android、Windows、Linux、iOS 和 macOS 全平台 CI 构建验证。

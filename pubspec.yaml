@@ -1,5 +1,5 @@
 name: zaix
-version: 1.0.9
+version: 2.0.0+2
 publish_to: none
 description: "ZAI-X"
 environment:
