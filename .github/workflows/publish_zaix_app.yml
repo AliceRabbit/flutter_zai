@@ -4,9 +4,16 @@ on:
   push:
     tags:
       - "zaix/*"
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Existing zaix/* tag to rebuild Windows release assets for"
+        required: true
+        type: string
 jobs:
   # Android 镜像
   build-android:
+    if: github.event_name == 'push'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -56,6 +63,7 @@ jobs:
         with:
           body_path: document/RELEASE.txt
           token: ${{ github.token }}
+          tag_name: ${{ github.ref_name }}
           files: |
             build/app/outputs/flutter-apk/app-release.apk
         #完成
@@ -65,9 +73,19 @@ jobs:
     runs-on: windows-2022
     permissions:
       contents: write
+    env:
+      RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref_name }}
     steps:
       # 3.1 签出代码
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - name: Validate release tag
+        shell: pwsh
+        run: |
+          if ($env:RELEASE_TAG -notmatch '^zaix/.+') {
+            throw "release_tag must start with zaix/."
+          }
       - name: Read Flutter version
         id: flutter-version
         shell: pwsh
@@ -89,18 +107,44 @@ jobs:
       # 3.4 build Windows ZIP\MSIX
       - name: Build Windows
         run: fastforge package --platform windows --targets msix,zip --skip-clean
+      - name: Check Windows signing configuration
+        id: windows-signing
+        shell: pwsh
+        env:
+          WINDOWS_CERTIFICATE_BASE64: ${{ secrets.ZAI_WINDOWS_CERTIFICATE_BASE64 }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.ZAI_WINDOWS_CERTIFICATE_PASSWORD }}
+        run: |
+          $hasCertificate = -not [string]::IsNullOrWhiteSpace(
+            $env:WINDOWS_CERTIFICATE_BASE64
+          )
+          $hasPassword = -not [string]::IsNullOrWhiteSpace(
+            $env:WINDOWS_CERTIFICATE_PASSWORD
+          )
+          if ($hasCertificate -xor $hasPassword) {
+            throw "The Windows certificate and password secrets must be configured together."
+          }
+
+          $signingAvailable = $hasCertificate -and $hasPassword
+          "available=$($signingAvailable.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
+          if (-not $signingAvailable) {
+            Write-Warning "Windows signing secrets are absent; publishing the ZIP only."
+          }
+      - name: Upload Windows ZIP
+        uses: softprops/action-gh-release@v3
+        with:
+          body_path: document/RELEASE.txt
+          token: ${{ github.token }}
+          tag_name: ${{ env.RELEASE_TAG }}
+          fail_on_unmatched_files: true
+          files: build/dist/*/*.zip
       - name: Sign MSIX
+        if: steps.windows-signing.outputs.available == 'true'
         shell: pwsh
         env:
           WINDOWS_CERTIFICATE_BASE64: ${{ secrets.ZAI_WINDOWS_CERTIFICATE_BASE64 }}
           WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.ZAI_WINDOWS_CERTIFICATE_PASSWORD }}
         run: |
           $ErrorActionPreference = "Stop"
-          if ([string]::IsNullOrWhiteSpace($env:WINDOWS_CERTIFICATE_BASE64) -or
-              [string]::IsNullOrWhiteSpace($env:WINDOWS_CERTIFICATE_PASSWORD)) {
-            throw "ZAI_WINDOWS_CERTIFICATE_BASE64 and ZAI_WINDOWS_CERTIFICATE_PASSWORD are required."
-          }
-
           $certificatePath = Join-Path $env:RUNNER_TEMP "zaix-signing.pfx"
           try {
             [IO.File]::WriteAllBytes(
@@ -152,14 +196,15 @@ jobs:
           } finally {
             Remove-Item -LiteralPath $certificatePath -Force -ErrorAction SilentlyContinue
           }
-      # 3.5 上传ZIP\MSIX
-      - name: Upload Release
+      # 3.5 上传已签名的MSIX
+      - name: Upload signed MSIX
+        if: steps.windows-signing.outputs.available == 'true'
         uses: softprops/action-gh-release@v3
         with:
           body_path: document/RELEASE.txt
           token: ${{ github.token }}
-          files: |
-            build/dist/*/*.msix
-            build/dist/*/*.zip
+          tag_name: ${{ env.RELEASE_TAG }}
+          fail_on_unmatched_files: true
+          files: build/dist/*/*.msix
         #完成
       - run: echo "Windows job's status is ${{ job.status }}."
