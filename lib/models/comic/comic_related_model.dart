@@ -20,8 +20,9 @@ class ComicRelatedModel {
     if (authorComics != null) {
       for (final dynamic item in json['author_comics']!) {
         if (item != null) {
-          authorComics.add(ComicRelatedAuthorModel.fromJson(
-              asT<Map<String, dynamic>>(item)!));
+          authorComics.add(
+            ComicRelatedAuthorModel.fromJson(asT<Map<String, dynamic>>(item)!),
+          );
         }
       }
     }
@@ -32,18 +33,21 @@ class ComicRelatedModel {
       for (final dynamic item in json['theme_comics']!) {
         if (item != null) {
           themeComics.add(
-              ComicRelatedItemModel.fromJson(asT<Map<String, dynamic>>(item)!));
+            ComicRelatedItemModel.fromJson(asT<Map<String, dynamic>>(item)!),
+          );
         }
       }
     }
 
-    final List<ComicRelatedItemModel>? novels =
-        json['novels'] is List ? <ComicRelatedItemModel>[] : null;
+    final List<ComicRelatedItemModel>? novels = json['novels'] is List
+        ? <ComicRelatedItemModel>[]
+        : null;
     if (novels != null) {
       for (final dynamic item in json['novels']!) {
         if (item != null) {
           novels.add(
-              ComicRelatedItemModel.fromJson(asT<Map<String, dynamic>>(item)!));
+            ComicRelatedItemModel.fromJson(asT<Map<String, dynamic>>(item)!),
+          );
         }
       }
     }
@@ -64,10 +68,10 @@ class ComicRelatedModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'author_comics': authorComics,
-        'theme_comics': themeComics,
-        'novels': novels,
-      };
+    'author_comics': authorComics,
+    'theme_comics': themeComics,
+    'novels': novels,
+  };
 }
 
 class ComicRelatedAuthorModel {
@@ -78,13 +82,15 @@ class ComicRelatedAuthorModel {
   });
 
   factory ComicRelatedAuthorModel.fromJson(Map<String, dynamic> json) {
-    final List<ComicRelatedItemModel>? data =
-        json['data'] is List ? <ComicRelatedItemModel>[] : null;
+    final List<ComicRelatedItemModel>? data = json['data'] is List
+        ? <ComicRelatedItemModel>[]
+        : null;
     if (data != null) {
       for (final dynamic item in json['data']!) {
         if (item != null) {
           data.add(
-              ComicRelatedItemModel.fromJson(asT<Map<String, dynamic>>(item)!));
+            ComicRelatedItemModel.fromJson(asT<Map<String, dynamic>>(item)!),
+          );
         }
       }
     }
@@ -105,10 +111,10 @@ class ComicRelatedAuthorModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'author_name': authorName,
-        'author_id': authorId,
-        'data': data,
-      };
+    'author_name': authorName,
+    'author_id': authorId,
+    'data': data,
+  };
 }
 
 class ComicRelatedItemModel {
@@ -138,9 +144,9 @@ class ComicRelatedItemModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'name': name,
-        'cover': cover,
-        'status': status,
-      };
+    'id': id,
+    'name': name,
+    'cover': cover,
+    'status': status,
+  };
 }

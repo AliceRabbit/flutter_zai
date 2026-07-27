@@ -1,12 +1,12 @@
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/db/comic_history.dart';
-import 'package:flutter_dmzj/models/db/local_favorite.dart';
-import 'package:flutter_dmzj/models/db/novel_history.dart';
-import 'package:flutter_dmzj/models/user/comic_history_model.dart';
-import 'package:flutter_dmzj/models/user/novel_history_model.dart';
+import 'package:zaix/app/app_constant.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/models/db/comic_history.dart';
+import 'package:zaix/models/db/local_favorite.dart';
+import 'package:zaix/models/db/novel_history.dart';
+import 'package:zaix/models/user/comic_history_model.dart';
+import 'package:zaix/models/user/novel_history_model.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DBService extends GetxService {
@@ -17,22 +17,10 @@ class DBService extends GetxService {
   late Box<LocalFavorite> localFavoriteBox;
   Future init() async {
     var dir = await getApplicationSupportDirectory();
-    newsLikeBox = await Hive.openBox(
-      "ZaiNewsLike",
-      path: dir.path,
-    );
-    comicHistoryBox = await Hive.openBox(
-      "ZaiComicHistory",
-      path: dir.path,
-    );
-    novelHistoryBox = await Hive.openBox(
-      "ZaiNovelHistory",
-      path: dir.path,
-    );
-    localFavoriteBox = await Hive.openBox(
-      "ZaiLocalFavorite",
-      path: dir.path,
-    );
+    newsLikeBox = await Hive.openBox("ZaiNewsLike", path: dir.path);
+    comicHistoryBox = await Hive.openBox("ZaiComicHistory", path: dir.path);
+    novelHistoryBox = await Hive.openBox("ZaiNovelHistory", path: dir.path);
+    localFavoriteBox = await Hive.openBox("ZaiLocalFavorite", path: dir.path);
   }
 
   Future putComicHistory(ComicHistory history) async {
@@ -66,8 +54,9 @@ class DBService extends GetxService {
   void syncRemoteComicHistory(List<UserComicHistoryModel> items) {
     try {
       for (var item in items) {
-        var remoteTime =
-            DateTime.fromMillisecondsSinceEpoch((item.viewingTime ?? 0) * 1000);
+        var remoteTime = DateTime.fromMillisecondsSinceEpoch(
+          (item.viewingTime ?? 0) * 1000,
+        );
         //本地是否存在记录
         var local = comicHistoryBox.get(item.comicId);
         if (local != null && local.chapterId != 0) {
@@ -140,8 +129,9 @@ class DBService extends GetxService {
   void syncRemoteNovelHistory(List<UserNovelHistoryModel> items) {
     try {
       for (var item in items) {
-        var remoteTime =
-            DateTime.fromMillisecondsSinceEpoch((item.viewingTime ?? 0) * 1000);
+        var remoteTime = DateTime.fromMillisecondsSinceEpoch(
+          (item.viewingTime ?? 0) * 1000,
+        );
         //本地是否存在记录
         var local = novelHistoryBox.get(item.lnovelId);
         if (local != null && local.chapterId != 0) {
@@ -191,8 +181,11 @@ class DBService extends GetxService {
     return localFavoriteBox.containsKey(id);
   }
 
-  void putComicFavorite(
-      {required String title, required String cover, required int comicId}) {
+  void putComicFavorite({
+    required String title,
+    required String cover,
+    required int comicId,
+  }) {
     var id = "${AppConstant.kTypeComic}_$comicId";
     localFavoriteBox.put(
       id,

@@ -4,25 +4,20 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/db/comic_download_info.dart';
-import 'package:flutter_dmzj/models/db/download_status.dart';
-import 'package:flutter_dmzj/models/db/local_favorite.dart';
-import 'package:flutter_dmzj/models/db/novel_download_info.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/db/comic_history.dart';
-import 'package:flutter_dmzj/models/db/novel_history.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
-import 'package:flutter_dmzj/services/novel_download_service.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/hive_registrar.g.dart';
+import 'package:zaix/services/app_settings_service.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/services/comic_download_service.dart';
+import 'package:zaix/services/novel_download_service.dart';
+import 'package:zaix/services/db_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:flutter_dmzj/routes/app_pages.dart';
-import 'package:flutter_dmzj/services/local_storage_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:zaix/routes/app_pages.dart';
+import 'package:zaix/services/local_storage_service.dart';
+import 'package:zaix/services/user_service.dart';
+import 'package:zaix/widgets/status/app_loadding_widget.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -51,7 +46,7 @@ void main() async {
   );
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
 
-  runApp(const DMZJApp());
+  runApp(const ZaixApp());
 }
 
 Future initServices() async {
@@ -66,12 +61,7 @@ Future initServices() async {
   Get.put(UserService()).init();
 
   //注册Hive适配器
-  Hive.registerAdapter(ComicHistoryAdapter());
-  Hive.registerAdapter(NovelHistoryAdapter());
-  Hive.registerAdapter(DownloadStatusAdapter());
-  Hive.registerAdapter(ComicDownloadInfoAdapter());
-  Hive.registerAdapter(NovelDownloadInfoAdapter());
-  Hive.registerAdapter(LocalFavoriteAdapter());
+  Hive.registerAdapters();
   await Get.put(DBService()).init();
 
   //初始化设置服务
@@ -88,12 +78,12 @@ class AppScrollBehavior extends MaterialScrollBehavior {
   Set<PointerDeviceKind> get dragDevices => PointerDeviceKind.values.toSet();
 }
 
-class DMZJApp extends StatelessWidget {
-  const DMZJApp({Key? key}) : super(key: key);
+class ZaixApp extends StatelessWidget {
+  const ZaixApp({super.key});
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: '动漫之家 X',
+      title: 'ZAI-X',
       scrollBehavior: AppScrollBehavior(),
       theme: AppStyle.lightTheme,
       darkTheme: AppStyle.darkTheme,
@@ -117,8 +107,9 @@ class DMZJApp extends StatelessWidget {
           () => MediaQuery(
             data: AppSettingsService.instance.useSystemFontSize.value
                 ? MediaQuery.of(context)
-                : MediaQuery.of(context)
-                    .copyWith(textScaler: const TextScaler.linear(1.0)),
+                : MediaQuery.of(
+                    context,
+                  ).copyWith(textScaler: const TextScaler.linear(1.0)),
             child: child!,
           ),
         ),

@@ -56,16 +56,16 @@ class ComicWebSearchModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'comic_name': comicName,
-        'comic_author': comicAuthor,
-        'comic_cover': comicCover,
-        'cover': cover,
-        'last_update_chapter_name': lastUpdateChapterName,
-        'comic_url_raw': comicUrlRaw,
-        'comic_url': comicUrl,
-        'status': status,
-        'chapter_url_raw': chapterUrlRaw,
-        'chapter_url': chapterUrl,
-      };
+    'id': id,
+    'comic_name': comicName,
+    'comic_author': comicAuthor,
+    'comic_cover': comicCover,
+    'cover': cover,
+    'last_update_chapter_name': lastUpdateChapterName,
+    'comic_url_raw': comicUrlRaw,
+    'comic_url': comicUrl,
+    'status': status,
+    'chapter_url_raw': chapterUrlRaw,
+    'chapter_url': chapterUrl,
+  };
 }

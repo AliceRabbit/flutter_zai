@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_dmzj/models/version_model.dart';
+import 'package:zaix/models/version_model.dart';
 
 /// 通用的请求
 class CommonRequest {
@@ -15,12 +15,8 @@ class CommonRequest {
   Future<VersionModel> checkUpdateGitMirror() async {
     var result = await Dio().get(
       "https://raw.gitmirror.com/AliceRabbit/flutter_zai/main/document/app_version.json",
-      queryParameters: {
-        "ts": DateTime.now().millisecondsSinceEpoch,
-      },
-      options: Options(
-        responseType: ResponseType.json,
-      ),
+      queryParameters: {"ts": DateTime.now().millisecondsSinceEpoch},
+      options: Options(responseType: ResponseType.json),
     );
     return VersionModel.fromJson(result.data);
   }
@@ -29,12 +25,8 @@ class CommonRequest {
   Future<VersionModel> checkUpdateJsDelivr() async {
     var result = await Dio().get(
       "https://cdn.jsdelivr.net/gh/AliceRabbit/flutter_zai@main/document/app_version.json",
-      queryParameters: {
-        "ts": DateTime.now().millisecondsSinceEpoch,
-      },
-      options: Options(
-        responseType: ResponseType.json,
-      ),
+      queryParameters: {"ts": DateTime.now().millisecondsSinceEpoch},
+      options: Options(responseType: ResponseType.json),
     );
     return VersionModel.fromJson(result.data);
   }

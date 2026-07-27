@@ -3,20 +3,19 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/comic/detail_info.dart';
-import 'package:flutter_dmzj/models/db/comic_download_info.dart';
-import 'package:flutter_dmzj/models/db/download_status.dart';
-
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/services/download_task/comic_downloader.dart';
-import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
-// ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
-// ignore: depend_on_referenced_packages
+import 'package:zaix/app/connectivity_utils.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/models/comic/detail_info.dart';
+import 'package:zaix/models/db/comic_download_info.dart';
+import 'package:zaix/models/db/download_status.dart';
+
+import 'package:zaix/services/app_settings_service.dart';
+import 'package:zaix/services/download_task/comic_downloader.dart';
+import 'package:get/get.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 /// 漫画下载管理
 // TODO 整理代码
@@ -29,7 +28,7 @@ class ComicDownloadService extends GetxService {
   String savePath = "";
 
   /// 连接信息监听
-  StreamSubscription<ConnectivityResult>? connectivitySubscription;
+  StreamSubscription<List<ConnectivityResult>>? connectivitySubscription;
 
   /// 当前连接类型
   ConnectivityResult? connectivityType;
@@ -39,10 +38,7 @@ class ComicDownloadService extends GetxService {
 
   Future init() async {
     var dir = await getApplicationSupportDirectory();
-    box = await Hive.openBox(
-      "ZaiComicDownload",
-      path: dir.path,
-    );
+    box = await Hive.openBox("ZaiComicDownload", path: dir.path);
     savePath = await getSavePath();
     //监听网络状态
     initConnectivity();
@@ -56,11 +52,14 @@ class ComicDownloadService extends GetxService {
   void initConnectivity() async {
     try {
       var connectivity = Connectivity();
-      connectivitySubscription = connectivity.onConnectivityChanged
-          .listen((ConnectivityResult result) {
-        networkChanged(result);
+      connectivitySubscription = connectivity.onConnectivityChanged.listen((
+        results,
+      ) {
+        networkChanged(primaryConnectivityResult(results));
       });
-      connectivityType = await connectivity.checkConnectivity();
+      connectivityType = primaryConnectivityResult(
+        await connectivity.checkConnectivity(),
+      );
       initTasks();
     } catch (e) {
       Log.logPrint(e);
@@ -164,9 +163,7 @@ class ComicDownloadService extends GetxService {
         }
       }
 
-      taskQueues.add(
-        ComicDownloader(item, onUpdateTask: onUpdateTask),
-      );
+      taskQueues.add(ComicDownloader(item, onUpdateTask: onUpdateTask));
     }
     updateQueue();
   }
@@ -186,9 +183,11 @@ class ComicDownloadService extends GetxService {
     }
     var taskNum = settings.downloadComicTaskCount.value;
     var count = taskQueues
-        .where((x) =>
-            x.status == DownloadStatus.downloading ||
-            x.status == DownloadStatus.loadding)
+        .where(
+          (x) =>
+              x.status == DownloadStatus.downloading ||
+              x.status == DownloadStatus.loadding,
+        )
         .length;
 
     currentNum = count;
@@ -343,10 +342,7 @@ class ComicDownloadService extends GetxService {
       isVip: isVip,
       isLongComic: isLongComic,
     );
-    await box.put(
-      taskId,
-      info,
-    );
+    await box.put(taskId, info);
     taskQueues.add(ComicDownloader(info, onUpdateTask: onUpdateTask));
     updateQueue();
   }

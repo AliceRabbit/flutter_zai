@@ -1,8 +1,8 @@
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/comic/author_model.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/app_constant.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/models/comic/author_model.dart';
+import 'package:zaix/requests/comic_request.dart';
+import 'package:zaix/services/user_service.dart';
 import 'package:get/get.dart';
 
 class ComicAuthorDetailController extends BaseController {
@@ -24,10 +24,7 @@ class ComicAuthorDetailController extends BaseController {
     try {
       pageLoadding.value = true;
       pageError.value = false;
-      var result = await request.authorDetail(
-        id: id,
-        authorName: authorName,
-      );
+      var result = await request.authorDetail(id: id, authorName: authorName);
       detail.value = result;
     } catch (e) {
       pageError.value = true;

@@ -16,12 +16,12 @@ class NewsStatModel {
   });
 
   factory NewsStatModel.fromJson(Map<String, dynamic> json) => NewsStatModel(
-        /// DMZJ后端是真混乱... commentAmount是string，mood_amount是int
-        commentAmount: int.tryParse(json['comment_amount'].toString()) ?? 0,
-        moodAmount: int.tryParse(json['mood_amount'].toString()) ?? 0,
-        rowPicUrl: asT<String>(json['row_pic_url'])!,
-        title: asT<String>(json['title'])!,
-      );
+    /// DMZJ后端是真混乱... commentAmount是string，mood_amount是int
+    commentAmount: int.tryParse(json['comment_amount'].toString()) ?? 0,
+    moodAmount: int.tryParse(json['mood_amount'].toString()) ?? 0,
+    rowPicUrl: asT<String>(json['row_pic_url'])!,
+    title: asT<String>(json['title'])!,
+  );
 
   int commentAmount;
   int moodAmount;
@@ -34,9 +34,9 @@ class NewsStatModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'comment_amount': commentAmount,
-        'mood_amount': moodAmount,
-        'row_pic_url': rowPicUrl,
-        'title': title,
-      };
+    'comment_amount': commentAmount,
+    'mood_amount': moodAmount,
+    'row_pic_url': rowPicUrl,
+    'title': title,
+  };
 }

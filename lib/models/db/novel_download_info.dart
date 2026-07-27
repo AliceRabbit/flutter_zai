@@ -1,5 +1,5 @@
-import 'package:flutter_dmzj/models/db/download_status.dart';
-import 'package:hive/hive.dart';
+import 'package:zaix/models/db/download_status.dart';
+import 'package:hive_ce/hive.dart';
 part 'novel_download_info.g.dart';
 
 @HiveType(typeId: 5)

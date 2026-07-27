@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/modules/news/home/news_home_controller.dart';
-import 'package:flutter_dmzj/modules/news/home/news_list_view.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
-import 'package:flutter_dmzj/widgets/tab_appbar.dart';
+import 'package:zaix/modules/news/home/news_home_controller.dart';
+import 'package:zaix/modules/news/home/news_list_view.dart';
+import 'package:zaix/widgets/status/app_error_widget.dart';
+import 'package:zaix/widgets/status/app_loadding_widget.dart';
+import 'package:zaix/widgets/tab_appbar.dart';
 import 'package:get/get.dart';
 
 class NewsHomePage extends GetView<NewsHomeController> {
-  const NewsHomePage({Key? key}) : super(key: key);
+  const NewsHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +15,7 @@ class NewsHomePage extends GetView<NewsHomeController> {
       init: controller,
       builder: (controller) {
         if (controller.loadding) {
-          return const Scaffold(
-            body: AppLoaddingWidget(),
-          );
+          return const Scaffold(body: AppLoaddingWidget());
         }
         if (!controller.loadding && controller.error) {
           return Scaffold(
@@ -34,8 +32,9 @@ class NewsHomePage extends GetView<NewsHomeController> {
           ),
           body: TabBarView(
             controller: controller.tabController,
-            children:
-                controller.categores.map((e) => NewsListView(tag: e)).toList(),
+            children: controller.categores
+                .map((e) => NewsListView(tag: e))
+                .toList(),
           ),
         );
       },

@@ -1,19 +1,19 @@
 import 'dart:async';
 
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/app/event_bus.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/comic/detail_info.dart';
-import 'package:flutter_dmzj/models/db/comic_history.dart';
-import 'package:flutter_dmzj/modules/comic/detail/comic_detail_related_page.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
-import 'package:flutter_dmzj/requests/user_request.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/app_constant.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/app/event_bus.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/models/comic/detail_info.dart';
+import 'package:zaix/models/db/comic_history.dart';
+import 'package:zaix/modules/comic/detail/comic_detail_related_page.dart';
+import 'package:zaix/requests/comic_request.dart';
+import 'package:zaix/requests/user_request.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/services/app_settings_service.dart';
+import 'package:zaix/services/db_service.dart';
+import 'package:zaix/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -53,8 +53,9 @@ class ComicDetailControler extends BaseController {
     );
     favorited.value = DBService.instance.hasComicFavorited(comicId: comicId);
     // 从本地读取订阅状态
-    subscribeStatus.value =
-        UserService.instance.subscribedComicIds.contains(comicId);
+    subscribeStatus.value = UserService.instance.subscribedComicIds.contains(
+      comicId,
+    );
     getHistory();
     loadDetail();
     loadSubscribeStatus();
@@ -93,8 +94,10 @@ class ComicDetailControler extends BaseController {
 
   void refreshV1() async {
     try {
-      var result =
-          await request.comicDetail(comicId: comicId, priorityV1: true);
+      var result = await request.comicDetail(
+        comicId: comicId,
+        priorityV1: true,
+      );
       if (result.volumes.isEmpty) {
         return;
       }
@@ -167,8 +170,9 @@ class ComicDetailControler extends BaseController {
   /// 订阅
   void subscribe() async {
     var result = await (subscribeStatus.value
-        ? UserService.instance
-            .cancelSubscribe([comicId], AppConstant.kTypeComic)
+        ? UserService.instance.cancelSubscribe([
+            comicId,
+          ], AppConstant.kTypeComic)
         : UserService.instance.addSubscribe([comicId], AppConstant.kTypeComic));
     if (result) {
       subscribeStatus.value = !subscribeStatus.value;
@@ -278,10 +282,7 @@ class ComicDetailControler extends BaseController {
   }
 
   void toAuthorDetail(ComicDetailTag e) {
-    AppNavigator.toComicAuthorDetail(
-      e.tagId,
-      authorName: e.tagName,
-    );
+    AppNavigator.toComicAuthorDetail(e.tagId, authorName: e.tagName);
   }
 
   void toCategoryDetail(ComicDetailTag e) {

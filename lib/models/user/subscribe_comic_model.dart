@@ -34,7 +34,8 @@ class UserSubscribeComicItemModel {
         comicPy: asT<String>(json['comic_py'])!,
         status: asT<String>(json['status'])!,
         readingRecord: ReadingRecord.fromJson(
-            asT<Map<String, dynamic>>(json['readingRecord'])!),
+          asT<Map<String, dynamic>>(json['readingRecord'])!,
+        ),
         hasNew: (asT<int>(json['sub_readed']) == 0).obs,
       );
 
@@ -57,16 +58,16 @@ class UserSubscribeComicItemModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'title': title,
-        'cover': cover,
-        'sub_readed': subReaded,
-        'last_update_chapter_id': lastUpdateChapterId,
-        'last_update_chapter_name': lastUpdateChapterName,
-        'comic_py': comicPy,
-        'status': status,
-        'readingRecord': readingRecord,
-      };
+    'id': id,
+    'title': title,
+    'cover': cover,
+    'sub_readed': subReaded,
+    'last_update_chapter_id': lastUpdateChapterId,
+    'last_update_chapter_name': lastUpdateChapterName,
+    'comic_py': comicPy,
+    'status': status,
+    'readingRecord': readingRecord,
+  };
 }
 
 class ReadingRecord {
@@ -85,18 +86,18 @@ class ReadingRecord {
   });
 
   factory ReadingRecord.fromJson(Map<String, dynamic> json) => ReadingRecord(
-        typeName: asT<String>(json['type_name'])!,
-        uid: asT<int>(json['uid'])!,
-        source: asT<int>(json['source'])!,
-        bizId: asT<int>(json['biz_id'])!,
-        chapterId: asT<int>(json['chapter_id'])!,
-        viewingTime: asT<int>(json['viewing_time'])!,
-        record: asT<int>(json['record'])!,
-        volumeId: asT<int>(json['volume_id'])!,
-        totalNum: asT<int>(json['total_num'])!,
-        chapterName: asT<String>(json['chapter_name'])!,
-        volumeName: asT<String>(json['volume_name'])!,
-      );
+    typeName: asT<String>(json['type_name'])!,
+    uid: asT<int>(json['uid'])!,
+    source: asT<int>(json['source'])!,
+    bizId: asT<int>(json['biz_id'])!,
+    chapterId: asT<int>(json['chapter_id'])!,
+    viewingTime: asT<int>(json['viewing_time'])!,
+    record: asT<int>(json['record'])!,
+    volumeId: asT<int>(json['volume_id'])!,
+    totalNum: asT<int>(json['total_num'])!,
+    chapterName: asT<String>(json['chapter_name'])!,
+    volumeName: asT<String>(json['volume_name'])!,
+  );
 
   String typeName;
   int uid;
@@ -116,16 +117,16 @@ class ReadingRecord {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'type_name': typeName,
-        'uid': uid,
-        'source': source,
-        'biz_id': bizId,
-        'chapter_id': chapterId,
-        'viewing_time': viewingTime,
-        'record': record,
-        'volume_id': volumeId,
-        'total_num': totalNum,
-        'chapter_name': chapterName,
-        'volume_name': volumeName,
-      };
+    'type_name': typeName,
+    'uid': uid,
+    'source': source,
+    'biz_id': bizId,
+    'chapter_id': chapterId,
+    'viewing_time': viewingTime,
+    'record': record,
+    'volume_id': volumeId,
+    'total_num': totalNum,
+    'chapter_name': chapterName,
+    'volume_name': volumeName,
+  };
 }

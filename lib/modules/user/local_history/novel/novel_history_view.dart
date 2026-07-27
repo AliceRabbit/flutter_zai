@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/db/novel_history.dart';
-import 'package:flutter_dmzj/modules/user/local_history/novel/novel_history_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/page_list_view.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/models/db/novel_history.dart';
+import 'package:zaix/modules/user/local_history/novel/novel_history_controller.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/widgets/keep_alive_wrapper.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/page_list_view.dart';
 import 'package:get/get.dart';
 
 class LocalNovelHistoryView extends StatelessWidget {
   final LocalNovelHistoryController controller;
   LocalNovelHistoryView({super.key})
-      : controller = Get.put(LocalNovelHistoryController());
+    : controller = Get.put(LocalNovelHistoryController());
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class LocalNovelHistoryView extends StatelessWidget {
         separatorBuilder: (context, i) => Divider(
           endIndent: 12,
           indent: 12,
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues(alpha: .2),
           height: 1,
         ),
         itemBuilder: (context, i) {
@@ -45,12 +45,7 @@ class LocalNovelHistoryView extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            NetImage(
-              item.novelCover,
-              width: 80,
-              height: 110,
-              borderRadius: 4,
-            ),
+            NetImage(item.novelCover, width: 80, height: 110, borderRadius: 4),
             AppStyle.hGap12,
             Expanded(
               child: Column(
@@ -62,12 +57,15 @@ class LocalNovelHistoryView extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   AppStyle.vGap4,
-                  Text("看到${item.volumeName} ${item.chapterName}",
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                  Text(
+                    "看到${item.volumeName} ${item.chapterName}",
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
                   AppStyle.vGap4,
                   Text(
-                      "观看于${Utils.formatTimestampMS(item.updateTime.millisecondsSinceEpoch)}",
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                    "观看于${Utils.formatTimestampMS(item.updateTime.millisecondsSinceEpoch)}",
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
                 ],
               ),
             ),

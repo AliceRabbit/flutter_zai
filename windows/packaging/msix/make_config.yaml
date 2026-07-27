@@ -1,7 +1,9 @@
 display_name: ZAI-X
 publisher_display_name: AliceRabbit
 identity_name: io.github.alicerabbit.zaix
+publisher: CN=AliceRabbit
 logo_path: assets/images/logo.png
 capabilities: internetClient
 languages: zh-cn
+sign_msix: "false"
 install_certificate: "false"

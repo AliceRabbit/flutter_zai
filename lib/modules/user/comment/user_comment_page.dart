@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/modules/user/comment/user_comment_view.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/modules/user/comment/user_comment_view.dart';
 import 'package:get/get.dart';
 
 class UserCommentPage extends StatelessWidget {
   final int userId;
-  const UserCommentPage(this.userId, {Key? key}) : super(key: key);
+  const UserCommentPage(this.userId, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +22,9 @@ class UserCommentPage extends StatelessWidget {
               labelPadding: AppStyle.edgeInsetsH24,
               indicatorColor: Theme.of(context).colorScheme.primary,
               labelColor: Theme.of(context).colorScheme.primary,
-              unselectedLabelColor:
-                  Get.isDarkMode ? Colors.white70 : Colors.black87,
+              unselectedLabelColor: Get.isDarkMode
+                  ? Colors.white70
+                  : Colors.black87,
               tabs: const [
                 Tab(text: "漫画"),
                 Tab(text: "小说"),

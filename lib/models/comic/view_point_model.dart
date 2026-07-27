@@ -39,10 +39,10 @@ class ComicViewPointModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'uid': uid,
-        'content': content,
-        'num': num,
-        'page': page,
-      };
+    'id': id,
+    'uid': uid,
+    'content': content,
+    'num': num,
+    'page': page,
+  };
 }

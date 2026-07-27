@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/modules/comic/home/special/comic_special_controller.dart';
-import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/page_list_view.dart';
-import 'package:flutter_dmzj/widgets/shadow_card.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/modules/comic/home/special/comic_special_controller.dart';
+import 'package:zaix/widgets/keep_alive_wrapper.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/page_list_view.dart';
+import 'package:zaix/widgets/shadow_card.dart';
 import 'package:get/get.dart';
 
 class ComicSpecialView extends StatelessWidget {
   final ComicSpecialController controller;
-  ComicSpecialView({Key? key})
-      : controller = Get.put(ComicSpecialController()),
-        super(key: key);
+  ComicSpecialView({super.key})
+    : controller = Get.put(ComicSpecialController());
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +33,7 @@ class ComicSpecialView extends StatelessWidget {
               children: [
                 AspectRatio(
                   aspectRatio: 710 / 284,
-                  child: NetImage(
-                    item.smallCover,
-                    width: 710,
-                    height: 354,
-                  ),
+                  child: NetImage(item.smallCover, width: 710, height: 354),
                 ),
                 Padding(
                   padding: AppStyle.edgeInsetsA8,

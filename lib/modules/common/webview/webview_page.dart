@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/modules/common/webview/webview_controller.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/modules/common/webview/webview_controller.dart';
+import 'package:zaix/widgets/status/app_error_widget.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -9,27 +9,22 @@ import 'package:webview_flutter/webview_flutter.dart';
 class WebViewPage extends StatelessWidget {
   final String url;
   final WebViewPageController controller;
-  WebViewPage({required this.url, Key? key})
-      : controller = Get.put(
-          WebViewPageController(url),
-          tag: DateTime.now().millisecondsSinceEpoch.toString(),
-        ),
-        super(key: key);
+  WebViewPage({required this.url, super.key})
+    : controller = Get.put(
+        WebViewPageController(url),
+        tag: DateTime.now().millisecondsSinceEpoch.toString(),
+      );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Obx(() => Text(controller.title.value)),
-      ),
+      appBar: AppBar(title: Obx(() => Text(controller.title.value))),
       body: Stack(
         children: [
           Obx(
             () => Offstage(
               offstage: controller.pageLoadding.value,
-              child: WebViewWidget(
-                controller: controller.webViewController,
-              ),
+              child: WebViewWidget(controller: controller.webViewController),
             ),
           ),
           Obx(
@@ -55,9 +50,7 @@ class WebViewPage extends StatelessWidget {
                       onPressed: () {
                         controller.webViewController.goBack();
                       },
-                      icon: const Icon(
-                        Icons.chevron_left,
-                      ),
+                      icon: const Icon(Icons.chevron_left),
                     ),
                   ),
                   Expanded(
@@ -65,9 +58,7 @@ class WebViewPage extends StatelessWidget {
                       onPressed: () {
                         controller.webViewController.reload();
                       },
-                      icon: const Icon(
-                        Icons.refresh,
-                      ),
+                      icon: const Icon(Icons.refresh),
                     ),
                   ),
                   Expanded(
@@ -75,9 +66,7 @@ class WebViewPage extends StatelessWidget {
                       onPressed: () {
                         controller.webViewController.goForward();
                       },
-                      icon: const Icon(
-                        Icons.chevron_right,
-                      ),
+                      icon: const Icon(Icons.chevron_right),
                     ),
                   ),
                   Expanded(
@@ -88,25 +77,22 @@ class WebViewPage extends StatelessWidget {
                               .toString(),
                         );
                       },
-                      icon: const Icon(
-                        Icons.share,
-                        size: 20,
-                      ),
+                      icon: const Icon(Icons.share, size: 20),
                     ),
                   ),
                   Expanded(
                     child: IconButton(
                       onPressed: () async {
-                        var url =
-                            await controller.webViewController.currentUrl();
+                        var url = await controller.webViewController
+                            .currentUrl();
                         if (url != null) {
-                          launchUrlString(url,
-                              mode: LaunchMode.externalApplication);
+                          launchUrlString(
+                            url,
+                            mode: LaunchMode.externalApplication,
+                          );
                         }
                       },
-                      icon: const Icon(
-                        Icons.open_in_browser,
-                      ),
+                      icon: const Icon(Icons.open_in_browser),
                     ),
                   ),
                 ],
@@ -125,7 +111,7 @@ class WebViewPage extends StatelessWidget {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

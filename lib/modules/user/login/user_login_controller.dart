@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/requests/user_request.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/requests/user_request.dart';
+import 'package:zaix/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 

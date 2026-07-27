@@ -8,10 +8,7 @@ T? asT<T>(dynamic value) {
 }
 
 class UserBindStatusModel {
-  UserBindStatusModel({
-    required this.isBindTel,
-    required this.isSetPwd,
-  });
+  UserBindStatusModel({required this.isBindTel, required this.isSetPwd});
 
   factory UserBindStatusModel.fromJson(Map<String, dynamic> json) =>
       UserBindStatusModel(
@@ -28,7 +25,7 @@ class UserBindStatusModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'is_bind_tel': isBindTel,
-        'is_set_pwd': isSetPwd,
-      };
+    'is_bind_tel': isBindTel,
+    'is_set_pwd': isSetPwd,
+  };
 }

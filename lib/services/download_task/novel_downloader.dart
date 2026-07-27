@@ -3,12 +3,12 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/db/novel_download_info.dart';
-import 'package:flutter_dmzj/models/db/download_status.dart';
-import 'package:flutter_dmzj/requests/novel_request.dart';
-import 'package:flutter_dmzj/services/novel_download_service.dart';
+import 'package:zaix/app/dialog_utils.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/models/db/novel_download_info.dart';
+import 'package:zaix/models/db/download_status.dart';
+import 'package:zaix/requests/novel_request.dart';
+import 'package:zaix/services/novel_download_service.dart';
 import 'package:get/get.dart';
 
 // ignore: depend_on_referenced_packages
@@ -23,11 +23,7 @@ class NovelDownloader {
   final NovelRequest request = NovelRequest();
   DownloadStatus get status => info.value.status;
   CancelToken? cancelToken;
-  Dio dio = Dio(BaseOptions(
-    headers: {
-      'Referer': "http://www.zaimanhua.com/",
-    },
-  ));
+  Dio dio = Dio(BaseOptions(headers: {'Referer': "http://www.zaimanhua.com/"}));
   void start() {
     _startDownload();
   }
@@ -94,13 +90,18 @@ class NovelDownloader {
         cache: false,
       );
       var fileName = await _saveContent(content);
-      var subStr =
-          content.substring(0, content.length < 200 ? content.length : 200);
+      var subStr = content.substring(
+        0,
+        content.length < 200 ? content.length : 200,
+      );
       //检查是否是插画
       if (subStr.contains(RegExp('<img.*?>'))) {
         List<String> imgs = [];
-        for (var item in RegExp(r'<img.*?src=[' '""](.*?)[' '""].*?>')
-            .allMatches(content)) {
+        for (var item in RegExp(
+          r'<img.*?src=['
+          '""](.*?)['
+          '""].*?>',
+        ).allMatches(content)) {
           var src = item.group(1);
           if (src != null && src.isNotEmpty) {
             imgs.add(src);
@@ -124,7 +125,9 @@ class NovelDownloader {
       if (e is DioException) {
         if (e.type == DioExceptionType.cancel) rethrow;
         if (status == DownloadStatus.waitNetwork ||
-            status == DownloadStatus.pauseCellular) rethrow;
+            status == DownloadStatus.pauseCellular) {
+          rethrow;
+        }
         if (retryTime < 3) {
           retryTime++;
           await Future.delayed(const Duration(seconds: 1));
@@ -148,9 +151,7 @@ class NovelDownloader {
 
         var result = await dio.get(
           url,
-          options: Options(
-            responseType: ResponseType.bytes,
-          ),
+          options: Options(responseType: ResponseType.bytes),
           cancelToken: cancelToken,
         );
         bytes = result.data;
@@ -166,7 +167,9 @@ class NovelDownloader {
       if (e is DioException) {
         if (e.type == DioExceptionType.cancel) rethrow;
         if (status == DownloadStatus.waitNetwork ||
-            status == DownloadStatus.pauseCellular) rethrow;
+            status == DownloadStatus.pauseCellular) {
+          rethrow;
+        }
         if (retryTime < 3) {
           retryTime++;
           await Future.delayed(const Duration(seconds: 1));
@@ -190,7 +193,10 @@ class NovelDownloader {
   }
 
   Future<String> _saveImage(
-      Uint8List bytes, int index, String extension) async {
+    Uint8List bytes,
+    int index,
+    String extension,
+  ) async {
     var dir = info.value.savePath;
     var fileName = "${(index + 1).toString().padLeft(3, "0")}$extension";
     var file = File(p.join(dir, fileName));

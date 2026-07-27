@@ -58,17 +58,17 @@ class NewsListItemModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'article_id': articleId,
-        'title': title,
-        'create_time': createTime,
-        'intro': intro,
-        'author_id': authorId,
-        'status': status,
-        'row_pic_url': rowPicUrl,
-        'col_pic_url': colPicUrl,
-        'page_url': pageUrl,
-        'author_uid': authorUid,
-        'cover': cover,
-        'nickname': nickname,
-      };
+    'article_id': articleId,
+    'title': title,
+    'create_time': createTime,
+    'intro': intro,
+    'author_id': authorId,
+    'status': status,
+    'row_pic_url': rowPicUrl,
+    'col_pic_url': colPicUrl,
+    'page_url': pageUrl,
+    'author_uid': authorUid,
+    'cover': cover,
+    'nickname': nickname,
+  };
 }

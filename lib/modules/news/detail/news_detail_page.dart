@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/modules/news/detail/news_detail_controller.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/modules/news/detail/news_detail_controller.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/status/app_error_widget.dart';
+import 'package:zaix/widgets/status/app_loadding_widget.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
@@ -20,12 +20,11 @@ class NewsDetailPage extends StatelessWidget {
     required this.newsUrl,
     this.title = "资讯详情",
     required this.newsId,
-    Key? key,
-  })  : controller = Get.put(
-          NewsDetailController(id: newsId, newsUrl: newsUrl, title: title),
-          tag: DateTime.now().millisecondsSinceEpoch.toString(),
-        ),
-        super(key: key);
+    super.key,
+  }) : controller = Get.put(
+         NewsDetailController(id: newsId, newsUrl: newsUrl, title: title),
+         tag: DateTime.now().millisecondsSinceEpoch.toString(),
+       );
 
   @override
   Widget build(BuildContext context) {
@@ -83,9 +82,11 @@ class NewsDetailPage extends StatelessWidget {
                           : Remix.thumb_up_line,
                       size: 20,
                     ),
-                    label: Text(controller.moodAmount > 0
-                        ? "${controller.moodAmount}"
-                        : "点赞"),
+                    label: Text(
+                      controller.moodAmount > 0
+                          ? "${controller.moodAmount}"
+                          : "点赞",
+                    ),
                   ),
                 ),
               ),
@@ -96,13 +97,12 @@ class NewsDetailPage extends StatelessWidget {
                       textStyle: const TextStyle(fontSize: 14),
                     ),
                     onPressed: controller.comment,
-                    icon: const Icon(
-                      Remix.chat_2_line,
-                      size: 20,
+                    icon: const Icon(Remix.chat_2_line, size: 20),
+                    label: Text(
+                      controller.commentAmount > 0
+                          ? "${controller.commentAmount}"
+                          : "评论",
                     ),
-                    label: Text(controller.commentAmount > 0
-                        ? "${controller.commentAmount}"
-                        : "评论"),
                   ),
                 ),
               ),
@@ -129,10 +129,7 @@ class NewsDetailPage extends StatelessWidget {
                     textStyle: const TextStyle(fontSize: 14),
                   ),
                   onPressed: controller.showSettings,
-                  icon: const Icon(
-                    Remix.settings_line,
-                    size: 20,
-                  ),
+                  icon: const Icon(Remix.settings_line, size: 20),
                   label: const Text("设置"),
                 ),
               ),
@@ -148,10 +145,7 @@ class NewsDetailPage extends StatelessWidget {
       () => ListView(
         padding: AppStyle.edgeInsetsA12,
         children: [
-          Text(
-            controller.title,
-            style: Get.textTheme.titleLarge,
-          ),
+          Text(controller.title, style: Get.textTheme.titleLarge),
           AppStyle.vGap4,
           Text(
             "${controller.author.value}    ${controller.src.value}    ${controller.time.value}",
@@ -168,10 +162,7 @@ class NewsDetailPage extends StatelessWidget {
                 var imgSrc = e.attributes["src"];
                 imgSrc ??= e.attributes["data-original"];
                 return GestureDetector(
-                  child: NetImage(
-                    imgSrc!,
-                    borderRadius: 4,
-                  ),
+                  child: NetImage(imgSrc!, borderRadius: 4),
                   onTap: () {
                     controller.showImageView(imgSrc ?? "");
                   },

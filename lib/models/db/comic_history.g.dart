@@ -8,7 +8,7 @@ part of 'comic_history.dart';
 
 class ComicHistoryAdapter extends TypeAdapter<ComicHistory> {
   @override
-  final int typeId = 1;
+  final typeId = 1;
 
   @override
   ComicHistory read(BinaryReader reader) {
@@ -17,13 +17,13 @@ class ComicHistoryAdapter extends TypeAdapter<ComicHistory> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ComicHistory(
-      comicId: fields[0] as int,
-      chapterId: fields[1] as int,
+      comicId: (fields[0] as num).toInt(),
+      chapterId: (fields[1] as num).toInt(),
       comicName: fields[2] as String,
       comicCover: fields[3] as String,
       chapterName: fields[4] as String,
       updateTime: fields[6] as DateTime,
-      page: fields[5] as int,
+      page: (fields[5] as num).toInt(),
     );
   }
 

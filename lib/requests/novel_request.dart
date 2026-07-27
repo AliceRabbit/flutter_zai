@@ -1,23 +1,25 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_dmzj/models/novel/category_filter_model.dart';
-import 'package:flutter_dmzj/models/novel/category_model.dart';
-import 'package:flutter_dmzj/models/novel/category_novel_model.dart';
-import 'package:flutter_dmzj/models/novel/detail_model.dart';
-import 'package:flutter_dmzj/models/novel/latest_model.dart';
-import 'package:flutter_dmzj/models/novel/rank_model.dart';
-import 'package:flutter_dmzj/models/novel/recommend_model.dart';
-import 'package:flutter_dmzj/models/novel/search_model.dart';
-import 'package:flutter_dmzj/models/novel/volume_detail_model.dart';
-import 'package:flutter_dmzj/requests/common/api.dart';
-import 'package:flutter_dmzj/requests/common/http_client.dart';
-import 'package:flutter_dmzj/services/local_storage_service.dart';
+import 'package:zaix/models/novel/category_filter_model.dart';
+import 'package:zaix/models/novel/category_model.dart';
+import 'package:zaix/models/novel/category_novel_model.dart';
+import 'package:zaix/models/novel/detail_model.dart';
+import 'package:zaix/models/novel/latest_model.dart';
+import 'package:zaix/models/novel/rank_model.dart';
+import 'package:zaix/models/novel/recommend_model.dart';
+import 'package:zaix/models/novel/search_model.dart';
+import 'package:zaix/models/novel/volume_detail_model.dart';
+import 'package:zaix/requests/common/api.dart';
+import 'package:zaix/requests/common/http_client.dart';
+import 'package:zaix/services/local_storage_service.dart';
 
 class NovelRequest {
   /// 轻小说-推荐
   Future<List<NovelRecommendModel>> recommend() async {
     var list = <NovelRecommendModel>[];
-    var result =
-        await HttpClient.instance.getJson('/novel/recommend', checkCode: true);
+    var result = await HttpClient.instance.getJson(
+      '/novel/recommend',
+      checkCode: true,
+    );
     for (var item in result["recommendList"]) {
       list.add(NovelRecommendModel.fromJson(item));
     }
@@ -50,9 +52,7 @@ class NovelRequest {
     var list = <NovelCategoryModel>[];
     var result = await HttpClient.instance.getJson(
       '/comic/filter/category',
-      queryParameters: {
-        "source": 2,
-      },
+      queryParameters: {"source": 2},
       checkCode: true,
     );
     for (var item in result["cateList"]) {
@@ -72,9 +72,7 @@ class NovelRequest {
     for (var item in result["cateList"]) {
       list.add(NovelCategoryFilterItemModel.fromJson(item));
     }
-    return [
-      NovelCategoryFilterModel(title: "题材", items: list),
-    ];
+    return [NovelCategoryFilterModel(title: "题材", items: list)];
   }
 
   /// 分类下漫画
@@ -125,16 +123,12 @@ class NovelRequest {
   Future<Map<int, String>> rankFilter() async {
     var result = await HttpClient.instance.getJson(
       '/comic/filter/category',
-      queryParameters: {
-        "source": 2,
-      },
+      queryParameters: {"source": 2},
       checkCode: true,
     );
     Map<int, String> map = {};
     for (var item in result["cateList"]) {
-      map.addAll({
-        item["tagId"]: item["title"],
-      });
+      map.addAll({item["tagId"]: item["title"]});
     }
     return map;
   }
@@ -142,8 +136,10 @@ class NovelRequest {
   /// 轻小说搜索
   /// - [page] 页数从0开始
   /// - [keyword] 关键字
-  Future<List<NovelSearchModel>> search(
-      {required String keyword, int page = 1}) async {
+  Future<List<NovelSearchModel>> search({
+    required String keyword,
+    int page = 1,
+  }) async {
     var list = <NovelSearchModel>[];
     var result = await HttpClient.instance.getJson(
       '/search/index',
@@ -163,22 +159,16 @@ class NovelRequest {
 
   /// 小说搜索热词
   Future<Map<int, String>> searchHotWord() async {
-    var result = await HttpClient.instance.getJson(
-      '/search/hot/1.json',
-    );
+    var result = await HttpClient.instance.getJson('/search/hot/1.json');
     Map<int, String> map = {};
     for (var item in result) {
-      map.addAll({
-        item["id"]: item["name"],
-      });
+      map.addAll({item["id"]: item["name"]});
     }
     return map;
   }
 
   /// 小说详情
-  Future<NovelDetailModel> novelDetail({
-    required int novelId,
-  }) async {
+  Future<NovelDetailModel> novelDetail({required int novelId}) async {
     var result = await HttpClient.instance.getJson(
       '/novel/detail/$novelId',
       needLogin: true,
@@ -216,8 +206,10 @@ class NovelRequest {
     CancelToken? cancel,
     bool cache = true,
   }) async {
-    var localContent = await LocalStorageService.instance
-        .getNovelContent(volumeId: volumeId, chapterId: chapterId);
+    var localContent = await LocalStorageService.instance.getNovelContent(
+      volumeId: volumeId,
+      chapterId: chapterId,
+    );
     if (localContent != null) {
       return localContent;
     }

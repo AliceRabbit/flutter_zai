@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/modules/common/download/comic/comic_downloaded_view.dart';
-import 'package:flutter_dmzj/modules/common/download/comic/comic_downloading_view.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
+import 'package:zaix/modules/common/download/comic/comic_downloaded_view.dart';
+import 'package:zaix/modules/common/download/comic/comic_downloading_view.dart';
+import 'package:zaix/services/comic_download_service.dart';
 import 'package:get/get.dart';
 
 class ComicDownloadPage extends StatelessWidget {
@@ -23,25 +23,24 @@ class ComicDownloadPage extends StatelessWidget {
               indicatorSize: TabBarIndicatorSize.label,
               indicatorColor: Theme.of(context).colorScheme.primary,
               labelColor: Theme.of(context).colorScheme.primary,
-              unselectedLabelColor:
-                  Get.isDarkMode ? Colors.white70 : Colors.black87,
+              unselectedLabelColor: Get.isDarkMode
+                  ? Colors.white70
+                  : Colors.black87,
               tabs: [
                 const Tab(text: "已完成"),
                 Obx(
                   () => Tab(
-                      text: ComicDownloadService.instance.taskQueues.isEmpty
-                          ? "下载中"
-                          : "下载中(${ComicDownloadService.instance.taskQueues.length})"),
-                )
+                    text: ComicDownloadService.instance.taskQueues.isEmpty
+                        ? "下载中"
+                        : "下载中(${ComicDownloadService.instance.taskQueues.length})",
+                  ),
+                ),
               ],
             ),
           ),
         ),
         body: const TabBarView(
-          children: [
-            ComicDownloadedView(),
-            ComicDownloadingView(),
-          ],
+          children: [ComicDownloadedView(), ComicDownloadingView()],
         ),
       ),
     );

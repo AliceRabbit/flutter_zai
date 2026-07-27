@@ -37,10 +37,10 @@ class NewsBannerModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'title': title,
-        'pic_url': picUrl,
-        'object_id': objectId,
-        'object_url': objectUrl,
-      };
+    'id': id,
+    'title': title,
+    'pic_url': picUrl,
+    'object_id': objectId,
+    'object_url': objectUrl,
+  };
 }

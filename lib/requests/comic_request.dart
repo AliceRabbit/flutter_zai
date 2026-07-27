@@ -1,31 +1,31 @@
 import 'dart:convert';
 
-import 'package:flutter_dmzj/app/app_error.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/comic/author_model.dart';
-import 'package:flutter_dmzj/models/comic/category_comic_model.dart';
-import 'package:flutter_dmzj/models/comic/category_filter_model.dart';
-import 'package:flutter_dmzj/models/comic/category_item_model.dart';
-import 'package:flutter_dmzj/models/comic/chapter_detail_model.dart';
-import 'package:flutter_dmzj/models/comic/chapter_detail_web_model.dart';
-import 'package:flutter_dmzj/models/comic/chapter_info.dart';
-import 'package:flutter_dmzj/models/comic/comic_related_model.dart';
-import 'package:flutter_dmzj/models/comic/detail_info.dart';
-import 'package:flutter_dmzj/models/comic/detail_model.dart';
-import 'package:flutter_dmzj/models/comic/detail_v1_model.dart';
-import 'package:flutter_dmzj/models/comic/rank_item_model.dart';
-import 'package:flutter_dmzj/models/comic/recommend_model.dart';
-import 'package:flutter_dmzj/models/comic/search_item.dart';
-import 'package:flutter_dmzj/models/comic/search_model.dart';
-import 'package:flutter_dmzj/models/comic/special_model.dart';
-import 'package:flutter_dmzj/models/comic/update_item_model.dart';
-import 'package:flutter_dmzj/models/comic/view_point_model.dart';
-import 'package:flutter_dmzj/models/comic/web_search_model.dart';
-import 'package:flutter_dmzj/models/db/download_status.dart';
-import 'package:flutter_dmzj/requests/common/api.dart';
-import 'package:flutter_dmzj/requests/common/http_client.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/app_error.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/models/comic/author_model.dart';
+import 'package:zaix/models/comic/category_comic_model.dart';
+import 'package:zaix/models/comic/category_filter_model.dart';
+import 'package:zaix/models/comic/category_item_model.dart';
+import 'package:zaix/models/comic/chapter_detail_model.dart';
+import 'package:zaix/models/comic/chapter_detail_web_model.dart';
+import 'package:zaix/models/comic/chapter_info.dart';
+import 'package:zaix/models/comic/comic_related_model.dart';
+import 'package:zaix/models/comic/detail_info.dart';
+import 'package:zaix/models/comic/detail_model.dart';
+import 'package:zaix/models/comic/detail_v1_model.dart';
+import 'package:zaix/models/comic/rank_item_model.dart';
+import 'package:zaix/models/comic/recommend_model.dart';
+import 'package:zaix/models/comic/search_item.dart';
+import 'package:zaix/models/comic/search_model.dart';
+import 'package:zaix/models/comic/special_model.dart';
+import 'package:zaix/models/comic/update_item_model.dart';
+import 'package:zaix/models/comic/view_point_model.dart';
+import 'package:zaix/models/comic/web_search_model.dart';
+import 'package:zaix/models/db/download_status.dart';
+import 'package:zaix/requests/common/api.dart';
+import 'package:zaix/requests/common/http_client.dart';
+import 'package:zaix/services/comic_download_service.dart';
+import 'package:zaix/services/user_service.dart';
 
 import '../models/comic/special_detail_model.dart';
 
@@ -42,8 +42,11 @@ class ComicRequest {
   }
 
   /// 猜你喜欢
-  Future<List<ComicRecommendItemModel>> refreshRecommend(int categoryId,
-      {int page = 1, int size = 3}) async {
+  Future<List<ComicRecommendItemModel>> refreshRecommend(
+    int categoryId, {
+    int page = 1,
+    int size = 3,
+  }) async {
     var result = await HttpClient.instance.getJson(
       '/comic/recommend/more',
       queryParameters: {"cateId": categoryId, "size": size, "page": page},
@@ -64,12 +67,7 @@ class ComicRequest {
       needLogin: true,
       checkCode: true,
       withDefaultParameter: false,
-      queryParameters: {
-        "status": "",
-        "firstLetter": "",
-        "page": 1,
-        "size": 3,
-      },
+      queryParameters: {"status": "", "firstLetter": "", "page": 1, "size": 3},
     );
 
     var list = <ComicRecommendItemModel>[];
@@ -85,8 +83,10 @@ class ComicRequest {
   }
 
   /// 最近更新
-  Future<List<ComicUpdateItemModel>> latest(
-      {required int type, int page = 1}) async {
+  Future<List<ComicUpdateItemModel>> latest({
+    required int type,
+    int page = 1,
+  }) async {
     var result = await HttpClient.instance.getJson(
       '/comic/update/list/$type/$page',
       needLogin: true,
@@ -128,9 +128,7 @@ class ComicRequest {
     for (var item in result["cateList"]) {
       list.add(ComicCategoryFilterItemModel.fromJson(item));
     }
-    return [
-      ComicCategoryFilterModel(title: "全部分类", items: list),
-    ];
+    return [ComicCategoryFilterModel(title: "全部分类", items: list)];
   }
 
   /// 分类下漫画
@@ -144,17 +142,18 @@ class ComicRequest {
     int status = 0,
   }) async {
     var list = <ComicCategoryComicModel>[];
-    var result = await HttpClient.instance.getJson('/comic/filter/list',
-        queryParameters: {
-          "theme": id,
-          "status": 0,
-          "sortType": sort,
-          "page": page,
-          "size": 20,
-        },
-        checkCode: true,
-        needLogin: true // 登录可以更多内容
-        );
+    var result = await HttpClient.instance.getJson(
+      '/comic/filter/list',
+      queryParameters: {
+        "theme": id,
+        "status": 0,
+        "sortType": sort,
+        "page": page,
+        "size": 20,
+      },
+      checkCode: true,
+      needLogin: true, // 登录可以更多内容
+    );
     for (var item in result["comicList"]) {
       list.add(ComicCategoryComicModel.fromJson(item));
     }
@@ -174,7 +173,7 @@ class ComicRequest {
         'tag_id': tagId,
         'by_time': byTime,
         'rank_type': rankType,
-        'page': page
+        'page': page,
       },
     );
     var list = <ComicRankListItemModel>[];
@@ -193,9 +192,7 @@ class ComicRequest {
     );
     Map<int, String> map = {0: "全部分类", 3243: "ゆり"};
     for (var item in result["cateList"]) {
-      map.addAll({
-        item["tagId"]: item["title"],
-      });
+      map.addAll({item["tagId"]: item["title"]});
     }
     return map;
   }
@@ -232,27 +229,18 @@ class ComicRequest {
     if (name.isNotEmpty) {
       var result = await HttpClient.instance.getJson(
         '/search/index',
-        queryParameters: {
-          "keyword": name,
-          "page": 1,
-          "size": 100,
-        },
+        queryParameters: {"keyword": name, "page": 1, "size": 100},
         checkCode: true,
       );
       final items = (result["list"] as List? ?? const [])
           .whereType<Map>()
           .map((item) => Map<String, dynamic>.from(item))
           .toList();
-      return ComicAuthorModel.fromSearch(
-        authorName: name,
-        results: items,
-      );
+      return ComicAuthorModel.fromSearch(authorName: name, results: items);
     }
 
     // 兼容没有作者名称的旧入口。
-    var result = await HttpClient.instance.getJson(
-      '/UCenter/author/$id.json',
-    );
+    var result = await HttpClient.instance.getJson('/UCenter/author/$id.json');
 
     return ComicAuthorModel.fromJson(result);
   }
@@ -266,14 +254,18 @@ class ComicRequest {
     return ComicRelatedModel.fromJson(result);
   }
 
-  Future<ComicDetailInfo> comicDetail(
-      {required int comicId, bool priorityV1 = false}) async {
+  Future<ComicDetailInfo> comicDetail({
+    required int comicId,
+    bool priorityV1 = false,
+  }) async {
     ComicDetailInfo info;
     var errorMsg = "";
     try {
       if (priorityV1) {
-        info = ComicDetailInfo.fromV1(await comicDetailV1(comicId: comicId),
-            isHide: true);
+        info = ComicDetailInfo.fromV1(
+          await comicDetailV1(comicId: comicId),
+          isHide: true,
+        );
       } else {
         info = ComicDetailInfo.fromV4(await comicDetailV4(comicId: comicId));
       }
@@ -283,8 +275,10 @@ class ComicRequest {
         if (priorityV1) {
           info = ComicDetailInfo.fromV4(await comicDetailV4(comicId: comicId));
         } else {
-          info = ComicDetailInfo.fromV1(await comicDetailV1(comicId: comicId),
-              isHide: e.toString() == "漫画不存在");
+          info = ComicDetailInfo.fromV1(
+            await comicDetailV1(comicId: comicId),
+            isHide: e.toString() == "漫画不存在",
+          );
         }
       } catch (e) {
         errorMsg += "\n${priorityV1 ? "V4" : "V1"}：$e";
@@ -295,9 +289,7 @@ class ComicRequest {
   }
 
   /// 漫画详情
-  Future<ComicDetailModel> comicDetailV4({
-    required int comicId,
-  }) async {
+  Future<ComicDetailModel> comicDetailV4({required int comicId}) async {
     var result = await HttpClient.instance.getJson(
       '/comic/detail/$comicId',
       needLogin: true,
@@ -308,9 +300,7 @@ class ComicRequest {
   }
 
   /// 漫画详情
-  Future<ComicDetailV1Model> comicDetailV1({
-    required int comicId,
-  }) async {
+  Future<ComicDetailV1Model> comicDetailV1({required int comicId}) async {
     var result = await HttpClient.instance.getJson(
       '/dynamic/comicinfo/$comicId.json',
       baseUrl: "https://api.dmzj.com",
@@ -329,16 +319,14 @@ class ComicRequest {
   /// 漫画搜索
   /// - [page] 页数从0开始
   /// - [keyword] 关键字
-  Future<List<SearchComicItem>> search(
-      {required String keyword, int page = 1}) async {
+  Future<List<SearchComicItem>> search({
+    required String keyword,
+    int page = 1,
+  }) async {
     var list = <ComicSearchModel>[];
     var result = await HttpClient.instance.getJson(
       '/search/index',
-      queryParameters: {
-        "keyword": keyword,
-        "page": page,
-        "size": 20,
-      },
+      queryParameters: {"keyword": keyword, "page": page, "size": 20},
       checkCode: true,
     );
     for (var item in result["list"]) {
@@ -349,29 +337,27 @@ class ComicRequest {
 
   /// 漫画搜索热词
   Future<Map<int, String>> searchHotWord() async {
-    var result = await HttpClient.instance.getJson(
-      '/search/hot/0.json',
-    );
+    var result = await HttpClient.instance.getJson('/search/hot/0.json');
     Map<int, String> map = {};
     for (var item in result) {
-      map.addAll({
-        item["id"]: item["name"],
-      });
+      map.addAll({item["id"]: item["name"]});
     }
     return map;
   }
 
   /// 章节详情
-  Future<ComicChapterDetail> chapterDetail(
-      {required int comicId,
-      required int chapterId,
-      required bool useHD}) async {
+  Future<ComicChapterDetail> chapterDetail({
+    required int comicId,
+    required int chapterId,
+    required bool useHD,
+  }) async {
     ComicChapterDetail info;
 
     try {
       //查询本地是否存在
-      var localInfo =
-          ComicDownloadService.instance.box.get("${comicId}_$chapterId");
+      var localInfo = ComicDownloadService.instance.box.get(
+        "${comicId}_$chapterId",
+      );
       if (localInfo != null && localInfo.status == DownloadStatus.complete) {
         return ComicChapterDetail.fromDownload(localInfo);
       }
@@ -393,8 +379,10 @@ class ComicRequest {
   }
 
   /// 章节详情-V4
-  Future<ComicChapterDetailModel> chapterDetailV4(
-      {required int comicId, required int chapterId}) async {
+  Future<ComicChapterDetailModel> chapterDetailV4({
+    required int comicId,
+    required int chapterId,
+  }) async {
     var result = await HttpClient.instance.getJson(
       '/comic/chapter/$comicId/$chapterId',
       needLogin: true,
@@ -407,8 +395,10 @@ class ComicRequest {
   }
 
   /// 章节详情-WebAPI
-  Future<ComicChapterDetailWebModel> chapterDetailWeb(
-      {required int comicId, required int chapterId}) async {
+  Future<ComicChapterDetailWebModel> chapterDetailWeb({
+    required int comicId,
+    required int chapterId,
+  }) async {
     var result = await HttpClient.instance.getJson(
       '/chapinfo/$comicId/$chapterId.html',
       baseUrl: "https://m.idmzj.com",
@@ -423,8 +413,10 @@ class ComicRequest {
   }
 
   /// 观点、吐槽
-  Future<List<ComicViewPointModel>> viewPoints(
-      {required int comicId, required int chapterId}) async {
+  Future<List<ComicViewPointModel>> viewPoints({
+    required int comicId,
+    required int chapterId,
+  }) async {
     var list = <ComicViewPointModel>[];
     var result = await HttpClient.instance.getJson(
       '/viewPoint/0/$comicId/$chapterId.json',
@@ -450,11 +442,12 @@ class ComicRequest {
   }
 
   /// 点赞观点、吐槽
-  Future<bool> sendViewPoint(
-      {required int comicId,
-      required int chapterId,
-      required String content,
-      required int page}) async {
+  Future<bool> sendViewPoint({
+    required int comicId,
+    required int chapterId,
+    required String content,
+    required int page,
+  }) async {
     await HttpClient.instance.postJson(
       '/viewPoint/addv2',
       checkCode: true,
@@ -478,9 +471,7 @@ class ComicRequest {
     var result = await HttpClient.instance.getText(
       'http://sacg.idmzj.com/comicsum/search.php',
       baseUrl: "",
-      queryParameters: {
-        "s": keyword,
-      },
+      queryParameters: {"s": keyword},
     );
     var data = jsonDecode(result.substring(20, result.lastIndexOf(';')));
     for (var item in data) {

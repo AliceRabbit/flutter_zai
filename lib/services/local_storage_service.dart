@@ -1,6 +1,6 @@
-import 'package:flutter_dmzj/app/log.dart';
+import 'package:zaix/app/log.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 // ignore: depend_on_referenced_packages
@@ -96,10 +96,7 @@ class LocalStorageService extends GetxService {
   late Box settingsBox;
   Future init() async {
     var dir = await getApplicationSupportDirectory();
-    settingsBox = await Hive.openBox(
-      "LocalStorage",
-      path: dir.path,
-    );
+    settingsBox = await Hive.openBox("LocalStorage", path: dir.path);
   }
 
   T getValue<T>(dynamic key, T defaultValue) {
@@ -149,8 +146,10 @@ class LocalStorageService extends GetxService {
     }
   }
 
-  Future<String?> getNovelContent(
-      {required int volumeId, required int chapterId}) async {
+  Future<String?> getNovelContent({
+    required int volumeId,
+    required int chapterId,
+  }) async {
     try {
       var novelDir = await getNovelCacheDirectory();
       var fileName = p.join(novelDir.path, "${volumeId}_$chapterId.txt");

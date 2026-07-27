@@ -55,16 +55,16 @@ class ComicSearchModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'authors': authors,
-        'copyright': copyright,
-        'cover': cover,
-        'hot_hits': hotHits,
-        'last_name': lastName,
-        'status': status,
-        'title': title,
-        'types': types,
-        'alias_name': aliasName,
-        'comic_py': comicPy,
-      };
+    'id': id,
+    'authors': authors,
+    'copyright': copyright,
+    'cover': cover,
+    'hot_hits': hotHits,
+    'last_name': lastName,
+    'status': status,
+    'title': title,
+    'types': types,
+    'alias_name': aliasName,
+    'comic_py': comicPy,
+  };
 }

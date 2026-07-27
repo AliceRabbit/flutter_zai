@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter_dmzj/app/event_bus.dart';
+import 'package:zaix/app/event_bus.dart';
 
-import 'package:flutter_dmzj/models/db/novel_history.dart';
-import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/novel_download_service.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
+import 'package:zaix/models/db/novel_history.dart';
+import 'package:zaix/models/novel/novel_detail_model.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/services/novel_download_service.dart';
+import 'package:zaix/services/db_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -164,8 +164,11 @@ class NovelDownloadedDetailController extends GetxController {
 
   void delete() {
     for (var item in selectItems) {
-      NovelDownloadService.instance
-          .deleteChapter(info.novelId, item.volumeId, item.chapterId);
+      NovelDownloadService.instance.deleteChapter(
+        info.novelId,
+        item.volumeId,
+        item.chapterId,
+      );
     }
     exitEditMode();
     SmartDialog.showToast("删除成功");
@@ -174,7 +177,7 @@ class NovelDownloadedDetailController extends GetxController {
 
   void selectItem(NovelDetailChapter item) {
     if (selectItems.contains(item)) {
-      selectItems.remove(item.chapterId);
+      selectItems.remove(item);
     } else {
       selectItems.add(item);
     }

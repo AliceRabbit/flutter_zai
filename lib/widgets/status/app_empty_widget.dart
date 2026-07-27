@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:zaix/app/app_style.dart';
 import 'package:lottie/lottie.dart';
 
 class AppEmptyWidget extends StatelessWidget {
   final Function()? onRefresh;
-  const AppEmptyWidget({this.onRefresh, Key? key}) : super(key: key);
+  const AppEmptyWidget({this.onRefresh, super.key});
 
   @override
   Widget build(BuildContext context) {

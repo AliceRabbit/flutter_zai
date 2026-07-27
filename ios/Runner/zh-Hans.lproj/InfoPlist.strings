@@ -6,4 +6,4 @@
   
 */
 "CFBundleDisplayName" = "ZAI-X";
-"NSPhotoLibraryUsageDescription" = "保存图片至相册";
+"NSPhotoLibraryAddUsageDescription" = "保存图片至相册";

@@ -8,7 +8,7 @@ part of 'novel_history.dart';
 
 class NovelHistoryAdapter extends TypeAdapter<NovelHistory> {
   @override
-  final int typeId = 2;
+  final typeId = 2;
 
   @override
   NovelHistory read(BinaryReader reader) {
@@ -17,15 +17,15 @@ class NovelHistoryAdapter extends TypeAdapter<NovelHistory> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return NovelHistory(
-      novelId: fields[0] as int,
-      chapterId: fields[1] as int,
+      novelId: (fields[0] as num).toInt(),
+      chapterId: (fields[1] as num).toInt(),
       novelName: fields[2] as String,
       novelCover: fields[3] as String,
       chapterName: fields[4] as String,
       updateTime: fields[9] as DateTime,
-      index: fields[5] as int,
-      total: fields[6] as int,
-      volumeId: fields[7] as int,
+      index: (fields[5] as num).toInt(),
+      total: (fields[6] as num).toInt(),
+      volumeId: (fields[7] as num).toInt(),
       volumeName: fields[8] as String,
     );
   }

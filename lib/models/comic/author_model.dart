@@ -16,13 +16,15 @@ class ComicAuthorModel {
   });
 
   factory ComicAuthorModel.fromJson(Map<String, dynamic> json) {
-    final List<ComicAuthorComicModel>? data =
-        json['data'] is List ? <ComicAuthorComicModel>[] : null;
+    final List<ComicAuthorComicModel>? data = json['data'] is List
+        ? <ComicAuthorComicModel>[]
+        : null;
     if (data != null) {
       for (final dynamic item in json['data']!) {
         if (item != null) {
           data.add(
-              ComicAuthorComicModel.fromJson(asT<Map<String, dynamic>>(item)!));
+            ComicAuthorComicModel.fromJson(asT<Map<String, dynamic>>(item)!),
+          );
         }
       }
     }
@@ -43,7 +45,8 @@ class ComicAuthorModel {
 
     for (final item in results) {
       final authors = asT<String?>(item['authors']) ?? "";
-      final matches = _normalizeAuthorName(authors) == normalizedAuthorName ||
+      final matches =
+          _normalizeAuthorName(authors) == normalizedAuthorName ||
           authors
               .split(RegExp(r'[/／,，、;；&＆]'))
               .map(_normalizeAuthorName)
@@ -62,7 +65,8 @@ class ComicAuthorModel {
           id: id,
           name: name,
           cover: asT<String?>(item['cover']) ?? "",
-          status: asT<String?>(item['status']) ??
+          status:
+              asT<String?>(item['status']) ??
               asT<String?>(item['last_name']) ??
               "",
         ),
@@ -88,11 +92,11 @@ class ComicAuthorModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'nickname': nickname,
-        'description': description,
-        'cover': cover,
-        'data': data,
-      };
+    'nickname': nickname,
+    'description': description,
+    'cover': cover,
+    'data': data,
+  };
 }
 
 String _normalizeAuthorName(String value) =>
@@ -125,9 +129,9 @@ class ComicAuthorComicModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'name': name,
-        'cover': cover,
-        'status': status,
-      };
+    'id': id,
+    'name': name,
+    'cover': cover,
+    'status': status,
+  };
 }

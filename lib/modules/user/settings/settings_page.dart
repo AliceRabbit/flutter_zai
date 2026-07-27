@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/modules/user/settings/settings_controller.dart';
+import 'package:zaix/app/app_color.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/modules/user/settings/settings_controller.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
@@ -26,8 +26,9 @@ class SettingsPage extends StatelessWidget {
               indicatorSize: TabBarIndicatorSize.label,
               indicatorColor: Theme.of(context).colorScheme.primary,
               labelColor: Theme.of(context).colorScheme.primary,
-              unselectedLabelColor:
-                  Get.isDarkMode ? Colors.white70 : Colors.black87,
+              unselectedLabelColor: Get.isDarkMode
+                  ? Colors.white70
+                  : Colors.black87,
               tabs: const [
                 Tab(text: "常规"),
                 Tab(text: "漫画"),
@@ -67,10 +68,7 @@ class SettingsPage extends StatelessWidget {
           ListTile(
             title: const Text("清除小说缓存"),
             subtitle: Text(controller.novelCacheSize.value),
-            trailing: OutlinedButton(
-              onPressed: () {},
-              child: const Text("清除"),
-            ),
+            trailing: OutlinedButton(onPressed: () {}, child: const Text("清除")),
           ),
           // SwitchListTile(
           //   value: controller.settings.comicSearchUseWebApi.value,
@@ -141,7 +139,7 @@ class SettingsPage extends StatelessWidget {
                   },
                   selected: controller.settings.comicReaderDirection.value == 1,
                   child: const Icon(Remix.arrow_down_line),
-                )
+                ),
               ],
             ),
           ),
@@ -225,7 +223,7 @@ class SettingsPage extends StatelessWidget {
                   },
                   selected: controller.settings.novelReaderDirection.value == 1,
                   child: const Icon(Remix.arrow_down_line),
-                )
+                ),
               ],
             ),
           ),
@@ -269,10 +267,7 @@ class SettingsPage extends StatelessWidget {
                       controller.settings.novelReaderFontSize.value + 1,
                     );
                   },
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.grey,
-                  ),
+                  child: const Icon(Icons.add, color: Colors.grey),
                 ),
                 AppStyle.hGap12,
                 Text("${controller.settings.novelReaderFontSize.value}"),
@@ -283,10 +278,7 @@ class SettingsPage extends StatelessWidget {
                       controller.settings.novelReaderFontSize.value - 1,
                     );
                   },
-                  child: const Icon(
-                    Icons.remove,
-                    color: Colors.grey,
-                  ),
+                  child: const Icon(Icons.remove, color: Colors.grey),
                 ),
               ],
             ),
@@ -302,14 +294,13 @@ class SettingsPage extends StatelessWidget {
                       controller.settings.novelReaderLineSpacing.value + 0.1,
                     );
                   },
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.grey,
-                  ),
+                  child: const Icon(Icons.add, color: Colors.grey),
                 ),
                 AppStyle.hGap12,
-                Text((controller.settings.novelReaderLineSpacing.value)
-                    .toStringAsFixed(1)),
+                Text(
+                  (controller.settings.novelReaderLineSpacing.value)
+                      .toStringAsFixed(1),
+                ),
                 AppStyle.hGap12,
                 OutlinedButton(
                   onPressed: () {
@@ -317,10 +308,7 @@ class SettingsPage extends StatelessWidget {
                       controller.settings.novelReaderLineSpacing.value - 0.1,
                     );
                   },
-                  child: const Icon(
-                    Icons.remove,
-                    color: Colors.grey,
-                  ),
+                  child: const Icon(Icons.remove, color: Colors.grey),
                 ),
               ],
             ),
@@ -346,7 +334,7 @@ class SettingsPage extends StatelessWidget {
                         child: Visibility(
                           visible:
                               AppColor.novelThemes.keys.toList().indexOf(e) ==
-                                  controller.settings.novelReaderTheme.value,
+                              controller.settings.novelReaderTheme.value,
                           child: Icon(
                             Icons.check,
                             color: AppColor.novelThemes[e]!.last,
@@ -364,7 +352,8 @@ class SettingsPage extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: AppStyle.radius4,
               color: AppColor
-                  .novelThemes[controller.settings.novelReaderTheme]!.first,
+                  .novelThemes[controller.settings.novelReaderTheme.value]!
+                  .first,
             ),
             child: Text(
               """这是一段测试文字，可以预览上面的设置效果。
@@ -374,11 +363,12 @@ class SettingsPage extends StatelessWidget {
               //不需要跟随系统
               textScaler: const TextScaler.linear(1.0),
               style: TextStyle(
-                fontSize:
-                    controller.settings.novelReaderFontSize.value.toDouble(),
+                fontSize: controller.settings.novelReaderFontSize.value
+                    .toDouble(),
                 height: controller.settings.novelReaderLineSpacing.value,
                 color: AppColor
-                    .novelThemes[controller.settings.novelReaderTheme]!.last,
+                    .novelThemes[controller.settings.novelReaderTheme.value]!
+                    .last,
               ),
             ),
           ),
@@ -413,10 +403,7 @@ class SettingsPage extends StatelessWidget {
                       : controller.settings.downloadComicTaskCount.toString(),
                 ),
                 AppStyle.hGap4,
-                const Icon(
-                  Icons.chevron_right,
-                  color: Colors.grey,
-                ),
+                const Icon(Icons.chevron_right, color: Colors.grey),
               ],
             ),
           ),
@@ -434,10 +421,7 @@ class SettingsPage extends StatelessWidget {
                       : controller.settings.downloadNovelTaskCount.toString(),
                 ),
                 AppStyle.hGap4,
-                const Icon(
-                  Icons.chevron_right,
-                  color: Colors.grey,
-                ),
+                const Icon(Icons.chevron_right, color: Colors.grey),
               ],
             ),
           ),
@@ -446,14 +430,15 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget buildSelectedButton(
-      {required Widget child, bool selected = false, Function()? onTap}) {
+  Widget buildSelectedButton({
+    required Widget child,
+    bool selected = false,
+    Function()? onTap,
+  }) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         foregroundColor: selected ? Colors.blue : Colors.grey,
-        side: BorderSide(
-          color: selected ? Colors.blue : Colors.grey,
-        ),
+        side: BorderSide(color: selected ? Colors.blue : Colors.grey),
       ),
       onPressed: onTap,
       child: child,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
+import 'package:zaix/app/app_constant.dart';
 
 class EmptyPage extends StatelessWidget {
-  const EmptyPage({Key? key}) : super(key: key);
+  const EmptyPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,10 +11,7 @@ class EmptyPage extends StatelessWidget {
         : Scaffold(
             resizeToAvoidBottomInset: false,
             body: Center(
-              child: Image.asset(
-                "assets/images/logo_dmzj.png",
-                height: 80,
-              ),
+              child: Image.asset("assets/images/logo_dmzj.png", height: 80),
             ),
           );
   }

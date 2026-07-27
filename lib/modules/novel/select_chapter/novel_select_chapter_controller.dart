@@ -1,9 +1,9 @@
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/models/novel/novel_detail_model.dart';
 
-import 'package:flutter_dmzj/requests/novel_request.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/novel_download_service.dart';
+import 'package:zaix/requests/novel_request.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/services/novel_download_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -38,9 +38,7 @@ class NovelSelectChapterController extends BaseController {
       var ls = chpaterResult.map((e) => NovelDetailVolume.fromJson(e)).toList();
       selectIds.value = {};
       for (var item in ls) {
-        selectIds.addAll({
-          item.volumeId: RxSet<int>(),
-        });
+        selectIds.addAll({item.volumeId: RxSet<int>()});
       }
       volumes.value = ls;
     } catch (e) {
@@ -96,8 +94,9 @@ class NovelSelectChapterController extends BaseController {
       NovelDetailVolume? volume;
       NovelDetailChapter? chapter;
       for (var item in volumes) {
-        var chapterItem =
-            item.chapters.firstWhereOrNull((y) => y.chapterId == id);
+        var chapterItem = item.chapters.firstWhereOrNull(
+          (y) => y.chapterId == id,
+        );
         if (chapterItem != null) {
           volume = item;
           chapter = chapterItem;

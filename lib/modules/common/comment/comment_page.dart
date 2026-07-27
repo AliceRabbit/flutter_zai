@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/modules/common/comment/comment_list_view.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/modules/common/comment/comment_list_view.dart';
+import 'package:zaix/routes/app_navigator.dart';
 import 'package:get/get.dart';
 
 class CommentPage extends StatelessWidget {
   final int objId;
   final int type;
-  const CommentPage({required this.objId, required this.type, Key? key})
-      : super(key: key);
+  const CommentPage({required this.objId, required this.type, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +24,9 @@ class CommentPage extends StatelessWidget {
               indicatorSize: TabBarIndicatorSize.label,
               indicatorColor: Theme.of(context).colorScheme.primary,
               labelColor: Theme.of(context).colorScheme.primary,
-              unselectedLabelColor:
-                  Get.isDarkMode ? Colors.white70 : Colors.black87,
+              unselectedLabelColor: Get.isDarkMode
+                  ? Colors.white70
+                  : Colors.black87,
               tabs: const [
                 Tab(text: "最新评论"),
                 Tab(text: "热门评论"),

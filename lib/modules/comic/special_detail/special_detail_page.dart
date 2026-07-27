@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/comic/special_detail_model.dart';
-import 'package:flutter_dmzj/modules/comic/special_detail/special_detail_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
+import 'package:zaix/app/app_constant.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/models/comic/special_detail_model.dart';
+import 'package:zaix/modules/comic/special_detail/special_detail_controller.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/services/user_service.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/status/app_error_widget.dart';
+import 'package:zaix/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
@@ -15,18 +15,13 @@ class SpecialDetailPage extends StatelessWidget {
   final int id;
   final SpecialDetailController controller;
   SpecialDetailPage(this.id, {super.key})
-      : controller = Get.put(
-          SpecialDetailController(id),
-          tag: "$id",
-        );
+    : controller = Get.put(SpecialDetailController(id), tag: "$id");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Obx(
-          () => Text(controller.detail.value?.title ?? "专题"),
-        ),
+        title: Obx(() => Text(controller.detail.value?.title ?? "专题")),
       ),
       body: Obx(
         () => Stack(
@@ -39,7 +34,7 @@ class SpecialDetailPage extends StatelessWidget {
                 separatorBuilder: (context, i) => Divider(
                   endIndent: 12,
                   indent: 12,
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.grey.withValues(alpha: .2),
                   height: 1,
                 ),
                 itemBuilder: (_, i) {
@@ -80,10 +75,7 @@ class SpecialDetailPage extends StatelessWidget {
                     textStyle: const TextStyle(fontSize: 14),
                   ),
                   onPressed: controller.subscribeAll,
-                  icon: const Icon(
-                    Remix.heart_line,
-                    size: 20,
-                  ),
+                  icon: const Icon(Remix.heart_line, size: 20),
                   label: const Text("订阅全部"),
                 ),
               ),
@@ -94,12 +86,10 @@ class SpecialDetailPage extends StatelessWidget {
                       textStyle: const TextStyle(fontSize: 14),
                     ),
                     onPressed: controller.comment,
-                    icon: const Icon(
-                      Remix.chat_2_line,
-                      size: 20,
-                    ),
+                    icon: const Icon(Remix.chat_2_line, size: 20),
                     label: Text(
-                        "评论(${controller.detail.value?.commentAmount ?? 0})"),
+                      "评论(${controller.detail.value?.commentAmount ?? 0})",
+                    ),
                   ),
                 ),
               ),
@@ -109,10 +99,7 @@ class SpecialDetailPage extends StatelessWidget {
                     textStyle: const TextStyle(fontSize: 14),
                   ),
                   onPressed: controller.share,
-                  icon: const Icon(
-                    Remix.share_box_line,
-                    size: 20,
-                  ),
+                  icon: const Icon(Remix.share_box_line, size: 20),
                   label: const Text("分享"),
                 ),
               ),
@@ -133,28 +120,23 @@ class SpecialDetailPage extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            NetImage(
-              item.cover,
-              width: 80,
-              height: 110,
-              borderRadius: 4,
-            ),
+            NetImage(item.cover, width: 80, height: 110, borderRadius: 4),
             AppStyle.hGap12,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Text(item.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  AppStyle.vGap4,
                   Text(
-                    item.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    item.recommendBrief,
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
                   ),
                   AppStyle.vGap4,
-                  Text(item.recommendBrief,
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
-                  AppStyle.vGap4,
-                  Text(item.recommendReason,
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                  Text(
+                    item.recommendReason,
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
                 ],
               ),
             ),
@@ -164,23 +146,21 @@ class SpecialDetailPage extends StatelessWidget {
                     ? IconButton(
                         icon: const Icon(Icons.favorite),
                         onPressed: () {
-                          UserService.instance.cancelSubscribe(
-                            [item.id],
-                            AppConstant.kTypeComic,
-                          );
+                          UserService.instance.cancelSubscribe([
+                            item.id,
+                          ], AppConstant.kTypeComic);
                         },
                       )
                     : IconButton(
                         icon: const Icon(Icons.favorite_border),
                         onPressed: () {
-                          UserService.instance.addSubscribe(
-                            [item.id],
-                            AppConstant.kTypeComic,
-                          );
+                          UserService.instance.addSubscribe([
+                            item.id,
+                          ], AppConstant.kTypeComic);
                         },
                       ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -197,9 +177,7 @@ class SpecialDetailPage extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            constraints: const BoxConstraints(
-              maxWidth: 500,
-            ),
+            constraints: const BoxConstraints(maxWidth: 500),
             child: AspectRatio(
               aspectRatio: 710 / 354,
               child: NetImage(
@@ -211,9 +189,7 @@ class SpecialDetailPage extends StatelessWidget {
             ),
           ),
           AppStyle.vGap12,
-          Text(
-            detail.description,
-          ),
+          Text(detail.description),
         ],
       ),
     );

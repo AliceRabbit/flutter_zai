@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/comment/comment_item.dart';
-import 'package:flutter_dmzj/requests/comment_request.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/models/comment/comment_item.dart';
+import 'package:zaix/requests/comment_request.dart';
+import 'package:zaix/routes/app_navigator.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 class AddCommentController extends BaseController {

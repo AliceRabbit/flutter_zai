@@ -1,7 +1,7 @@
-import 'package:flutter_dmzj/models/comic/chapter_detail_model.dart';
-import 'package:flutter_dmzj/models/comic/chapter_detail_web_model.dart';
-import 'package:flutter_dmzj/models/db/comic_download_info.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
+import 'package:zaix/models/comic/chapter_detail_model.dart';
+import 'package:zaix/models/comic/chapter_detail_web_model.dart';
+import 'package:zaix/models/db/comic_download_info.dart';
+import 'package:zaix/services/comic_download_service.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
@@ -19,15 +19,15 @@ class ComicChapterDetail {
     this.isLocal = false,
   });
   factory ComicChapterDetail.empty() => ComicChapterDetail(
-        chapterId: 0,
-        comicId: 0,
-        chapterOrder: 0,
-        direction: 0,
-        chapterTitle: "",
-        pageUrls: [],
-        picnum: 0,
-        commentCount: 0,
-      );
+    chapterId: 0,
+    comicId: 0,
+    chapterOrder: 0,
+    direction: 0,
+    chapterTitle: "",
+    pageUrls: [],
+    picnum: 0,
+    commentCount: 0,
+  );
   factory ComicChapterDetail.fromWebApi(ComicChapterDetailWebModel item) =>
       ComicChapterDetail(
         chapterId: item.id,
@@ -63,8 +63,13 @@ class ComicChapterDetail {
         direction: 1,
         chapterTitle: item.chapterName,
         pageUrls: item.files
-            .map((e) =>
-                p.join(ComicDownloadService.instance.savePath, item.taskId, e))
+            .map(
+              (e) => p.join(
+                ComicDownloadService.instance.savePath,
+                item.taskId,
+                e,
+              ),
+            )
             .toList(),
         picnum: item.files.length,
         commentCount: 0,

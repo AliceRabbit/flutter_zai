@@ -1,4 +1,4 @@
-import 'package:flutter_dmzj/models/comic/author_model.dart';
+import 'package:zaix/models/comic/author_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

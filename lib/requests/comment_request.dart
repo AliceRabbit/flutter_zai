@@ -1,9 +1,9 @@
-import 'package:flutter_dmzj/app/app_error.dart';
-import 'package:flutter_dmzj/models/comment/comment_item.dart';
-import 'package:flutter_dmzj/models/comment/user_comment_item.dart';
-import 'package:flutter_dmzj/requests/common/api.dart';
-import 'package:flutter_dmzj/requests/common/http_client.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/app_error.dart';
+import 'package:zaix/models/comment/comment_item.dart';
+import 'package:zaix/models/comment/user_comment_item.dart';
+import 'package:zaix/requests/common/api.dart';
+import 'package:zaix/requests/common/http_client.dart';
+import 'package:zaix/services/user_service.dart';
 import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
 
@@ -111,7 +111,7 @@ class CommentRequest {
         "sender_terminal": 1,
         "content": content,
         "dmzj_token": UserService.instance.dmzjToken,
-        "_debug": 0
+        "_debug": 0,
       },
     );
     if (result["code"] != 0) {
@@ -129,11 +129,7 @@ class CommentRequest {
     await HttpClient.instance.getJson(
       "/v1/$type/like/$commentId",
       baseUrl: Api.BASE_URL,
-      queryParameters: {
-        "comment_id": commentId,
-        "obj_id": objId,
-        "type": type,
-      },
+      queryParameters: {"comment_id": commentId, "obj_id": objId, "type": type},
       needLogin: true,
       withDefaultParameter: true,
       checkCode: true,

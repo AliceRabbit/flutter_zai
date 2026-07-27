@@ -15,31 +15,40 @@ class ComicDetailV1Model {
   });
 
   factory ComicDetailV1Model.fromJson(Map<String, dynamic> json) {
-    final List<ComicDetailV1ChapterModel>? list =
-        json['list'] is List ? <ComicDetailV1ChapterModel>[] : null;
+    final List<ComicDetailV1ChapterModel>? list = json['list'] is List
+        ? <ComicDetailV1ChapterModel>[]
+        : null;
     if (list != null) {
       for (final dynamic item in json['list']!) {
         if (item != null) {
-          list.add(ComicDetailV1ChapterModel.fromJson(
-              asT<Map<String, dynamic>>(item)!));
+          list.add(
+            ComicDetailV1ChapterModel.fromJson(
+              asT<Map<String, dynamic>>(item)!,
+            ),
+          );
         }
       }
     }
 
-    final List<ComicDetailV1ChapterModel>? alone =
-        json['alone'] is List ? <ComicDetailV1ChapterModel>[] : null;
+    final List<ComicDetailV1ChapterModel>? alone = json['alone'] is List
+        ? <ComicDetailV1ChapterModel>[]
+        : null;
     if (alone != null) {
       for (final dynamic item in json['alone']!) {
         if (item != null) {
-          alone.add(ComicDetailV1ChapterModel.fromJson(
-              asT<Map<String, dynamic>>(item)!));
+          alone.add(
+            ComicDetailV1ChapterModel.fromJson(
+              asT<Map<String, dynamic>>(item)!,
+            ),
+          );
         }
       }
     }
 
     return ComicDetailV1Model(
       info: ComicDetailV1InfoModel.fromJson(
-          asT<Map<String, dynamic>>(json['info'])!),
+        asT<Map<String, dynamic>>(json['info'])!,
+      ),
       list: list!,
       alone: alone!,
     );
@@ -55,10 +64,10 @@ class ComicDetailV1Model {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'info': info,
-        'list': list,
-        'alone': alone,
-      };
+    'info': info,
+    'list': list,
+    'alone': alone,
+  };
 }
 
 class ComicDetailV1InfoModel {
@@ -121,22 +130,22 @@ class ComicDetailV1InfoModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'title': title,
-        'subtitle': subtitle,
-        'types': types,
-        'zone': zone,
-        'status': status,
-        'last_update_chapter_name': lastUpdateChapterName,
-        'last_updatetime': lastUpdatetime,
-        'cover': cover,
-        'authors': authors,
-        'description': description,
-        'first_letter': firstLetter,
-        'direction': direction,
-        'islong': islong,
-        'copyright': copyright,
-      };
+    'id': id,
+    'title': title,
+    'subtitle': subtitle,
+    'types': types,
+    'zone': zone,
+    'status': status,
+    'last_update_chapter_name': lastUpdateChapterName,
+    'last_updatetime': lastUpdatetime,
+    'cover': cover,
+    'authors': authors,
+    'description': description,
+    'first_letter': firstLetter,
+    'direction': direction,
+    'islong': islong,
+    'copyright': copyright,
+  };
 }
 
 class ComicDetailV1ChapterModel {
@@ -175,12 +184,12 @@ class ComicDetailV1ChapterModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'comic_id': comicId,
-        'chapter_name': chapterName,
-        'chapter_order': chapterOrder,
-        'filesize': filesize,
-        'createtime': createtime,
-        'updatetime': updatetime,
-      };
+    'id': id,
+    'comic_id': comicId,
+    'chapter_name': chapterName,
+    'chapter_order': chapterOrder,
+    'filesize': filesize,
+    'createtime': createtime,
+    'updatetime': updatetime,
+  };
 }

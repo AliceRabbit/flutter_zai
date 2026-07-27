@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.xycz" "\0"
-            VALUE "FileDescription", "flutter_dmzj" "\0"
+            VALUE "CompanyName", "AliceRabbit" "\0"
+            VALUE "FileDescription", "ZAI-X" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "flutter_dmzj" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 com.xycz. All rights reserved." "\0"
-            VALUE "OriginalFilename", "flutter_dmzj.exe" "\0"
-            VALUE "ProductName", "flutter_dmzj" "\0"
+            VALUE "InternalName", "ZAI-X" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 AliceRabbit. All rights reserved." "\0"
+            VALUE "OriginalFilename", "ZAI-X.exe" "\0"
+            VALUE "ProductName", "ZAI-X" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

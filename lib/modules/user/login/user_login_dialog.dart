@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/modules/user/login/user_login_controller.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/modules/user/login/user_login_controller.dart';
 import 'package:get/get.dart';
 
 class UserLoginDialog extends StatelessWidget {
   final UserLoginController controller = Get.put(UserLoginController());
-  UserLoginDialog({Key? key}) : super(key: key);
+  UserLoginDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: AppStyle.radius12,
-      ),
+      shape: RoundedRectangleBorder(borderRadius: AppStyle.radius12),
       child: Container(
-        constraints: const BoxConstraints(
-          maxWidth: 400,
-        ),
+        constraints: const BoxConstraints(maxWidth: 400),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -77,8 +73,9 @@ class UserLoginDialog extends StatelessWidget {
                         borderRadius: AppStyle.radius24,
                       ),
                     ),
-                    onPressed:
-                        controller.loadding.value ? null : controller.login,
+                    onPressed: controller.loadding.value
+                        ? null
+                        : controller.login,
                     child: controller.loadding.value
                         ? const SizedBox(
                             width: 24,

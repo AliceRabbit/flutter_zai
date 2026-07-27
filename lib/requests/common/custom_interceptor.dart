@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_dmzj/app/log.dart';
+import 'package:zaix/app/log.dart';
 
 class CustomInterceptor extends Interceptor {
   @override
@@ -12,7 +12,8 @@ class CustomInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) {
     var time =
         DateTime.now().millisecondsSinceEpoch - err.requestOptions.extra["ts"];
-    Log.e('''【HTTP请求错误】 耗时:${time}ms
+    Log.e(
+      '''【HTTP请求错误】 耗时:${time}ms
 Request Method：${err.requestOptions.method}
 Response Code：${err.response?.statusCode}
 Request URL：${err.requestOptions.uri}
@@ -20,25 +21,26 @@ Request Query：${err.requestOptions.queryParameters}
 Request Data：${err.requestOptions.data}
 Request Headers：${err.requestOptions.headers}
 Response Headers：${err.response?.headers.map}
-Response Data：${err.response?.data}''', err.stackTrace);
+Response Data：${err.response?.data}''',
+      error: err,
+      stackTrace: err.stackTrace,
+    );
     super.onError(err, handler);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    var time = DateTime.now().millisecondsSinceEpoch -
+    var time =
+        DateTime.now().millisecondsSinceEpoch -
         response.requestOptions.extra["ts"];
     if (response.requestOptions.uri.toString().contains(".txt")) {
-      Log.i(
-        '''【HTTP请求响应】 耗时:${time}ms
+      Log.i('''【HTTP请求响应】 耗时:${time}ms
 Request Method：${response.requestOptions.method}
 Request Code：${response.statusCode}
-Request URL：${response.requestOptions.uri}''',
-      );
+Request URL：${response.requestOptions.uri}''');
       return super.onResponse(response, handler);
     }
-    Log.i(
-      '''【HTTP请求响应】 耗时:${time}ms
+    Log.i('''【HTTP请求响应】 耗时:${time}ms
 Request Method：${response.requestOptions.method}
 Request Code：${response.statusCode}
 Request URL：${response.requestOptions.uri}
@@ -46,8 +48,7 @@ Request Query：${response.requestOptions.queryParameters}
 Request Data：${response.requestOptions.data}
 Request Headers：${response.requestOptions.headers}
 Response Headers：${response.headers.map}
-Response Data：${response.data}''',
-    );
+Response Data：${response.data}''');
     super.onResponse(response, handler);
   }
 }

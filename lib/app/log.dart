@@ -13,25 +13,33 @@ class Log {
     ),
   );
 
-  static d(String message) {
+  static void d(String message) {
     logger.d("${DateTime.now().toString()}\n$message");
   }
 
-  static i(String message) {
+  static void i(String message) {
     logger.i("${DateTime.now().toString()}\n$message");
   }
 
-  static e(String message, StackTrace stackTrace) {
-    logger.e("${DateTime.now().toString()}\n$message", stackTrace: stackTrace);
+  static void e(String message, {Object? error, StackTrace? stackTrace}) {
+    logger.e(
+      "${DateTime.now().toString()}\n$message",
+      error: error,
+      stackTrace: stackTrace,
+    );
   }
 
-  static w(String message) {
+  static void w(String message) {
     logger.w("${DateTime.now().toString()}\n$message");
   }
 
   static void logPrint(dynamic obj) {
     if (obj is Error) {
-      Log.e(obj.toString(), obj.stackTrace ?? StackTrace.current);
+      Log.e(
+        obj.toString(),
+        error: obj,
+        stackTrace: obj.stackTrace ?? StackTrace.current,
+      );
     } else if (kDebugMode) {
       print(obj);
     }

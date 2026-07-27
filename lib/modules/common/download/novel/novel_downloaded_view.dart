@@ -1,15 +1,15 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/routes/app_navigator.dart';
 
-import 'package:flutter_dmzj/services/novel_download_service.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/status/app_empty_widget.dart';
+import 'package:zaix/services/novel_download_service.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/status/app_empty_widget.dart';
 import 'package:get/get.dart';
 
 class NovelDownloadedView extends StatelessWidget {
-  const NovelDownloadedView({Key? key}) : super(key: key);
+  const NovelDownloadedView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class NovelDownloadedView extends StatelessWidget {
               separatorBuilder: (_, i) => Divider(
                 endIndent: 12,
                 indent: 12,
-                color: Colors.grey.withOpacity(.2),
+                color: Colors.grey.withValues(alpha: .2),
                 height: 1,
               ),
               itemBuilder: (_, i) {
@@ -58,11 +58,7 @@ class NovelDownloadedView extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            NetImage(
-              item.novelCover,
-              width: 60,
-              borderRadius: 4,
-            ),
+            NetImage(item.novelCover, width: 60, borderRadius: 4),
             AppStyle.hGap12,
             Expanded(
               child: Column(

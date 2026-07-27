@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/utils.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -10,9 +10,12 @@ class AppErrorWidget extends StatelessWidget {
   final Function()? onRefresh;
   final String errorMsg;
   final Error? error;
-  const AppErrorWidget(
-      {this.errorMsg = "", this.onRefresh, this.error, Key? key})
-      : super(key: key);
+  const AppErrorWidget({
+    this.errorMsg = "",
+    this.onRefresh,
+    this.error,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,8 @@ class AppErrorWidget extends StatelessWidget {
                     ),
                     onPressed: () {
                       Utils.copyText(
-                          "$errorMsg\n${error?.stackTrace?.toString()}");
+                        "$errorMsg\n${error?.stackTrace?.toString()}",
+                      );
                       SmartDialog.showToast("已复制详细信息");
                     },
                     child: const Text("复制详细信息"),

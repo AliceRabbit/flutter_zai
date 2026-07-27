@@ -58,14 +58,14 @@ class NovelRankModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'last_update_time': lastUpdateTime,
-        'name': name,
-        'types': types,
-        'cover': cover,
-        'authors': authors,
-        'last_update_chapter_name': lastUpdateChapterName,
-        'top': top,
-        'subscribe_amount': subscribeAmount,
-      };
+    'id': id,
+    'last_update_time': lastUpdateTime,
+    'name': name,
+    'types': types,
+    'cover': cover,
+    'authors': authors,
+    'last_update_chapter_name': lastUpdateChapterName,
+    'top': top,
+    'subscribe_amount': subscribeAmount,
+  };
 }

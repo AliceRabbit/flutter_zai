@@ -21,8 +21,11 @@ class NovelVolumeDetailModel {
     if (chapters != null) {
       for (final dynamic item in json['chapters']!) {
         if (item != null) {
-          chapters.add(NovelVolumeDetailChapterModel.fromJson(
-              asT<Map<String, dynamic>>(item)!));
+          chapters.add(
+            NovelVolumeDetailChapterModel.fromJson(
+              asT<Map<String, dynamic>>(item)!,
+            ),
+          );
         }
       }
     }
@@ -45,11 +48,11 @@ class NovelVolumeDetailModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'volume_id': volumeId,
-        'volume_name': volumeName,
-        'volume_order': volumeOrder,
-        'chapters': chapters,
-      };
+    'volume_id': volumeId,
+    'volume_name': volumeName,
+    'volume_order': volumeOrder,
+    'chapters': chapters,
+  };
 }
 
 class NovelVolumeDetailChapterModel {
@@ -76,8 +79,8 @@ class NovelVolumeDetailChapterModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'chapter_id': chapterId,
-        'chapter_name': chapterName,
-        'chapter_order': chapterOrder,
-      };
+    'chapter_id': chapterId,
+    'chapter_name': chapterName,
+    'chapter_order': chapterOrder,
+  };
 }

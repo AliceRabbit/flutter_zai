@@ -61,18 +61,18 @@ class UserSubscribeNewsModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'sub_id': subId,
-        'sub_time': subTime,
-        'title': title,
-        'author_id': authorId,
-        'row_pic_url': rowPicUrl,
-        'col_pic_url': colPicUrl,
-        'is_foreign': isForeign,
-        'foreign_url': foreignUrl,
-        'user_photo': userPhoto,
-        'user_nickname': userNickname,
-        'page_url': pageUrl,
-        'comment_amount': commentAmount,
-        'mood_amount': moodAmount,
-      };
+    'sub_id': subId,
+    'sub_time': subTime,
+    'title': title,
+    'author_id': authorId,
+    'row_pic_url': rowPicUrl,
+    'col_pic_url': colPicUrl,
+    'is_foreign': isForeign,
+    'foreign_url': foreignUrl,
+    'user_photo': userPhoto,
+    'user_nickname': userNickname,
+    'page_url': pageUrl,
+    'comment_amount': commentAmount,
+    'mood_amount': moodAmount,
+  };
 }

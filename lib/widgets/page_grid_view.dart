@@ -1,9 +1,9 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/widgets/status/app_empty_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/widgets/status/app_empty_widget.dart';
+import 'package:zaix/widgets/status/app_error_widget.dart';
+import 'package:zaix/widgets/status/app_loadding_widget.dart';
 
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -30,57 +30,58 @@ class PageGridView extends StatelessWidget {
     this.mainAxisSpacing = 0.0,
     required this.crossAxisCount,
     this.loadMore = true,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () {
-        final enableLoadMore = loadMore && pageController.canLoadMore.value;
-        return Stack(
-          children: [
-            EasyRefresh(
-              header: const MaterialHeader(),
-              footer: enableLoadMore
-                  ? const MaterialFooter(
-                      clamping: false, infiniteOffset: 70, triggerOffset: 70)
-                  : null,
-              controller: pageController.easyRefreshController,
-              refreshOnStart: firstRefresh,
-              onLoad: enableLoadMore ? pageController.loadData : null,
-              onRefresh: pageController.refreshData,
-              child: MasonryGridView.count(
-                padding: padding ?? EdgeInsets.zero,
-                controller: pageController.scrollController,
-                itemCount: pageController.list.length,
-                itemBuilder: itemBuilder,
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: crossAxisSpacing,
-                mainAxisSpacing: mainAxisSpacing,
-              ),
+    return Obx(() {
+      final enableLoadMore = loadMore && pageController.canLoadMore.value;
+      return Stack(
+        children: [
+          EasyRefresh(
+            header: const MaterialHeader(),
+            footer: enableLoadMore
+                ? const MaterialFooter(
+                    clamping: false,
+                    infiniteOffset: 70,
+                    triggerOffset: 70,
+                  )
+                : null,
+            controller: pageController.easyRefreshController,
+            refreshOnStart: firstRefresh,
+            onLoad: enableLoadMore ? pageController.loadData : null,
+            onRefresh: pageController.refreshData,
+            child: MasonryGridView.count(
+              padding: padding ?? EdgeInsets.zero,
+              controller: pageController.scrollController,
+              itemCount: pageController.list.length,
+              itemBuilder: itemBuilder,
+              crossAxisCount: crossAxisCount,
+              crossAxisSpacing: crossAxisSpacing,
+              mainAxisSpacing: mainAxisSpacing,
             ),
-            Offstage(
-              offstage: !pageController.pageEmpty.value,
-              child: AppEmptyWidget(
-                onRefresh: () => pageController.refreshData(),
-              ),
+          ),
+          Offstage(
+            offstage: !pageController.pageEmpty.value,
+            child: AppEmptyWidget(
+              onRefresh: () => pageController.refreshData(),
             ),
-            Offstage(
-              offstage: !(showPageLoadding && pageController.pageLoadding.value),
-              child: const AppLoaddingWidget(),
+          ),
+          Offstage(
+            offstage: !(showPageLoadding && pageController.pageLoadding.value),
+            child: const AppLoaddingWidget(),
+          ),
+          Offstage(
+            offstage: !pageController.pageError.value,
+            child: AppErrorWidget(
+              errorMsg: pageController.errorMsg.value,
+              error: pageController.error,
+              onRefresh: () => pageController.refreshData(),
             ),
-            Offstage(
-              offstage: !pageController.pageError.value,
-              child: AppErrorWidget(
-                errorMsg: pageController.errorMsg.value,
-                error: pageController.error,
-                onRefresh: () => pageController.refreshData(),
-              ),
-            ),
-          ],
-        );
-      },
-    );
+          ),
+        ],
+      );
+    });
   }
 }

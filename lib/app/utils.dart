@@ -1,21 +1,20 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/requests/common_request.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/requests/common_request.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
+import 'package:permission_handler/permission_handler.dart';
+import 'package:saver_gallery/saver_gallery.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -77,25 +76,35 @@ class Utils {
   /// 检查相册权限
   static Future<bool> checkPhotoPermission() async {
     try {
-      var status = await Permission.photos.status;
-      if (status == PermissionStatus.granted) {
-        return true;
-      }
-      status = await Permission.photos.request();
-      if (status.isGranted) {
-        return true;
+      if (Platform.isAndroid) {
+        final sdkInt = (await DeviceInfoPlugin().androidInfo).version.sdkInt;
+        if (sdkInt >= 29) {
+          return true;
+        }
+        final status = await Permission.storage.request();
+        if (status.isGranted) {
+          return true;
+        }
+      } else if (Platform.isIOS) {
+        final status = await Permission.photosAddOnly.request();
+        if (status.isGranted || status.isLimited) {
+          return true;
+        }
       } else {
-        SmartDialog.showToast("请授予相册权限");
-        return false;
+        return true;
       }
-    } catch (e) {
+      SmartDialog.showToast("请授予相册权限");
+      return false;
+    } catch (error, stackTrace) {
+      Log.e("检查相册权限失败", error: error, stackTrace: stackTrace);
       return false;
     }
   }
 
   /// 保存图片
-  static void saveImage(String url) async {
-    if (Platform.isIOS && !await Utils.checkPhotoPermission()) {
+  static Future<void> saveImage(String url) async {
+    if ((Platform.isAndroid || Platform.isIOS) &&
+        !await Utils.checkPhotoPermission()) {
       return;
     }
     try {
@@ -111,29 +120,33 @@ class Utils {
         SmartDialog.showToast("图片保存失败");
         return;
       }
+      final rawPath = url.startsWith("http") ? Uri.parse(url).path : url;
+      final baseName = p.basename(rawPath);
+      final fileName = baseName.isEmpty
+          ? "image_${DateTime.now().millisecondsSinceEpoch}.jpg"
+          : baseName;
       if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-        saveImageDetktop(p.basename(url), data);
+        await saveImageDesktop(fileName, data);
       } else {
-        var cacheDir = await getTemporaryDirectory();
-        var file = File(p.join(cacheDir.path, p.basename(url)));
-        await file.writeAsBytes(data);
-        final result = await ImageGallerySaver.saveFile(
-          file.path,
-          name: p.basename(url),
-          isReturnPathOfIOS: true,
+        final result = await SaverGallery.saveImage(
+          data,
+          fileName: fileName,
+          skipIfExists: false,
         );
         Log.d(result.toString());
-        SmartDialog.showToast("保存成功");
+        SmartDialog.showToast(result.isSuccess ? "保存成功" : "保存失败");
       }
-    } catch (e) {
+    } catch (error, stackTrace) {
+      Log.e("保存图片失败", error: error, stackTrace: stackTrace);
       SmartDialog.showToast("保存失败");
     }
   }
 
   /// 保存图片-桌面平台
-  static void saveImageDetktop(String fileName, Uint8List list) async {
-    final FileSaveLocation? location =
-        await getSaveLocation(suggestedName: fileName);
+  static Future<void> saveImageDesktop(String fileName, Uint8List list) async {
+    final FileSaveLocation? location = await getSaveLocation(
+      suggestedName: fileName,
+    );
     if (location == null) {
       return;
     }
@@ -151,9 +164,7 @@ class Utils {
           topRight: Radius.circular(12),
         ),
       ),
-      constraints: const BoxConstraints(
-        maxWidth: 500,
-      ),
+      constraints: const BoxConstraints(maxWidth: 500),
       useSafeArea: true,
       backgroundColor: Get.theme.cardColor,
       builder: (context) => Column(
@@ -189,9 +200,18 @@ class Utils {
           ListTile(
             leading: const Icon(Icons.share),
             title: const Text("系统分享"),
-            onTap: () {
+            onTap: () async {
+              final renderBox = context.findRenderObject();
+              final sharePositionOrigin = renderBox is RenderBox
+                  ? renderBox.localToGlobal(Offset.zero) & renderBox.size
+                  : null;
               Get.back();
-              Share.share(content.isEmpty ? url : "$content\n$url");
+              await SharePlus.instance.share(
+                ShareParams(
+                  text: content.isEmpty ? url : "$content\n$url",
+                  sharePositionOrigin: sharePositionOrigin,
+                ),
+              );
             },
           ),
         ],
@@ -233,9 +253,7 @@ class Utils {
                   AppStyle.hGap12,
                   Expanded(
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                      ),
+                      style: ElevatedButton.styleFrom(elevation: 0),
                       onPressed: () {
                         launchUrlString(
                           versionInfo.downloadUrl,

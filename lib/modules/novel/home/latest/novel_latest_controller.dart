@@ -1,6 +1,6 @@
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/novel/latest_model.dart';
-import 'package:flutter_dmzj/requests/novel_request.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/models/novel/latest_model.dart';
+import 'package:zaix/requests/novel_request.dart';
 
 class NovelLatestController extends BasePageController<NovelLatestModel> {
   final NovelRequest request = NovelRequest();

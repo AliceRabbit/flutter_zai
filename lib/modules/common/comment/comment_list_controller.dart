@@ -1,6 +1,6 @@
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/comment/comment_item.dart';
-import 'package:flutter_dmzj/requests/comment_request.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/models/comment/comment_item.dart';
+import 'package:zaix/requests/comment_request.dart';
 
 class CommentListController extends BasePageController<CommentItem> {
   final int type;
@@ -23,11 +23,7 @@ class CommentListController extends BasePageController<CommentItem> {
         sort: 2,
       );
     } else {
-      return await request.getComment(
-        type: type,
-        objId: objId,
-        page: page,
-      );
+      return await request.getComment(type: type, objId: objId, page: page);
     }
   }
 }

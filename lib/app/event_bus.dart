@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_dmzj/app/log.dart';
+import 'package:zaix/app/log.dart';
 
 /// 全局事件
 class EventBus {

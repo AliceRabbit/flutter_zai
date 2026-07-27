@@ -1,13 +1,18 @@
-[CmdletBinding()]
-param(
-    [Parameter(ValueFromRemainingArguments = $true)]
-    [string[]]$DartArguments
-)
+$DartArguments = @($args)
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $dartCommand = Join-Path $projectRoot ".tooling\flutter\bin\dart.bat"
 $flutterRoot = Join-Path $projectRoot ".tooling\flutter"
+$localAppDataRoot = Join-Path $projectRoot ".tooling\localappdata"
+$roamingAppDataRoot = Join-Path $projectRoot ".tooling\appdata"
+New-Item -ItemType Directory -Force -Path $localAppDataRoot, $roamingAppDataRoot |
+    Out-Null
+$env:LOCALAPPDATA = $localAppDataRoot
+$env:APPDATA = $roamingAppDataRoot
 $env:PUB_CACHE = Join-Path $projectRoot ".tooling\pub-cache"
+$env:DART_SUPPRESS_ANALYTICS = "true"
+$env:FLUTTER_SUPPRESS_ANALYTICS = "true"
+$env:Path = "$(Join-Path $flutterRoot 'bin');$env:Path"
 $gitConfigCount = 0
 [int]::TryParse($env:GIT_CONFIG_COUNT, [ref]$gitConfigCount) | Out-Null
 [Environment]::SetEnvironmentVariable(

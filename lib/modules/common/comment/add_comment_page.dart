@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/comment/comment_item.dart';
-import 'package:flutter_dmzj/modules/common/comment/add_comment_controller.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/models/comment/comment_item.dart';
+import 'package:zaix/modules/common/comment/add_comment_controller.dart';
 import 'package:get/get.dart';
 
 class AddCommentPage extends StatelessWidget {
@@ -10,22 +10,19 @@ class AddCommentPage extends StatelessWidget {
   final CommentItem? replyItem;
   final AddCommentController controller;
   AddCommentPage({
-    Key? key,
+    super.key,
     required this.objId,
     required this.type,
     this.replyItem,
-  })  : controller = Get.put(
-          AddCommentController(objId: objId, type: type, replyItem: replyItem),
-          tag: DateTime.now().millisecondsSinceEpoch.toString(),
-        ),
-        super(key: key);
+  }) : controller = Get.put(
+         AddCommentController(objId: objId, type: type, replyItem: replyItem),
+         tag: DateTime.now().millisecondsSinceEpoch.toString(),
+       );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("添加评论"),
-      ),
+      appBar: AppBar(title: const Text("添加评论")),
       body: ListView(
         padding: AppStyle.edgeInsetsA12,
         children: [
@@ -33,7 +30,7 @@ class AddCommentPage extends StatelessWidget {
             visible: replyItem != null,
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(.2),
+                color: Colors.grey.withValues(alpha: .2),
                 borderRadius: AppStyle.radius4,
               ),
               margin: AppStyle.edgeInsetsB12,
@@ -55,10 +52,7 @@ class AddCommentPage extends StatelessWidget {
             maxLength: 1000,
           ),
           AppStyle.vGap12,
-          ElevatedButton(
-            onPressed: controller.submit,
-            child: const Text("发布"),
-          ),
+          ElevatedButton(onPressed: controller.submit, child: const Text("发布")),
         ],
       ),
     );

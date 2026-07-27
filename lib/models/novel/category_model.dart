@@ -31,8 +31,8 @@ class NovelCategoryModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'tag_id': tagId,
-        'title': title,
-        'cover': cover,
-      };
+    'tag_id': tagId,
+    'title': title,
+    'cover': cover,
+  };
 }

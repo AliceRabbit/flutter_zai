@@ -1,5 +1,5 @@
-import 'package:flutter_dmzj/models/db/download_status.dart';
-import 'package:hive/hive.dart';
+import 'package:zaix/models/db/download_status.dart';
+import 'package:hive_ce/hive.dart';
 part 'comic_download_info.g.dart';
 
 @HiveType(typeId: 3)
@@ -85,10 +85,10 @@ class ComicDownloadInfo {
 
   /// 是否VIP章节
   /// * 暂时没啥用，总之先加上
-  @HiveField(15)
+  @HiveField(15, defaultValue: false)
   bool isVip;
 
   /// 是否为条漫
-  @HiveField(16)
+  @HiveField(16, defaultValue: false)
   bool isLongComic;
 }

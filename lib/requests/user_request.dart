@@ -2,26 +2,23 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/app_error.dart';
-import 'package:flutter_dmzj/models/user/comic_history_model.dart';
-import 'package:flutter_dmzj/models/user/bind_status_model.dart';
-import 'package:flutter_dmzj/models/user/login_result_model.dart';
-import 'package:flutter_dmzj/models/user/novel_history_model.dart';
-import 'package:flutter_dmzj/models/user/subscribe_comic_model.dart';
-import 'package:flutter_dmzj/models/user/subscribe_news_model.dart';
-import 'package:flutter_dmzj/models/user/subscribe_novel_model.dart';
-import 'package:flutter_dmzj/models/user/user_profile_model.dart';
-import 'package:flutter_dmzj/requests/common/api.dart';
-import 'package:flutter_dmzj/requests/common/http_client.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/app_constant.dart';
+import 'package:zaix/app/app_error.dart';
+import 'package:zaix/models/user/comic_history_model.dart';
+import 'package:zaix/models/user/bind_status_model.dart';
+import 'package:zaix/models/user/login_result_model.dart';
+import 'package:zaix/models/user/novel_history_model.dart';
+import 'package:zaix/models/user/subscribe_comic_model.dart';
+import 'package:zaix/models/user/subscribe_news_model.dart';
+import 'package:zaix/models/user/subscribe_novel_model.dart';
+import 'package:zaix/models/user/user_profile_model.dart';
+import 'package:zaix/requests/common/api.dart';
+import 'package:zaix/requests/common/http_client.dart';
+import 'package:zaix/services/db_service.dart';
+import 'package:zaix/services/user_service.dart';
 
 class SubscribePageResult<T> {
-  const SubscribePageResult({
-    required this.items,
-    required this.total,
-  });
+  const SubscribePageResult({required this.items, required this.total});
 
   final List<T> items;
   final int total;
@@ -31,14 +28,13 @@ class UserRequest {
   /// 登录
   /// - [nickname] 用户名
   /// - [password] 密码
-  Future<LoginResultModel> login(
-      {required String nickname, required String password}) async {
+  Future<LoginResultModel> login({
+    required String nickname,
+    required String password,
+  }) async {
     var pwd = md5.convert(utf8.encode(password)).toString().toLowerCase();
 
-    Map<String, dynamic> data = {
-      "username": nickname,
-      "passwd": pwd,
-    };
+    Map<String, dynamic> data = {"username": nickname, "passwd": pwd};
 
     var result = await HttpClient.instance.postJson(
       "/login/passwd",
@@ -56,9 +52,7 @@ class UserRequest {
     var result = await HttpClient.instance.getJson(
       "/UCenter/comicsv2/${UserService.instance.userId}.json",
       baseUrl: Api.BASE_URL,
-      queryParameters: {
-        "dmzj_token": UserService.instance.dmzjToken,
-      },
+      queryParameters: {"dmzj_token": UserService.instance.dmzjToken},
       withDefaultParameter: true,
       needLogin: true,
     );
@@ -71,9 +65,7 @@ class UserRequest {
     var result = await HttpClient.instance.getJson(
       "/account/isbindtelpwd",
       baseUrl: Api.BASE_URL,
-      queryParameters: {
-        "dmzj_token": UserService.instance.dmzjToken,
-      },
+      queryParameters: {"dmzj_token": UserService.instance.dmzjToken},
       withDefaultParameter: true,
       checkCode: true,
     );
@@ -94,10 +86,7 @@ class UserRequest {
         data: const <String, dynamic>{},
         options: Options(
           responseType: ResponseType.json,
-          headers: {
-            "Authorization": "Bearer $token",
-            "Platform": "pc",
-          },
+          headers: {"Authorization": "Bearer $token", "Platform": "pc"},
         ),
       );
 
@@ -108,7 +97,9 @@ class UserRequest {
       if (data is Map && data["errno"] == 0) {
         return;
       }
-      throw AppError((data is Map ? data["errmsg"] : null)?.toString() ?? "签到失败");
+      throw AppError(
+        (data is Map ? data["errmsg"] : null)?.toString() ?? "签到失败",
+      );
     } on DioException catch (e) {
       if (e.type == DioExceptionType.badResponse) {
         throw AppError("签到失败:状态码：${e.response?.statusCode ?? -1}");
@@ -121,11 +112,12 @@ class UserRequest {
   /// - [page] 页数从1开始
   /// - [subType] 全部=1，未读=2，已读=3，完结=4
   /// - [letter] all=全部
-  Future<List<UserSubscribeComicItemModel>> comicSubscribes(
-      {required int subType,
-      int page = 1,
-      int size = 20,
-      String letter = ""}) async {
+  Future<List<UserSubscribeComicItemModel>> comicSubscribes({
+    required int subType,
+    int page = 1,
+    int size = 20,
+    String letter = "",
+  }) async {
     final result = await comicSubscribesPage(
       subType: subType,
       page: page,
@@ -135,11 +127,12 @@ class UserRequest {
     return result.items;
   }
 
-  Future<SubscribePageResult<UserSubscribeComicItemModel>> comicSubscribesPage(
-      {required int subType,
-      int page = 1,
-      int size = 20,
-      String letter = ""}) async {
+  Future<SubscribePageResult<UserSubscribeComicItemModel>> comicSubscribesPage({
+    required int subType,
+    int page = 1,
+    int size = 20,
+    String letter = "",
+  }) async {
     var list = <UserSubscribeComicItemModel>[];
     final status = subType == 1 ? "" : subType.toString();
     var result = await HttpClient.instance.getJson(
@@ -149,7 +142,7 @@ class UserRequest {
         "status": status,
         "firstLetter": letter,
         "page": page,
-        "size": size
+        "size": size,
       },
       withDefaultParameter: false,
       needLogin: true,
@@ -168,11 +161,12 @@ class UserRequest {
   /// - [page] 页数从1开始
   /// - [subType] 全部=1，未读=2，已读=3，完结=4
   /// - [letter] all=全部
-  Future<List<UserSubscribeNovelModel>> novelSubscribes(
-      {required int subType,
-      int page = 1,
-      int size = 20,
-      String letter = ""}) async {
+  Future<List<UserSubscribeNovelModel>> novelSubscribes({
+    required int subType,
+    int page = 1,
+    int size = 20,
+    String letter = "",
+  }) async {
     final result = await novelSubscribesPage(
       subType: subType,
       page: page,
@@ -182,11 +176,12 @@ class UserRequest {
     return result.items;
   }
 
-  Future<SubscribePageResult<UserSubscribeNovelModel>> novelSubscribesPage(
-      {required int subType,
-      int page = 1,
-      int size = 20,
-      String letter = ""}) async {
+  Future<SubscribePageResult<UserSubscribeNovelModel>> novelSubscribesPage({
+    required int subType,
+    int page = 1,
+    int size = 20,
+    String letter = "",
+  }) async {
     var list = <UserSubscribeNovelModel>[];
     final status = subType == 1 ? "" : subType.toString();
     var result = await HttpClient.instance.getJson(
@@ -196,7 +191,7 @@ class UserRequest {
         "status": status,
         "firstLetter": letter,
         "page": page,
-        "size": size
+        "size": size,
       },
       withDefaultParameter: false,
       needLogin: true,
@@ -222,10 +217,7 @@ class UserRequest {
     var result = await HttpClient.instance.postJson(
       '/api/news/getSubscribe',
       baseUrl: Api.BASE_URL_INTERFACE,
-      data: {
-        "parm": parJson,
-        "sign": sign,
-      },
+      data: {"parm": parJson, "sign": sign},
     );
     var data = json.decode(result);
     if (data["result"] != 1000) {
@@ -245,14 +237,10 @@ class UserRequest {
     var requestQuery = <String, dynamic>{};
     if (type == AppConstant.kTypeComic) {
       requestUrl = "/comic/sub/add";
-      requestQuery = {
-        "comic_id": ids.join(","),
-      };
+      requestQuery = {"comic_id": ids.join(",")};
     } else if (type == AppConstant.kTypeNovel) {
       requestUrl = "/novel/sub/add";
-      requestQuery = {
-        "novel_id": ids.join(","),
-      };
+      requestQuery = {"novel_id": ids.join(",")};
     }
 
     await HttpClient.instance.getJson(
@@ -276,10 +264,7 @@ class UserRequest {
 
     await HttpClient.instance.getJson(
       '/subscribe/read',
-      queryParameters: {
-        "obj_id": id,
-        "type": typeStr,
-      },
+      queryParameters: {"obj_id": id, "type": typeStr},
       withDefaultParameter: true,
       needLogin: true,
     );
@@ -288,20 +273,18 @@ class UserRequest {
 
   /// 取消订阅
   /// - [type] 类型，对应AppConstant
-  Future<bool> removeSubscribe(
-      {required List<int> ids, required int type}) async {
+  Future<bool> removeSubscribe({
+    required List<int> ids,
+    required int type,
+  }) async {
     var requestUrl = "/comic/sub/del";
     var requestQuery = <String, dynamic>{};
     if (type == AppConstant.kTypeComic) {
       requestUrl = "/comic/sub/del";
-      requestQuery = {
-        "comic_id": ids.join(","),
-      };
+      requestQuery = {"comic_id": ids.join(",")};
     } else if (type == AppConstant.kTypeNovel) {
       requestUrl = "/novel/sub/del";
-      requestQuery = {
-        "novel_id": ids.join(","),
-      };
+      requestQuery = {"novel_id": ids.join(",")};
     }
 
     await HttpClient.instance.getJson(
@@ -316,8 +299,10 @@ class UserRequest {
   /// 查询订阅状态
   /// - [objId] 漫画ID或小说ID
   /// - [type] 类型，对应AppConstant
-  Future<bool> checkSubscribeStatus(
-      {required int objId, required int type}) async {
+  Future<bool> checkSubscribeStatus({
+    required int objId,
+    required int type,
+  }) async {
     var typeId = 1;
     if (type == AppConstant.kTypeComic) {
       typeId = 1;
@@ -328,10 +313,7 @@ class UserRequest {
     var result = await HttpClient.instance.getJson(
       '/comic/sub/checkIsSub',
       checkCode: true,
-      queryParameters: {
-        "objId": objId,
-        "source": typeId,
-      },
+      queryParameters: {"objId": objId, "source": typeId},
       needLogin: true,
     );
     return result["isSub"];
@@ -385,7 +367,7 @@ class UserRequest {
       "comicId": comicId.toString(),
       "chapterId": chapterId.toString(),
       "page": page,
-      "time": (time.millisecondsSinceEpoch ~/ 1000).toString()
+      "time": (time.millisecondsSinceEpoch ~/ 1000).toString(),
     };
     await HttpClient.instance.getJson(
       "/api/record/getRe",
@@ -420,7 +402,7 @@ class UserRequest {
       "chapterId": chapterId.toString(),
       "total_num": total,
       "page": page,
-      "time": (time.millisecondsSinceEpoch ~/ 1000).toString()
+      "time": (time.millisecondsSinceEpoch ~/ 1000).toString(),
     };
     await HttpClient.instance.getJson(
       "/api/record/getRe",

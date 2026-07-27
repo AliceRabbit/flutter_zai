@@ -27,13 +27,15 @@ class ComicCategoryComicModel {
   });
 
   factory ComicCategoryComicModel.fromJson(Map<String, dynamic> json) {
-    final List<AuthorTagList>? authorTagList =
-        json['authorTagList'] is List ? <AuthorTagList>[] : null;
+    final List<AuthorTagList>? authorTagList = json['authorTagList'] is List
+        ? <AuthorTagList>[]
+        : null;
     if (authorTagList != null) {
       for (final dynamic item in json['authorTagList']!) {
         if (item != null) {
-          authorTagList
-              .add(AuthorTagList.fromJson(asT<Map<String, dynamic>>(item)!));
+          authorTagList.add(
+            AuthorTagList.fromJson(asT<Map<String, dynamic>>(item)!),
+          );
         }
       }
     }
@@ -80,36 +82,32 @@ class ComicCategoryComicModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'name': name,
-        'authors': authors,
-        'types': types,
-        'status': status,
-        'last_update_chapter_name': lastUpdateChapterName,
-        'last_update_chapter_id': lastUpdateChapterId,
-        'last_updatetime': lastUpdatetime,
-        'cover': cover,
-        'comic_py': comicPy,
-        'isFee': isFee,
-        'hotNum': hotNum,
-        'authorTag': authorTag,
-        'authorTagList': authorTagList,
-        'copyright': copyright,
-      };
+    'id': id,
+    'name': name,
+    'authors': authors,
+    'types': types,
+    'status': status,
+    'last_update_chapter_name': lastUpdateChapterName,
+    'last_update_chapter_id': lastUpdateChapterId,
+    'last_updatetime': lastUpdatetime,
+    'cover': cover,
+    'comic_py': comicPy,
+    'isFee': isFee,
+    'hotNum': hotNum,
+    'authorTag': authorTag,
+    'authorTagList': authorTagList,
+    'copyright': copyright,
+  };
 }
 
 class AuthorTag {
-  AuthorTag({
-    this.id,
-    this.tagName,
-    this.tagPy,
-  });
+  AuthorTag({this.id, this.tagName, this.tagPy});
 
   factory AuthorTag.fromJson(Map<String, dynamic> json) => AuthorTag(
-        id: asT<int?>(json['id']),
-        tagName: asT<String?>(json['tagName']),
-        tagPy: asT<String?>(json['tagPy']),
-      );
+    id: asT<int?>(json['id']),
+    tagName: asT<String?>(json['tagName']),
+    tagPy: asT<String?>(json['tagPy']),
+  );
 
   int? id;
   String? tagName;
@@ -121,24 +119,20 @@ class AuthorTag {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'tagName': tagName,
-        'tagPy': tagPy,
-      };
+    'id': id,
+    'tagName': tagName,
+    'tagPy': tagPy,
+  };
 }
 
 class AuthorTagList {
-  AuthorTagList({
-    this.id,
-    this.tagName,
-    this.tagPy,
-  });
+  AuthorTagList({this.id, this.tagName, this.tagPy});
 
   factory AuthorTagList.fromJson(Map<String, dynamic> json) => AuthorTagList(
-        id: asT<int?>(json['id']),
-        tagName: asT<String?>(json['tagName']),
-        tagPy: asT<String?>(json['tagPy']),
-      );
+    id: asT<int?>(json['id']),
+    tagName: asT<String?>(json['tagName']),
+    tagPy: asT<String?>(json['tagPy']),
+  );
 
   int? id;
   String? tagName;
@@ -150,8 +144,8 @@ class AuthorTagList {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'tagName': tagName,
-        'tagPy': tagPy,
-      };
+    'id': id,
+    'tagName': tagName,
+    'tagPy': tagPy,
+  };
 }

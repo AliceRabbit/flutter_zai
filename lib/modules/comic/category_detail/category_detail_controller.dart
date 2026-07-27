@@ -1,7 +1,7 @@
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/comic/category_comic_model.dart';
-import 'package:flutter_dmzj/models/comic/category_filter_model.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/models/comic/category_comic_model.dart';
+import 'package:zaix/models/comic/category_filter_model.dart';
+import 'package:zaix/requests/comic_request.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -25,8 +25,10 @@ class CategoryDetailController
       return "全部漫画";
     } else {
       return items
-          .map((e) =>
-              e.items.firstWhere((x) => x.tagId == e.selectId.value).tagName)
+          .map(
+            (e) =>
+                e.items.firstWhere((x) => x.tagId == e.selectId.value).tagName,
+          )
           .join("-");
     }
   }

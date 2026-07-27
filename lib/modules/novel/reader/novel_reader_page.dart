@@ -2,24 +2,24 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/modules/novel/reader/novel_horizontal_reader.dart';
+import 'package:zaix/app/app_color.dart';
+import 'package:zaix/app/app_constant.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/dialog_utils.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/modules/novel/reader/novel_horizontal_reader.dart';
 
-import 'package:flutter_dmzj/modules/novel/reader/novel_reader_controller.dart';
-import 'package:flutter_dmzj/widgets/custom_header.dart';
-import 'package:flutter_dmzj/widgets/local_image.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
+import 'package:zaix/modules/novel/reader/novel_reader_controller.dart';
+import 'package:zaix/widgets/custom_header.dart';
+import 'package:zaix/widgets/local_image.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/status/app_error_widget.dart';
+import 'package:zaix/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
 class NovelReaderPage extends GetView<NovelReaderController> {
-  const NovelReaderPage({Key? key}) : super(key: key);
+  const NovelReaderPage({super.key});
 
   Color get color =>
       AppColor.novelThemes[controller.settings.novelReaderTheme.value]!.last;
@@ -41,7 +41,8 @@ class NovelReaderPage extends GetView<NovelReaderController> {
           () => Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: AppColor
-                .novelThemes[controller.settings.novelReaderTheme.value]!.first,
+                .novelThemes[controller.settings.novelReaderTheme.value]!
+                .first,
             body: Stack(
               children: [
                 Obx(
@@ -54,9 +55,9 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                       child: controller.isPicture.value
                           ? buildPicture()
                           : (controller.direction.value ==
-                                  ReaderDirection.kUpToDown
-                              ? buildVertical()
-                              : buildHorizontal()),
+                                    ReaderDirection.kUpToDown
+                                ? buildVertical()
+                                : buildHorizontal()),
                     ),
                   ),
                 ),
@@ -79,10 +80,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                           ),
                         ),
                       ),
-                      Expanded(
-                        flex: 8,
-                        child: Container(),
-                      ),
+                      Expanded(flex: 8, child: Container()),
                       Expanded(
                         flex: 1,
                         child: GestureDetector(
@@ -140,7 +138,8 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                           AppStyle.hGap12,
                           Expanded(
                             child: Text(
-                              controller.chapters[controller.chapterIndex.value]
+                              controller
+                                  .chapters[controller.chapterIndex.value]
                                   .chapterName,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -163,13 +162,12 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                     child: Container(
                       color: AppStyle.darkTheme.cardColor,
                       height: 104 + AppStyle.bottomBarHeight,
-                      padding:
-                          EdgeInsets.only(bottom: AppStyle.bottomBarHeight),
+                      padding: EdgeInsets.only(
+                        bottom: AppStyle.bottomBarHeight,
+                      ),
                       alignment: Alignment.center,
                       child: Container(
-                        constraints: const BoxConstraints(
-                          maxWidth: 500,
-                        ),
+                        constraints: const BoxConstraints(maxWidth: 500),
                         child: Column(
                           children: [
                             buildSilderBar(),
@@ -228,10 +226,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
             borderRadius: AppStyle.radius24,
           ),
           padding: AppStyle.edgeInsetsA12,
-          child: const Icon(
-            Icons.arrow_circle_left,
-            color: Colors.blue,
-          ),
+          child: const Icon(Icons.arrow_circle_left, color: Colors.blue),
         ),
       ),
       footer: MaterialFooter2(
@@ -242,10 +237,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
             borderRadius: AppStyle.radius24,
           ),
           padding: AppStyle.edgeInsetsA12,
-          child: const Icon(
-            Icons.arrow_circle_right,
-            color: Colors.blue,
-          ),
+          child: const Icon(Icons.arrow_circle_right, color: Colors.blue),
         ),
       ),
       refreshOnStart: false,
@@ -263,7 +255,8 @@ class NovelReaderPage extends GetView<NovelReaderController> {
           fontSize: controller.settings.novelReaderFontSize.value.toDouble(),
           height: controller.settings.novelReaderLineSpacing.value,
           color: AppColor
-              .novelThemes[controller.settings.novelReaderTheme.value]!.last,
+              .novelThemes[controller.settings.novelReaderTheme.value]!
+              .last,
         ),
         padding: AppStyle.edgeInsetsA12.copyWith(
           top: AppStyle.statusBarHeight + 12,
@@ -281,9 +274,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
     return SizedBox(
       height: double.infinity,
       child: Padding(
-        padding: EdgeInsets.only(
-          top: AppStyle.statusBarHeight,
-        ),
+        padding: EdgeInsets.only(top: AppStyle.statusBarHeight),
         child: Padding(
           padding: AppStyle.edgeInsetsA12.copyWith(
             bottom: (controller.settings.novelReaderShowStatus.value ? 32 : 12),
@@ -297,10 +288,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                   borderRadius: AppStyle.radius24,
                 ),
                 padding: AppStyle.edgeInsetsA12,
-                child: const Icon(
-                  Icons.arrow_circle_up,
-                  color: Colors.blue,
-                ),
+                child: const Icon(Icons.arrow_circle_up, color: Colors.blue),
               ),
             ),
             footer: MaterialFooter2(
@@ -311,10 +299,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                   borderRadius: AppStyle.radius24,
                 ),
                 padding: AppStyle.edgeInsetsA12,
-                child: const Icon(
-                  Icons.arrow_circle_down,
-                  color: Colors.blue,
-                ),
+                child: const Icon(Icons.arrow_circle_down, color: Colors.blue),
               ),
             ),
             refreshOnStart: false,
@@ -330,8 +315,8 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                 controller.content.value,
                 textAlign: TextAlign.justify,
                 style: TextStyle(
-                  fontSize:
-                      controller.settings.novelReaderFontSize.value.toDouble(),
+                  fontSize: controller.settings.novelReaderFontSize.value
+                      .toDouble(),
                   height: controller.settings.novelReaderLineSpacing.value,
                   color: AppColor
                       .novelThemes[controller.settings.novelReaderTheme.value]!
@@ -347,9 +332,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
 
   Widget buildPicture() {
     return Padding(
-      padding: EdgeInsets.only(
-        top: AppStyle.statusBarHeight,
-      ),
+      padding: EdgeInsets.only(top: AppStyle.statusBarHeight),
       child: EasyRefresh(
         header: MaterialHeader2(
           triggerOffset: 80,
@@ -410,7 +393,9 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                     child: GestureDetector(
                       onDoubleTap: () {
                         DialogUtils.showImageViewer(
-                            i, controller.pictures.toList());
+                          i,
+                          controller.pictures.toList(),
+                        );
                       },
                       child: controller.isLocal
                           ? LocalImage(
@@ -424,7 +409,8 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                             ),
                     ),
                   );
-                })
+                },
+              )
             : ListView.separated(
                 controller: controller.scrollController,
                 itemCount: controller.pictures.length,
@@ -434,7 +420,9 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                   return GestureDetector(
                     onDoubleTap: () {
                       DialogUtils.showImageViewer(
-                          i, controller.pictures.toList());
+                        i,
+                        controller.pictures.toList(),
+                      );
                     },
                     child: controller.isLocal
                         ? LocalImage(
@@ -447,52 +435,19 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                             progress: true,
                           ),
                   );
-                }),
+                },
+              ),
       ),
     );
   }
 
   Widget buildSilderBar() {
     if (controller.direction.value == ReaderDirection.kUpToDown) {
-      return Obx(
-        () {
-          var value = controller.progress.value;
-          var max = 1.0;
-          if (value > max) {
-            return const SizedBox(
-              height: 48,
-            );
-          }
-          return SizedBox(
-            height: 48,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Slider(
-                    value: value,
-                    max: max,
-                    onChanged: (e) {
-                      controller.scrollController.jumpTo(
-                        controller.scrollController.position.maxScrollExtent *
-                            e,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    }
-    return Obx(
-      () {
-        var value = controller.currentIndex.value + 1.0;
-        var max = controller.maxPage.value;
+      return Obx(() {
+        var value = controller.progress.value;
+        var max = 1.0;
         if (value > max) {
-          return const SizedBox(
-            height: 48,
-          );
+          return const SizedBox(height: 48);
         }
         return SizedBox(
           height: 48,
@@ -501,17 +456,42 @@ class NovelReaderPage extends GetView<NovelReaderController> {
               Expanded(
                 child: Slider(
                   value: value,
-                  max: max.toDouble(),
+                  max: max,
                   onChanged: (e) {
-                    controller.jumpToPage((e - 1).toInt());
+                    controller.scrollController.jumpTo(
+                      controller.scrollController.position.maxScrollExtent * e,
+                    );
                   },
                 ),
               ),
             ],
           ),
         );
-      },
-    );
+      });
+    }
+    return Obx(() {
+      var value = controller.currentIndex.value + 1.0;
+      var max = controller.maxPage.value;
+      if (value > max) {
+        return const SizedBox(height: 48);
+      }
+      return SizedBox(
+        height: 48,
+        child: Row(
+          children: [
+            Expanded(
+              child: Slider(
+                value: value,
+                max: max.toDouble(),
+                onChanged: (e) {
+                  controller.jumpToPage((e - 1).toInt());
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget buildBottomStatus() {
@@ -536,7 +516,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                           style: TextStyle(
                             fontSize: 12,
                             height: 1.0,
-                            color: color.withOpacity(.6),
+                            color: color.withValues(alpha: .6),
                           ),
                         )
                       : Text(
@@ -544,7 +524,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                           style: TextStyle(
                             fontSize: 12,
                             height: 1.0,
-                            color: color.withOpacity(.6),
+                            color: color.withValues(alpha: .6),
                           ),
                         ),
                 ],
@@ -595,12 +575,15 @@ class NovelReaderPage extends GetView<NovelReaderController> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon, size: 12, color: color.withOpacity(.6)),
+        Icon(icon, size: 12, color: color.withValues(alpha: .6)),
         AppStyle.hGap4,
         Text(
           name,
           style: TextStyle(
-              fontSize: 12, height: 1.0, color: color.withOpacity(.6)),
+            fontSize: 12,
+            height: 1.0,
+            color: color.withValues(alpha: .6),
+          ),
         ),
         AppStyle.hGap8,
       ],
@@ -637,7 +620,10 @@ class NovelReaderPage extends GetView<NovelReaderController> {
           Text(
             "电量 $battery%",
             style: TextStyle(
-                fontSize: 12, height: 1.0, color: color.withOpacity(.6)),
+              fontSize: 12,
+              height: 1.0,
+              color: color.withValues(alpha: .6),
+            ),
           ),
           AppStyle.hGap8,
         ],

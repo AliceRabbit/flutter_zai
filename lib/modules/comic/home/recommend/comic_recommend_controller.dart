@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/comic/recommend_model.dart';
-import 'package:flutter_dmzj/modules/comic/home/comic_home_controller.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/models/comic/recommend_model.dart';
+import 'package:zaix/modules/comic/home/comic_home_controller.dart';
+import 'package:zaix/requests/comic_request.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -138,14 +138,10 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   void openDetail(ComicRecommendItemModel item) {
     //漫画=1
     if (item.type == null || item.type == 1) {
-      AppNavigator.toComicDetail(
-        item.objId ?? item.id ?? 0,
-      );
+      AppNavigator.toComicDetail(item.objId ?? item.id ?? 0);
     } else if (item.type == 5) {
       //专题=5
-      AppNavigator.toSpecialDetail(
-        item.objId ?? 0,
-      );
+      AppNavigator.toSpecialDetail(item.objId ?? 0);
     } else if (item.type == 6) {
       //网页=6
       AppNavigator.toWebView(item.url ?? "");
@@ -158,10 +154,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
       );
     } else if (item.type == 8) {
       //作者=8
-      AppNavigator.toComicAuthorDetail(
-        item.objId ?? 0,
-        authorName: item.title,
-      );
+      AppNavigator.toComicAuthorDetail(item.objId ?? 0, authorName: item.title);
     } else if (item.type == 13) {
       //社区=13
       //直接跳转至网页

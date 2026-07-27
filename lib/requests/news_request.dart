@@ -1,21 +1,19 @@
 import 'dart:convert';
 
-import 'package:flutter_dmzj/app/app_error.dart';
-import 'package:flutter_dmzj/models/news/news_banner_model.dart';
-import 'package:flutter_dmzj/models/news/news_list_item_model.dart';
-import 'package:flutter_dmzj/models/news/news_stat_model.dart';
-import 'package:flutter_dmzj/models/news/news_tag_model.dart';
-import 'package:flutter_dmzj/requests/common/api.dart';
-import 'package:flutter_dmzj/requests/common/http_client.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/app_error.dart';
+import 'package:zaix/models/news/news_banner_model.dart';
+import 'package:zaix/models/news/news_list_item_model.dart';
+import 'package:zaix/models/news/news_stat_model.dart';
+import 'package:zaix/models/news/news_tag_model.dart';
+import 'package:zaix/requests/common/api.dart';
+import 'package:zaix/requests/common/http_client.dart';
+import 'package:zaix/services/user_service.dart';
 
 class NewsRequest {
   /// 新闻分类
   Future<List<NewsTagModel>> category() async {
     var list = <NewsTagModel>[];
-    var result = await HttpClient.instance.getJson(
-      '/news/category',
-    );
+    var result = await HttpClient.instance.getJson('/news/category');
     for (var item in result["data"]["cateList"]) {
       list.add(NewsTagModel.fromJson(item));
     }
@@ -64,10 +62,7 @@ class NewsRequest {
   /// 新闻点赞
   /// - [newsId] 新闻ID
   Future<bool> like(int newsId) async {
-    await HttpClient.instance.getJson(
-      '/article/mood/$newsId',
-      checkCode: true,
-    );
+    await HttpClient.instance.getJson('/article/mood/$newsId', checkCode: true);
 
     return true;
   }
@@ -83,10 +78,7 @@ class NewsRequest {
     var result = await HttpClient.instance.postJson(
       '/api/news/subscribe/check',
       baseUrl: Api.BASE_URL_INTERFACE,
-      data: {
-        "parm": parJson,
-        "sign": sign,
-      },
+      data: {"parm": parJson, "sign": sign},
     );
 
     return json.decode(result)["result"] == 809;
@@ -103,10 +95,7 @@ class NewsRequest {
     var result = await HttpClient.instance.postJson(
       '/api/news/subscribe/add',
       baseUrl: Api.BASE_URL_INTERFACE,
-      data: {
-        "parm": parJson,
-        "sign": sign,
-      },
+      data: {"parm": parJson, "sign": sign},
     );
 
     return json.decode(result)["result"] == 1000;
@@ -123,10 +112,7 @@ class NewsRequest {
     var result = await HttpClient.instance.postJson(
       '/api/news/subscribe/del',
       baseUrl: Api.BASE_URL_INTERFACE,
-      data: {
-        "parm": parJson,
-        "sign": sign,
-      },
+      data: {"parm": parJson, "sign": sign},
     );
 
     return json.decode(result)["result"] == 1000;

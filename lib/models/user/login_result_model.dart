@@ -43,12 +43,12 @@ class LoginResultModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'uid': uid,
-        'nickname': nickname,
-        'token': token,
-        'photo': photo,
-        'bind_phone': bindPhone,
-        'email': email,
-        'setPasswd': setPasswd
-      };
+    'uid': uid,
+    'nickname': nickname,
+    'token': token,
+    'photo': photo,
+    'bind_phone': bindPhone,
+    'email': email,
+    'setPasswd': setPasswd,
+  };
 }

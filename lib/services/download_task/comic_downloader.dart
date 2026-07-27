@@ -3,13 +3,13 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/db/comic_download_info.dart';
-import 'package:flutter_dmzj/models/db/download_status.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
+import 'package:zaix/app/dialog_utils.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/models/db/comic_download_info.dart';
+import 'package:zaix/models/db/download_status.dart';
+import 'package:zaix/requests/comic_request.dart';
+import 'package:zaix/services/app_settings_service.dart';
+import 'package:zaix/services/comic_download_service.dart';
 import 'package:get/get.dart';
 
 // ignore: depend_on_referenced_packages
@@ -24,11 +24,7 @@ class ComicDownloader {
   final ComicRequest request = ComicRequest();
   DownloadStatus get status => info.value.status;
   CancelToken? cancelToken;
-  Dio dio = Dio(BaseOptions(
-    headers: {
-      'Referer': "http://www.zaimanhua.com/",
-    },
-  ));
+  Dio dio = Dio(BaseOptions(headers: {'Referer': "http://www.zaimanhua.com/"}));
   void start() {
     _getPageUrls();
   }
@@ -121,9 +117,7 @@ class ComicDownloader {
 
         var result = await dio.get(
           url,
-          options: Options(
-            responseType: ResponseType.bytes,
-          ),
+          options: Options(responseType: ResponseType.bytes),
           cancelToken: cancelToken,
         );
         bytes = result.data;
@@ -140,7 +134,9 @@ class ComicDownloader {
       if (e is DioException) {
         if (e.type == DioExceptionType.cancel) rethrow;
         if (status == DownloadStatus.waitNetwork ||
-            status == DownloadStatus.pauseCellular) rethrow;
+            status == DownloadStatus.pauseCellular) {
+          rethrow;
+        }
         if (retryTime < 3) {
           retryTime++;
           await Future.delayed(const Duration(seconds: 1));
@@ -153,7 +149,10 @@ class ComicDownloader {
   }
 
   Future<String> _saveImage(
-      Uint8List bytes, int index, String extension) async {
+    Uint8List bytes,
+    int index,
+    String extension,
+  ) async {
     var dir = info.value.savePath;
     var fileName = "${(index + 1).toString().padLeft(3, "0")}$extension";
     var file = File(p.join(dir, fileName));

@@ -1,6 +1,6 @@
-import 'package:flutter_dmzj/models/novel/detail_model.dart';
-import 'package:flutter_dmzj/models/novel/volume_detail_model.dart';
-import 'package:flutter_dmzj/models/proto/novel.pb.dart';
+import 'package:zaix/models/novel/detail_model.dart';
+import 'package:zaix/models/novel/volume_detail_model.dart';
+import 'package:zaix/models/proto/novel.pb.dart';
 import 'package:get/get.dart';
 
 T? asT<T>(dynamic value) {
@@ -31,23 +31,23 @@ class NovelDetailInfo {
   });
 
   factory NovelDetailInfo.empty() => NovelDetailInfo(
-        novelId: 0,
-        name: "",
-        zone: "",
-        status: "",
-        lastUpdateVolumeName: "",
-        lastUpdateChapterName: "",
-        lastUpdateVolumeId: 0,
-        lastUpdateChapterId: 0,
-        lastUpdateTime: 0,
-        cover: "",
-        hotHits: 0,
-        introduction: "",
-        types: [],
-        authors: "",
-        firstLetter: "",
-        subscribeNum: 0,
-      );
+    novelId: 0,
+    name: "",
+    zone: "",
+    status: "",
+    lastUpdateVolumeName: "",
+    lastUpdateChapterName: "",
+    lastUpdateVolumeId: 0,
+    lastUpdateChapterId: 0,
+    lastUpdateTime: 0,
+    cover: "",
+    hotHits: 0,
+    introduction: "",
+    types: [],
+    authors: "",
+    firstLetter: "",
+    subscribeNum: 0,
+  );
   factory NovelDetailInfo.fromJson(NovelDetailDataModel item) =>
       NovelDetailInfo(
         novelId: item.novelId.toInt(),
@@ -69,23 +69,23 @@ class NovelDetailInfo {
       );
 
   factory NovelDetailInfo.fromV4(NovelDetailProto item) => NovelDetailInfo(
-        novelId: item.novelId.toInt(),
-        name: item.name,
-        zone: item.zone,
-        status: item.status,
-        lastUpdateVolumeName: item.lastUpdateVolumeName,
-        lastUpdateChapterName: item.lastUpdateChapterName,
-        lastUpdateVolumeId: item.lastUpdateVolumeId.toInt(),
-        lastUpdateChapterId: item.lastUpdateChapterId.toInt(),
-        lastUpdateTime: item.lastUpdateTime.toInt(),
-        cover: item.cover,
-        hotHits: item.hotHits.toInt(),
-        introduction: item.introduction,
-        types: item.types,
-        authors: item.authors,
-        firstLetter: item.firstLetter,
-        subscribeNum: item.subscribeNum.toInt(),
-      );
+    novelId: item.novelId.toInt(),
+    name: item.name,
+    zone: item.zone,
+    status: item.status,
+    lastUpdateVolumeName: item.lastUpdateVolumeName,
+    lastUpdateChapterName: item.lastUpdateChapterName,
+    lastUpdateVolumeId: item.lastUpdateVolumeId.toInt(),
+    lastUpdateChapterId: item.lastUpdateChapterId.toInt(),
+    lastUpdateTime: item.lastUpdateTime.toInt(),
+    cover: item.cover,
+    hotHits: item.hotHits.toInt(),
+    introduction: item.introduction,
+    types: item.types,
+    authors: item.authors,
+    firstLetter: item.firstLetter,
+    subscribeNum: item.subscribeNum.toInt(),
+  );
 
   int novelId;
   String name;
@@ -162,27 +162,33 @@ class NovelDetailChapter {
     required this.volumeName,
     required this.volumeOrder,
   });
-  factory NovelDetailChapter.fromJson(NovelVolumeDetailChapterModel item,
-          int volumeId, String volumeName, int volumeOrder) =>
-      NovelDetailChapter(
-        chapterId: item.chapterId.toInt(),
-        chapterName: item.chapterName,
-        chapterOrder: item.chapterOrder,
-        volumeId: volumeId,
-        volumeName: volumeName,
-        volumeOrder: volumeOrder,
-      );
+  factory NovelDetailChapter.fromJson(
+    NovelVolumeDetailChapterModel item,
+    int volumeId,
+    String volumeName,
+    int volumeOrder,
+  ) => NovelDetailChapter(
+    chapterId: item.chapterId.toInt(),
+    chapterName: item.chapterName,
+    chapterOrder: item.chapterOrder,
+    volumeId: volumeId,
+    volumeName: volumeName,
+    volumeOrder: volumeOrder,
+  );
 
-  factory NovelDetailChapter.fromV4(NovelChapterDetailProto item, int volumeId,
-          String volumeName, int volumeOrder) =>
-      NovelDetailChapter(
-        chapterId: item.chapterId.toInt(),
-        chapterName: item.chapterName,
-        chapterOrder: item.chapterOrder,
-        volumeId: volumeId,
-        volumeName: volumeName,
-        volumeOrder: volumeOrder,
-      );
+  factory NovelDetailChapter.fromV4(
+    NovelChapterDetailProto item,
+    int volumeId,
+    String volumeName,
+    int volumeOrder,
+  ) => NovelDetailChapter(
+    chapterId: item.chapterId.toInt(),
+    chapterName: item.chapterName,
+    chapterOrder: item.chapterOrder,
+    volumeId: volumeId,
+    volumeName: volumeName,
+    volumeOrder: volumeOrder,
+  );
 
   int chapterId;
   String chapterName;

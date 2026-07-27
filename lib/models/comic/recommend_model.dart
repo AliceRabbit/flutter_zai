@@ -16,13 +16,15 @@ class ComicRecommendModel {
   });
 
   factory ComicRecommendModel.fromJson(Map<String, dynamic> json) {
-    final List<ComicRecommendItemModel>? data =
-        json['data'] is List ? <ComicRecommendItemModel>[] : null;
+    final List<ComicRecommendItemModel>? data = json['data'] is List
+        ? <ComicRecommendItemModel>[]
+        : null;
     if (data != null) {
       for (final dynamic item in json['data']!) {
         if (item != null) {
-          data.add(ComicRecommendItemModel.fromJson(
-              asT<Map<String, dynamic>>(item)!));
+          data.add(
+            ComicRecommendItemModel.fromJson(asT<Map<String, dynamic>>(item)!),
+          );
         }
       }
     }
@@ -45,11 +47,11 @@ class ComicRecommendModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'category_id': categoryId,
-        'title': title,
-        'sort': sort,
-        'data': data,
-      };
+    'category_id': categoryId,
+    'title': title,
+    'sort': sort,
+    'data': data,
+  };
 }
 
 class ComicRecommendItemModel {
@@ -90,12 +92,12 @@ class ComicRecommendItemModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'cover': cover,
-        'title': title,
-        'sub_title': subTitle,
-        'type': type,
-        'url': url,
-        'obj_id': objId,
-        'status': status,
-      };
+    'cover': cover,
+    'title': title,
+    'sub_title': subTitle,
+    'type': type,
+    'url': url,
+    'obj_id': objId,
+    'status': status,
+  };
 }

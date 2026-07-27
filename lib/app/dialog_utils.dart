@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:zaix/app/app_style.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/utils.dart';
+import 'package:zaix/app/utils.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
@@ -28,10 +28,7 @@ class DialogUtils {
       AlertDialog(
         title: Text(title),
         content: Container(
-          constraints: const BoxConstraints(
-            maxHeight: 400,
-            maxWidth: 500,
-          ),
+          constraints: const BoxConstraints(maxHeight: 400, maxWidth: 500),
           child: SingleChildScrollView(
             child: Padding(
               padding: AppStyle.edgeInsetsV12,
@@ -60,8 +57,12 @@ class DialogUtils {
   /// - `content` 内容
   /// - `title` 弹窗标题
   /// - `confirm` 确认按钮内容，留空为确定
-  static Future<bool> showMessageDialog(String content,
-      {String title = '', String confirm = '', bool selectable = false}) async {
+  static Future<bool> showMessageDialog(
+    String content, {
+    String title = '',
+    String confirm = '',
+    bool selectable = false,
+  }) async {
     var result = await Get.dialog(
       AlertDialog(
         title: Text(title),
@@ -85,13 +86,16 @@ class DialogUtils {
   /// - `title` 弹窗标题
   /// - `confirm` 确认按钮内容
   /// - `cancel` 取消按钮内容
-  static Future<String?> showEditTextDialog(String content,
-      {String title = '',
-      String? hintText,
-      String confirm = '',
-      String cancel = ''}) async {
-    final TextEditingController textEditingController =
-        TextEditingController(text: content);
+  static Future<String?> showEditTextDialog(
+    String content, {
+    String title = '',
+    String? hintText,
+    String confirm = '',
+    String cancel = '',
+  }) async {
+    final TextEditingController textEditingController = TextEditingController(
+      text: content,
+    );
     var result = await Get.dialog(
       AlertDialog(
         title: Text(title),
@@ -112,10 +116,7 @@ class DialogUtils {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: Get.back,
-            child: const Text("取消"),
-          ),
+          TextButton(onPressed: Get.back, child: const Text("取消")),
           TextButton(
             onPressed: () {
               Get.back(result: textEditingController.text);
@@ -135,21 +136,23 @@ class DialogUtils {
     T value, {
     String title = '',
   }) async {
-    var result = await Get.dialog(
-      SimpleDialog(
-        title: Text(title),
-        children: contents
-            .map(
-              (e) => RadioListTile<T>(
-                title: Text(e.toString()),
-                value: e,
-                groupValue: value,
-                onChanged: (e) {
-                  Get.back(result: e);
-                },
-              ),
-            )
-            .toList(),
+    var result = await Get.dialog<T>(
+      RadioGroup<T>(
+        groupValue: value,
+        onChanged: (selectedValue) {
+          Get.back(result: selectedValue);
+        },
+        child: SimpleDialog(
+          title: Text(title),
+          children: contents
+              .map(
+                (option) => RadioListTile<T>(
+                  title: Text(option.toString()),
+                  value: option,
+                ),
+              )
+              .toList(),
+        ),
       ),
     );
     return result;
@@ -177,21 +180,23 @@ class DialogUtils {
     T value, {
     String title = '',
   }) async {
-    var result = await Get.dialog(
-      SimpleDialog(
-        title: Text(title),
-        children: contents.keys
-            .map(
-              (e) => RadioListTile<T>(
-                title: Text((contents[e] ?? '-').tr),
-                value: e,
-                groupValue: value,
-                onChanged: (e) {
-                  Get.back(result: e);
-                },
-              ),
-            )
-            .toList(),
+    var result = await Get.dialog<T>(
+      RadioGroup<T>(
+        groupValue: value,
+        onChanged: (selectedValue) {
+          Get.back(result: selectedValue);
+        },
+        child: SimpleDialog(
+          title: Text(title),
+          children: contents.keys
+              .map(
+                (option) => RadioListTile<T>(
+                  title: Text((contents[option] ?? '-').tr),
+                  value: option,
+                ),
+              )
+              .toList(),
+        ),
       ),
     );
     return result;
@@ -228,20 +233,18 @@ class DialogUtils {
                   );
                 }
               },
-              loadingBuilder: (context, event) => const Center(
-                child: CircularProgressIndicator(),
-              ),
-              pageController: PageController(
-                initialPage: index.value,
-              ),
+              loadingBuilder: (context, event) =>
+                  const Center(child: CircularProgressIndicator()),
+              pageController: PageController(initialPage: index.value),
               onPageChanged: ((i) {
                 index.value = i;
               }),
             ),
             Container(
               alignment: Alignment.bottomCenter,
-              margin: AppStyle.edgeInsetsA24
-                  .copyWith(bottom: 24 + AppStyle.bottomBarHeight),
+              margin: AppStyle.edgeInsetsA24.copyWith(
+                bottom: 24 + AppStyle.bottomBarHeight,
+              ),
               child: Obx(
                 () => Text(
                   "${index.value + 1}/${images.length}",

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/comment/user_comment_item.dart';
-import 'package:flutter_dmzj/modules/user/comment/user_comment_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/page_list_view.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/models/comment/user_comment_item.dart';
+import 'package:zaix/modules/user/comment/user_comment_controller.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/widgets/keep_alive_wrapper.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/page_list_view.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
@@ -14,18 +14,11 @@ class UserCommentView extends StatelessWidget {
   final int type;
   final int userId;
   final UserCommentController controller;
-  UserCommentView({
-    required this.type,
-    required this.userId,
-    Key? key,
-  })  : controller = Get.put(
-          UserCommentController(
-            type: type,
-            userId: userId,
-          ),
-          tag: "${userId}_$type",
-        ),
-        super(key: key);
+  UserCommentView({required this.type, required this.userId, super.key})
+    : controller = Get.put(
+        UserCommentController(type: type, userId: userId),
+        tag: "${userId}_$type",
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +29,7 @@ class UserCommentView extends StatelessWidget {
         separatorBuilder: (context, i) => Divider(
           endIndent: 12,
           indent: 12,
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues(alpha: .2),
           height: 1,
         ),
         itemBuilder: (context, i) {
@@ -51,11 +44,7 @@ class UserCommentView extends StatelessWidget {
                   onTap: () {
                     toDetail(item);
                   },
-                  child: NetImage(
-                    item.objCover,
-                    width: 60,
-                    borderRadius: 4,
-                  ),
+                  child: NetImage(item.objCover, width: 60, borderRadius: 4),
                 ),
                 AppStyle.hGap12,
                 Expanded(
@@ -63,14 +52,12 @@ class UserCommentView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        item.objName,
-                      ),
+                      Text(item.objName),
                       AppStyle.vGap8,
                       Container(
                         padding: AppStyle.edgeInsetsA8,
                         decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(.1),
+                          color: Colors.grey.withValues(alpha: .1),
                           borderRadius: AppStyle.radius4,
                         ),
                         child: Column(
@@ -82,16 +69,14 @@ class UserCommentView extends StatelessWidget {
                               visible: item.mastercomment != null,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(.1),
+                                  color: Colors.grey.withValues(alpha: .1),
                                   borderRadius: AppStyle.radius4,
                                 ),
                                 padding: AppStyle.edgeInsetsA4,
                                 margin: AppStyle.edgeInsetsV4,
                                 child: Text(
                                   "${item.mastercomment?.nickname}：${item.mastercomment?.content}",
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                  ),
+                                  style: const TextStyle(fontSize: 14),
                                 ),
                               ),
                             ),

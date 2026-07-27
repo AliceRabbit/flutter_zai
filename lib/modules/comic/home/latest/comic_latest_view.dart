@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/comic/update_item_model.dart';
-import 'package:flutter_dmzj/modules/comic/home/latest/comic_latest_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
-import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/page_list_view.dart';
+import 'package:zaix/app/app_constant.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/models/comic/update_item_model.dart';
+import 'package:zaix/modules/comic/home/latest/comic_latest_controller.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/services/user_service.dart';
+import 'package:zaix/widgets/keep_alive_wrapper.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/page_list_view.dart';
 import 'package:get/get.dart';
 
 class ComicLatestView extends StatelessWidget {
   final ComicLatestController controller;
-  ComicLatestView({Key? key})
-      : controller = Get.put(ComicLatestController()),
-        super(key: key);
+  ComicLatestView({super.key}) : controller = Get.put(ComicLatestController());
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +24,7 @@ class ComicLatestView extends StatelessWidget {
             children: [
               AppStyle.hGap12,
               ...controller.types.keys.map(
-                (e) => buildFilterButton(
-                  title: e,
-                  value: controller.types[e],
-                ),
+                (e) => buildFilterButton(title: e, value: controller.types[e]),
               ),
             ],
           ),
@@ -42,7 +37,7 @@ class ComicLatestView extends StatelessWidget {
               separatorBuilder: (context, i) => Divider(
                 endIndent: 12,
                 indent: 12,
-                color: Colors.grey.withOpacity(.2),
+                color: Colors.grey.withValues(alpha: .2),
                 height: 1,
               ),
               itemBuilder: (context, i) {
@@ -66,12 +61,7 @@ class ComicLatestView extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            NetImage(
-              item.cover ?? '',
-              width: 80,
-              height: 110,
-              borderRadius: 4,
-            ),
+            NetImage(item.cover ?? '', width: 80, height: 110, borderRadius: 4),
             AppStyle.hGap12,
             Expanded(
               child: Column(
@@ -84,58 +74,68 @@ class ComicLatestView extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text.rich(
-                    TextSpan(children: [
-                      const WidgetSpan(
+                    TextSpan(
+                      children: [
+                        const WidgetSpan(
                           child: Icon(
-                        Icons.account_circle,
-                        color: Colors.grey,
-                        size: 18,
-                      )),
-                      const TextSpan(
-                        text: " ",
-                      ),
-                      TextSpan(
+                            Icons.account_circle,
+                            color: Colors.grey,
+                            size: 18,
+                          ),
+                        ),
+                        const TextSpan(text: " "),
+                        TextSpan(
                           text: item.authors,
-                          style:
-                              const TextStyle(color: Colors.grey, fontSize: 14))
-                    ]),
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 2),
-                  Text(item.types ?? '',
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                  Text(
+                    item.types ?? '',
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
                   const SizedBox(height: 2),
-                  Text(item.lastUpdateChapterName ?? '',
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                  Text(
+                    item.lastUpdateChapterName ?? '',
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
                   const SizedBox(height: 2),
-                  Text("更新于${Utils.formatTimestamp(item.lastUpdatetime ?? 0)}",
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                  Text(
+                    "更新于${Utils.formatTimestamp(item.lastUpdatetime ?? 0)}",
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
                 ],
               ),
             ),
             Center(
               child: Obx(
-                () => UserService.instance.subscribedComicIds
-                        .contains(item.comicId.toInt())
+                () =>
+                    UserService.instance.subscribedComicIds.contains(
+                      item.comicId.toInt(),
+                    )
                     ? IconButton(
                         icon: const Icon(Icons.favorite),
                         onPressed: () {
-                          UserService.instance.cancelSubscribe(
-                            [item.comicId.toInt()],
-                            AppConstant.kTypeComic,
-                          );
+                          UserService.instance.cancelSubscribe([
+                            item.comicId.toInt(),
+                          ], AppConstant.kTypeComic);
                         },
                       )
                     : IconButton(
                         icon: const Icon(Icons.favorite_border),
                         onPressed: () {
-                          UserService.instance.addSubscribe(
-                            [item.comicId.toInt()],
-                            AppConstant.kTypeComic,
-                          );
+                          UserService.instance.addSubscribe([
+                            item.comicId.toInt(),
+                          ], AppConstant.kTypeComic);
                         },
                       ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -149,13 +149,15 @@ class ComicLatestView extends StatelessWidget {
       child: Obx(
         () => TextButton(
           style: TextButton.styleFrom(
-            foregroundColor:
-                controller.type.value == value ? Colors.blue : Colors.grey,
+            foregroundColor: controller.type.value == value
+                ? Colors.blue
+                : Colors.grey,
             shape: RoundedRectangleBorder(
               borderRadius: AppStyle.radius24,
               side: BorderSide(
-                color:
-                    controller.type.value == value ? Colors.blue : Colors.grey,
+                color: controller.type.value == value
+                    ? Colors.blue
+                    : Colors.grey,
               ),
             ),
             textStyle: const TextStyle(fontSize: 14),

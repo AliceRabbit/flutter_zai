@@ -1,16 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/app/event_bus.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/modules/comic/home/comic_home_page.dart';
-import 'package:flutter_dmzj/modules/news/home/news_home_controller.dart';
-import 'package:flutter_dmzj/modules/news/home/news_home_page.dart';
-import 'package:flutter_dmzj/modules/novel/home/novel_home_controller.dart';
-import 'package:flutter_dmzj/modules/novel/home/novel_home_page.dart';
-import 'package:flutter_dmzj/modules/user/user_home_page.dart';
+import 'package:zaix/services/app_settings_service.dart';
+import 'package:zaix/app/dialog_utils.dart';
+import 'package:zaix/app/event_bus.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/modules/comic/home/comic_home_page.dart';
+import 'package:zaix/modules/news/home/news_home_controller.dart';
+import 'package:zaix/modules/news/home/news_home_page.dart';
+import 'package:zaix/modules/novel/home/novel_home_controller.dart';
+import 'package:zaix/modules/novel/home/novel_home_page.dart';
+import 'package:zaix/modules/user/user_home_page.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:multi_split_view/multi_split_view.dart';
@@ -22,9 +22,7 @@ class IndexController extends GetxController {
   final GlobalKey subRouterKey = GlobalKey();
 
   final MultiSplitViewController multiSplitViewController =
-      MultiSplitViewController(areas: [
-    Area(minimalSize: 400, size: 500),
-  ]);
+      MultiSplitViewController(areas: [Area(min: 400, size: 500)]);
 
   /// 双击退出Flag
   bool doubleClickExit = false;
@@ -45,9 +43,13 @@ class IndexController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    doubleClickTimer?.cancel();
+    multiSplitViewController.dispose();
+    super.onClose();
+  }
 
-  void setIndex(i) {
+  void setIndex(int i) {
     if (i == 1 && pages[i] is SizedBox) {
       Get.put(NewsHomeController());
       pages[i] = const NewsHomePage();

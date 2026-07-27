@@ -1,39 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/db/local_favorite.dart';
-import 'package:flutter_dmzj/modules/user/local_favorite/local_favorite_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/page_grid_view.dart';
-import 'package:flutter_dmzj/widgets/shadow_card.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/models/db/local_favorite.dart';
+import 'package:zaix/modules/user/local_favorite/local_favorite_controller.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/page_grid_view.dart';
+import 'package:zaix/widgets/shadow_card.dart';
 import 'package:get/get.dart';
 
 class LocalFavoritePage extends StatelessWidget {
   final LocalFavoriteController controller;
   LocalFavoritePage({super.key})
-      : controller = Get.put(LocalFavoriteController());
+    : controller = Get.put(LocalFavoriteController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("本机收藏"),
+      appBar: AppBar(title: const Text("本机收藏")),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          var count = constraints.maxWidth ~/ 160;
+          if (count < 3) count = 3;
+          return PageGridView(
+            pageController: controller,
+            firstRefresh: true,
+            crossAxisCount: count,
+            padding: AppStyle.edgeInsetsA12,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            itemBuilder: (context, i) {
+              var item = controller.list[i];
+              return buildItem(item);
+            },
+          );
+        },
       ),
-      body: LayoutBuilder(builder: (context, constraints) {
-        var count = constraints.maxWidth ~/ 160;
-        if (count < 3) count = 3;
-        return PageGridView(
-          pageController: controller,
-          firstRefresh: true,
-          crossAxisCount: count,
-          padding: AppStyle.edgeInsetsA12,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          itemBuilder: (context, i) {
-            var item = controller.list[i];
-            return buildItem(item);
-          },
-        );
-      }),
       bottomNavigationBar: Obx(
         () => Offstage(
           offstage: !controller.editMode.value,
@@ -89,10 +89,7 @@ class LocalFavoritePage extends StatelessWidget {
             children: [
               AspectRatio(
                 aspectRatio: 27 / 36,
-                child: NetImage(
-                  item.cover,
-                  borderRadius: 4,
-                ),
+                child: NetImage(item.cover, borderRadius: 4),
               ),
               Padding(
                 padding: AppStyle.edgeInsetsA8,
@@ -100,9 +97,7 @@ class LocalFavoritePage extends StatelessWidget {
                   item.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    height: 1.2,
-                  ),
+                  style: const TextStyle(height: 1.2),
                 ),
               ),
             ],

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/comic/search_item.dart';
-import 'package:flutter_dmzj/modules/comic/search/comic_search_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/page_list_view.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/models/comic/search_item.dart';
+import 'package:zaix/modules/comic/search/comic_search_controller.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/page_list_view.dart';
 import 'package:get/get.dart';
 
 class ComicSearchPage extends StatelessWidget {
   final String keyword;
   final ComicSearchController controller;
   ComicSearchPage({this.keyword = "", super.key})
-      : controller = Get.put(ComicSearchController(keyword));
+    : controller = Get.put(ComicSearchController(keyword));
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class ComicSearchPage extends StatelessWidget {
             separatorBuilder: (context, i) => Divider(
               endIndent: 12,
               indent: 12,
-              color: Colors.grey.withOpacity(.2),
+              color: Colors.grey.withValues(alpha: .2),
               height: 1,
             ),
             itemBuilder: (context, i) {
@@ -120,12 +120,7 @@ class ComicSearchPage extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            NetImage(
-              item.cover,
-              width: 80,
-              height: 110,
-              borderRadius: 4,
-            ),
+            NetImage(item.cover, width: 80, height: 110, borderRadius: 4),
             AppStyle.hGap12,
             Expanded(
               child: Column(
@@ -138,28 +133,36 @@ class ComicSearchPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text.rich(
-                    TextSpan(children: [
-                      const WidgetSpan(
+                    TextSpan(
+                      children: [
+                        const WidgetSpan(
                           child: Icon(
-                        Icons.account_circle,
-                        color: Colors.grey,
-                        size: 18,
-                      )),
-                      const TextSpan(
-                        text: " ",
-                      ),
-                      TextSpan(
+                            Icons.account_circle,
+                            color: Colors.grey,
+                            size: 18,
+                          ),
+                        ),
+                        const TextSpan(text: " "),
+                        TextSpan(
                           text: item.author,
-                          style:
-                              const TextStyle(color: Colors.grey, fontSize: 14))
-                    ]),
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   AppStyle.vGap4,
-                  Text(item.tags,
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                  Text(
+                    item.tags,
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
                   AppStyle.vGap4,
-                  Text(item.lastChapterName,
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                  Text(
+                    item.lastChapterName,
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
                 ],
               ),
             ),

@@ -1,20 +1,20 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/modules/user/user_home_controller.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
-import 'package:flutter_dmzj/services/novel_download_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
-import 'package:flutter_dmzj/widgets/user_photo.dart';
+import 'package:zaix/app/app_color.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/dialog_utils.dart';
+import 'package:zaix/modules/user/user_home_controller.dart';
+import 'package:zaix/services/comic_download_service.dart';
+import 'package:zaix/services/novel_download_service.dart';
+import 'package:zaix/services/user_service.dart';
+import 'package:zaix/widgets/user_photo.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class UserHomePage extends GetView<UserHomeController> {
-  const UserHomePage({Key? key}) : super(key: key);
+  const UserHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +47,24 @@ class UserHomePage extends GetView<UserHomeController> {
                       ),
                       title: Text.rich(
                         TextSpan(
-                          text: UserService
-                                  .instance.userProfile.value?.nickname ??
+                          text:
+                              UserService
+                                  .instance
+                                  .userProfile
+                                  .value
+                                  ?.nickname ??
                               UserService.instance.nickname,
                           children: [
                             WidgetSpan(
                               alignment: PlaceholderAlignment.middle,
                               child: Visibility(
-                                visible: (UserService.instance.userProfile.value
-                                        ?.userfeeinfo?.isVip ??
+                                visible:
+                                    (UserService
+                                        .instance
+                                        .userProfile
+                                        .value
+                                        ?.userfeeinfo
+                                        ?.isVip ??
                                     false),
                                 child: Padding(
                                   padding: AppStyle.edgeInsetsL4,
@@ -131,17 +140,9 @@ class UserHomePage extends GetView<UserHomeController> {
                   () => Visibility(
                     visible: !UserService.instance.logined.value,
                     child: ListTile(
-                      leading: const UserPhoto(
-                        url: "",
-                        size: 48,
-                      ),
-                      title: const Text(
-                        "未登录",
-                        style: TextStyle(height: 1.0),
-                      ),
-                      subtitle: const Text(
-                        "点击前往登录",
-                      ),
+                      leading: const UserPhoto(url: "", size: 48),
+                      title: const Text("未登录", style: TextStyle(height: 1.0)),
+                      subtitle: const Text("点击前往登录"),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
@@ -223,7 +224,9 @@ class UserHomePage extends GetView<UserHomeController> {
                           Obx(
                             () => Visibility(
                               visible: ComicDownloadService
-                                  .instance.taskQueues.isNotEmpty,
+                                  .instance
+                                  .taskQueues
+                                  .isNotEmpty,
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.red,
@@ -243,10 +246,7 @@ class UserHomePage extends GetView<UserHomeController> {
                               ),
                             ),
                           ),
-                          const Icon(
-                            Icons.chevron_right,
-                            color: Colors.grey,
-                          ),
+                          const Icon(Icons.chevron_right, color: Colors.grey),
                         ],
                       ),
                       onTap: controller.comicDownload,
@@ -260,7 +260,9 @@ class UserHomePage extends GetView<UserHomeController> {
                           Obx(
                             () => Visibility(
                               visible: NovelDownloadService
-                                  .instance.taskQueues.isNotEmpty,
+                                  .instance
+                                  .taskQueues
+                                  .isNotEmpty,
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.red,
@@ -280,10 +282,7 @@ class UserHomePage extends GetView<UserHomeController> {
                               ),
                             ),
                           ),
-                          const Icon(
-                            Icons.chevron_right,
-                            color: Colors.grey,
-                          ),
+                          const Icon(Icons.chevron_right, color: Colors.grey),
                         ],
                       ),
                       onTap: controller.novelDownload,
@@ -295,7 +294,8 @@ class UserHomePage extends GetView<UserHomeController> {
                   children: [
                     ListTile(
                       leading: Icon(
-                          Get.isDarkMode ? Remix.moon_line : Remix.sun_line),
+                        Get.isDarkMode ? Remix.moon_line : Remix.sun_line,
+                      ),
                       title: const Text("显示主题"),
                       trailing: const Icon(
                         Icons.chevron_right,
@@ -320,10 +320,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     const ListTile(
                       leading: Icon(Remix.error_warning_line),
                       title: Text("免责声明"),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: Colors.grey,
-                      ),
+                      trailing: Icon(Icons.chevron_right, color: Colors.grey),
                       onTap: DialogUtils.showStatement,
                     ),
                     ListTile(

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/user/subscribe_comic_model.dart';
-import 'package:flutter_dmzj/modules/user/subscribe/comic/comic_subscribe_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/page_grid_view.dart';
-import 'package:flutter_dmzj/widgets/shadow_card.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/models/user/subscribe_comic_model.dart';
+import 'package:zaix/modules/user/subscribe/comic/comic_subscribe_controller.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/widgets/keep_alive_wrapper.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/page_grid_view.dart';
+import 'package:zaix/widgets/shadow_card.dart';
 import 'package:get/get.dart';
 
 class ComicSubscribeView extends StatelessWidget {
   final ComicSubscribeController controller;
   ComicSubscribeView({super.key})
-      : controller = Get.put(ComicSubscribeController());
+    : controller = Get.put(ComicSubscribeController());
 
   @override
   Widget build(BuildContext context) {
@@ -42,27 +42,26 @@ class ComicSubscribeView extends StatelessWidget {
               ],
             ),
           ),
-          Divider(
-            color: Colors.grey.withOpacity(.2),
-            height: 1.0,
-          ),
+          Divider(color: Colors.grey.withValues(alpha: .2), height: 1.0),
           Expanded(
-            child: LayoutBuilder(builder: (context, constraints) {
-              var count = constraints.maxWidth ~/ 160;
-              if (count < 3) count = 3;
-              return PageGridView(
-                pageController: controller,
-                firstRefresh: true,
-                crossAxisCount: count,
-                padding: AppStyle.edgeInsetsA12,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                itemBuilder: (context, i) {
-                  var item = controller.list[i];
-                  return buildItem(item);
-                },
-              );
-            }),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                var count = constraints.maxWidth ~/ 160;
+                if (count < 3) count = 3;
+                return PageGridView(
+                  pageController: controller,
+                  firstRefresh: true,
+                  crossAxisCount: count,
+                  padding: AppStyle.edgeInsetsA12,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  itemBuilder: (context, i) {
+                    var item = controller.list[i];
+                    return buildItem(item);
+                  },
+                );
+              },
+            ),
           ),
           Obx(
             () => Offstage(
@@ -129,25 +128,25 @@ class ComicSubscribeView extends StatelessWidget {
                 children: [
                   AspectRatio(
                     aspectRatio: 27 / 36,
-                    child: NetImage(
-                      item.cover,
-                      borderRadius: 4,
-                    ),
+                    child: NetImage(item.cover, borderRadius: 4),
                   ),
                   Positioned(
                     left: 0,
                     bottom: 0,
                     child: Container(
                       decoration: BoxDecoration(
-                        color:
-                            item.status == "连载中" ? Colors.blue : Colors.orange,
+                        color: item.status == "连载中"
+                            ? Colors.blue
+                            : Colors.orange,
                         borderRadius: const BorderRadius.only(
                           topRight: Radius.circular(4),
                           bottomLeft: Radius.circular(4),
                         ),
                       ),
-                      padding:
-                          AppStyle.edgeInsetsH8.copyWith(top: 2, bottom: 2),
+                      padding: AppStyle.edgeInsetsH8.copyWith(
+                        top: 2,
+                        bottom: 2,
+                      ),
                       child: Text(
                         item.status,
                         style: const TextStyle(
@@ -171,14 +170,13 @@ class ComicSubscribeView extends StatelessWidget {
                               topRight: Radius.circular(4),
                             ),
                           ),
-                          padding:
-                              AppStyle.edgeInsetsH8.copyWith(top: 2, bottom: 2),
+                          padding: AppStyle.edgeInsetsH8.copyWith(
+                            top: 2,
+                            bottom: 2,
+                          ),
                           child: const Text(
                             "新",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white,
-                            ),
+                            style: TextStyle(fontSize: 12, color: Colors.white),
                           ),
                         ),
                       ),
@@ -193,9 +191,7 @@ class ComicSubscribeView extends StatelessWidget {
                   item.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    height: 1.2,
-                  ),
+                  style: const TextStyle(height: 1.2),
                 ),
               ),
               AppStyle.vGap4,
@@ -257,13 +253,8 @@ class ComicSubscribeView extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
-                types[value] ?? "",
-              ),
-              const Icon(
-                Icons.arrow_drop_down,
-                color: Colors.grey,
-              )
+              Text(types[value] ?? ""),
+              const Icon(Icons.arrow_drop_down, color: Colors.grey),
             ],
           ),
         ),

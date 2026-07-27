@@ -1,12 +1,12 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/modules/comic/detail/comic_detail_controller.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
+import 'package:zaix/app/app_color.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/modules/comic/detail/comic_detail_controller.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/status/app_error_widget.dart';
+import 'package:zaix/widgets/status/app_loadding_widget.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
@@ -15,10 +15,10 @@ class ComicDetailPage extends StatelessWidget {
   final int id;
   final ComicDetailControler controller;
   ComicDetailPage(this.id, {super.key})
-      : controller = Get.put(
-          ComicDetailControler(id),
-          tag: DateTime.now().millisecondsSinceEpoch.toString(),
-        );
+    : controller = Get.put(
+        ComicDetailControler(id),
+        tag: DateTime.now().millisecondsSinceEpoch.toString(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +37,9 @@ class ComicDetailPage extends StatelessWidget {
               onPressed: controller.favorited.value
                   ? controller.cancelFavorite
                   : controller.favorite,
-              icon: Icon(controller.favorited.value
-                  ? Remix.star_fill
-                  : Remix.star_line),
+              icon: Icon(
+                controller.favorited.value ? Remix.star_fill : Remix.star_line,
+              ),
             ),
           ),
           IconButton(
@@ -77,7 +77,7 @@ class ComicDetailPage extends StatelessWidget {
                               },
                             ),
                             Divider(
-                              color: Colors.grey.withOpacity(.2),
+                              color: Colors.grey.withValues(alpha: .2),
                               height: 1.0,
                             ),
                           ],
@@ -140,10 +140,7 @@ class ComicDetailPage extends StatelessWidget {
                     textStyle: const TextStyle(fontSize: 14),
                   ),
                   onPressed: controller.comment,
-                  icon: const Icon(
-                    Remix.chat_2_line,
-                    size: 20,
-                  ),
+                  icon: const Icon(Remix.chat_2_line, size: 20),
                   label: const Text("评论"),
                 ),
               ),
@@ -153,10 +150,7 @@ class ComicDetailPage extends StatelessWidget {
                     textStyle: const TextStyle(fontSize: 14),
                   ),
                   onPressed: controller.download,
-                  icon: const Icon(
-                    Remix.download_line,
-                    size: 20,
-                  ),
+                  icon: const Icon(Remix.download_line, size: 20),
                   label: const Text("下载"),
                 ),
               ),
@@ -300,19 +294,13 @@ class ComicDetailPage extends StatelessWidget {
           },
           child: Text(
             controller.detail.value.description,
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 14,
-            ),
+            style: const TextStyle(color: Colors.grey, fontSize: 14),
             maxLines: controller.expandDescription.value ? 999 : 2,
             overflow: TextOverflow.ellipsis,
           ),
         ),
         AppStyle.vGap12,
-        Divider(
-          color: Colors.grey.withOpacity(.2),
-          height: 1.0,
-        ),
+        Divider(color: Colors.grey.withValues(alpha: .2), height: 1.0),
       ],
     );
   }
@@ -328,168 +316,182 @@ class ComicDetailPage extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey, fontSize: 14),
                 ),
-              )
+              ),
             ]
           : controller.detail.value.volumes
-              .map(
-                (item) => Obx(
-                  () => Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Padding(
-                        padding: AppStyle.edgeInsetsV8,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "${item.title}(共${item.chapters.length}话)",
-                                style: Get.textTheme.titleSmall,
+                .map(
+                  (item) => Obx(
+                    () => Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
+                          padding: AppStyle.edgeInsetsV8,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "${item.title}(共${item.chapters.length}话)",
+                                  style: Get.textTheme.titleSmall,
+                                ),
                               ),
-                            ),
-                            item.sortType.value == 1
-                                ? TextButton.icon(
-                                    style: TextButton.styleFrom(
-                                      textStyle: const TextStyle(fontSize: 14),
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
+                              item.sortType.value == 1
+                                  ? TextButton.icon(
+                                      style: TextButton.styleFrom(
+                                        textStyle: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                        tapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
+                                      ),
+                                      onPressed: () {
+                                        item.sortType.value = 0;
+                                        item.sort();
+                                      },
+                                      icon: const Icon(
+                                        Remix.sort_asc,
+                                        size: 20,
+                                      ),
+                                      label: const Text("升序"),
+                                    )
+                                  : TextButton.icon(
+                                      style: TextButton.styleFrom(
+                                        textStyle: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                        tapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
+                                      ),
+                                      onPressed: () {
+                                        item.sortType.value = 1;
+                                        item.sort();
+                                      },
+                                      icon: const Icon(
+                                        Remix.sort_desc,
+                                        size: 20,
+                                      ),
+                                      label: const Text("倒序"),
                                     ),
-                                    onPressed: () {
-                                      item.sortType.value = 0;
-                                      item.sort();
-                                    },
-                                    icon: const Icon(
-                                      Remix.sort_asc,
-                                      size: 20,
-                                    ),
-                                    label: const Text("升序"),
-                                  )
-                                : TextButton.icon(
-                                    style: TextButton.styleFrom(
-                                      textStyle: const TextStyle(fontSize: 14),
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    onPressed: () {
-                                      item.sortType.value = 1;
-                                      item.sort();
-                                    },
-                                    icon: const Icon(
-                                      Remix.sort_desc,
-                                      size: 20,
-                                    ),
-                                    label: const Text("倒序"),
-                                  ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      LayoutBuilder(builder: (ctx, constraints) {
-                        var count = constraints.maxWidth ~/ 160;
-                        if (count < 3) count = 3;
+                        LayoutBuilder(
+                          builder: (ctx, constraints) {
+                            var count = constraints.maxWidth ~/ 160;
+                            if (count < 3) count = 3;
 
-                        return Obx(
-                          () => MasonryGridView.count(
-                            shrinkWrap: true,
-                            padding: EdgeInsets.zero,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount:
-                                (item.showMoreButton && !item.showAll.value)
+                            return Obx(
+                              () => MasonryGridView.count(
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount:
+                                    (item.showMoreButton && !item.showAll.value)
                                     ? 15
                                     : item.chapters.length,
-                            itemBuilder: (_, i) {
-                              if (item.showMoreButton &&
-                                  !item.showAll.value &&
-                                  i == 14) {
-                                return Tooltip(
-                                  message: "展开全部章节",
-                                  child: OutlinedButton(
-                                    style: OutlinedButton.styleFrom(
-                                      foregroundColor: Colors.grey,
-                                      textStyle: const TextStyle(fontSize: 14),
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      minimumSize: const Size.fromHeight(40),
-                                    ),
-                                    onPressed: () {
-                                      item.showAll.value = true;
-                                    },
-                                    child: const Icon(Icons.arrow_drop_down),
-                                  ),
-                                );
-                              }
-                              return Tooltip(
-                                message: item.chapters[i].chapterTitle,
-                                child: Obx(
-                                  () => Stack(
-                                    children: [
-                                      OutlinedButton(
+                                itemBuilder: (_, i) {
+                                  if (item.showMoreButton &&
+                                      !item.showAll.value &&
+                                      i == 14) {
+                                    return Tooltip(
+                                      message: "展开全部章节",
+                                      child: OutlinedButton(
                                         style: OutlinedButton.styleFrom(
-                                          foregroundColor: item
-                                                      .chapters[i].chapterId ==
-                                                  controller
-                                                      .history.value?.chapterId
-                                              ? Colors.blue
-                                              : Get.textTheme.bodyMedium!.color,
-                                          textStyle:
-                                              const TextStyle(fontSize: 14),
+                                          foregroundColor: Colors.grey,
+                                          textStyle: const TextStyle(
+                                            fontSize: 14,
+                                          ),
                                           tapTargetSize:
                                               MaterialTapTargetSize.shrinkWrap,
-                                          minimumSize:
-                                              const Size.fromHeight(40),
-                                        ),
-                                        onPressed: () {
-                                          controller.readChapter(
-                                              item, item.chapters[i]);
-                                        },
-                                        child: Text(
-                                          item.chapters[i].chapterTitle,
-                                          textAlign: TextAlign.center,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        left: -2,
-                                        top: 0,
-                                        child: Offstage(
-                                          offstage: !item.chapters[i].isVip,
-                                          child: Image.asset(
-                                            "assets/images/vip_chapter.png",
-                                            height: 16,
+                                          minimumSize: const Size.fromHeight(
+                                            40,
                                           ),
                                         ),
+                                        onPressed: () {
+                                          item.showAll.value = true;
+                                        },
+                                        child: const Icon(
+                                          Icons.arrow_drop_down,
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                            crossAxisCount: count,
-                            crossAxisSpacing: 8,
-                            mainAxisSpacing: 8,
-                          ),
-                        );
-                      })
-                    ],
+                                    );
+                                  }
+                                  return Tooltip(
+                                    message: item.chapters[i].chapterTitle,
+                                    child: Obx(
+                                      () => Stack(
+                                        children: [
+                                          OutlinedButton(
+                                            style: OutlinedButton.styleFrom(
+                                              foregroundColor:
+                                                  item.chapters[i].chapterId ==
+                                                      controller
+                                                          .history
+                                                          .value
+                                                          ?.chapterId
+                                                  ? Colors.blue
+                                                  : Get
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color,
+                                              textStyle: const TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                              tapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                              minimumSize:
+                                                  const Size.fromHeight(40),
+                                            ),
+                                            onPressed: () {
+                                              controller.readChapter(
+                                                item,
+                                                item.chapters[i],
+                                              );
+                                            },
+                                            child: Text(
+                                              item.chapters[i].chapterTitle,
+                                              textAlign: TextAlign.center,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          Positioned(
+                                            left: -2,
+                                            top: 0,
+                                            child: Offstage(
+                                              offstage: !item.chapters[i].isVip,
+                                              child: Image.asset(
+                                                "assets/images/vip_chapter.png",
+                                                height: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                crossAxisCount: count,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              )
-              .toList(),
+                )
+                .toList(),
     );
   }
 
-  Widget _buildInfo({
-    required String title,
-    IconData iconData = Icons.tag,
-  }) {
+  Widget _buildInfo({required String title, IconData iconData = Icons.tag}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(
-            iconData,
-            color: Colors.grey,
-            size: 16,
-          ),
+          Icon(iconData, color: Colors.grey, size: 16),
           AppStyle.hGap8,
           Expanded(
             child: Text(
@@ -514,18 +516,9 @@ class ComicDetailPage extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(
-            iconData,
-            color: Colors.grey,
-            size: 16,
-          ),
+          Icon(iconData, color: Colors.grey, size: 16),
           AppStyle.hGap8,
-          Expanded(
-            child: Wrap(
-              spacing: 8,
-              children: children,
-            ),
-          ),
+          Expanded(child: Wrap(spacing: 8, children: children)),
         ],
       ),
     );

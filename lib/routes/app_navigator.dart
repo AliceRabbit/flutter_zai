@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/comic/detail_info.dart';
-import 'package:flutter_dmzj/models/comment/comment_item.dart';
-import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
-import 'package:flutter_dmzj/routes/route_path.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
-import 'package:flutter_dmzj/services/novel_download_service.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/models/comic/detail_info.dart';
+import 'package:zaix/models/comment/comment_item.dart';
+import 'package:zaix/models/novel/novel_detail_model.dart';
+import 'package:zaix/routes/route_path.dart';
+import 'package:zaix/services/comic_download_service.dart';
+import 'package:zaix/services/novel_download_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -20,8 +20,9 @@ class AppNavigator {
   static const int kSubNavigatorID = 1;
 
   /// 子路由Key
-  static final GlobalKey<NavigatorState>? subNavigatorKey =
-      Get.nestedKey(kSubNavigatorID);
+  static final GlobalKey<NavigatorState>? subNavigatorKey = Get.nestedKey(
+    kSubNavigatorID,
+  );
 
   /// 子路由的Context
   static BuildContext get subNavigatorContext =>
@@ -62,11 +63,10 @@ class AppNavigator {
     }
     //https://news.dmzj.com/article/77288.html
     if (url.contains("article/")) {
-      toContentPage(RoutePath.kNewsDetail, arg: {
-        "title": title,
-        "newsUrl": url,
-        "newsId": newsId,
-      });
+      toContentPage(
+        RoutePath.kNewsDetail,
+        arg: {"title": title, "newsUrl": url, "newsId": newsId},
+      );
     } else {
       toWebView(url);
     }
@@ -84,14 +84,8 @@ class AppNavigator {
   }
 
   /// 打开评论
-  static void toComment({
-    required int objId,
-    required int type,
-  }) {
-    toContentPage(RoutePath.kComment, arg: {
-      "objId": objId,
-      "type": type,
-    });
+  static void toComment({required int objId, required int type}) {
+    toContentPage(RoutePath.kComment, arg: {"objId": objId, "type": type});
   }
 
   /// 打开WebView
@@ -113,10 +107,7 @@ class AppNavigator {
   static void toComicAuthorDetail(int id, {String authorName = ""}) {
     toContentPage(
       RoutePath.kComicAuthorDetail,
-      arg: {
-        "id": id,
-        "authorName": authorName,
-      },
+      arg: {"id": id, "authorName": authorName},
     );
   }
 
@@ -174,14 +165,17 @@ class AppNavigator {
     required bool isLongComic,
   }) async {
     // 使用主路由跳转
-    await Get.toNamed(RoutePath.kComicReader, arguments: {
-      "comicId": comicId,
-      "comicTitle": comicTitle,
-      "comicCover": comicCover,
-      "chapters": chapters,
-      "chapter": chapter,
-      "isLongComic": isLongComic,
-    });
+    await Get.toNamed(
+      RoutePath.kComicReader,
+      arguments: {
+        "comicId": comicId,
+        "comicTitle": comicTitle,
+        "comicCover": comicCover,
+        "chapters": chapters,
+        "chapter": chapter,
+        "isLongComic": isLongComic,
+      },
+    );
   }
 
   /// 打开漫画阅读
@@ -193,13 +187,16 @@ class AppNavigator {
     required NovelDetailChapter chapter,
   }) async {
     // 使用主路由跳转
-    await Get.toNamed(RoutePath.kNovelReader, arguments: {
-      "novelId": novelId,
-      "novelTitle": novelTitle,
-      "novelCover": novelCover,
-      "chapters": chapters,
-      "chapter": chapter,
-    });
+    await Get.toNamed(
+      RoutePath.kNovelReader,
+      arguments: {
+        "novelId": novelId,
+        "novelTitle": novelTitle,
+        "novelCover": novelCover,
+        "chapters": chapters,
+        "chapter": chapter,
+      },
+    );
   }
 
   /// 打开漫画下载-选择章节
@@ -242,11 +239,10 @@ class AppNavigator {
     required int type,
     CommentItem? replyItem,
   }) {
-    toContentPage(RoutePath.kCommentAdd, arg: {
-      "objId": objId,
-      "type": type,
-      "replyItem": replyItem,
-    });
+    toContentPage(
+      RoutePath.kCommentAdd,
+      arg: {"objId": objId, "type": type, "replyItem": replyItem},
+    );
   }
 
   /// 打开用户的评论

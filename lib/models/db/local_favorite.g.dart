@@ -8,7 +8,7 @@ part of 'local_favorite.dart';
 
 class LocalFavoriteAdapter extends TypeAdapter<LocalFavorite> {
   @override
-  final int typeId = 6;
+  final typeId = 6;
 
   @override
   LocalFavorite read(BinaryReader reader) {
@@ -18,10 +18,10 @@ class LocalFavoriteAdapter extends TypeAdapter<LocalFavorite> {
     };
     return LocalFavorite(
       id: fields[0] as String,
-      objId: fields[1] as int,
+      objId: (fields[1] as num).toInt(),
       title: fields[2] as String,
       cover: fields[3] as String,
-      type: fields[4] as int,
+      type: (fields[4] as num).toInt(),
       updateTime: fields[5] as DateTime,
     );
   }

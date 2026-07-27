@@ -39,7 +39,8 @@ class UserCommentItem {
         mastercomment: json['masterComment'] == null
             ? null
             : UserMasterComment.fromJson(
-                asT<Map<String, dynamic>>(json['masterComment'])!),
+                asT<Map<String, dynamic>>(json['masterComment'])!,
+              ),
       );
 
   int commentId;
@@ -61,19 +62,19 @@ class UserCommentItem {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'comment_id': commentId,
-        'content': content,
-        'reply_amount': replyAmount,
-        'like_amount': likeAmount,
-        'origin_comment_id': originCommentId,
-        'obj_id': objId,
-        'create_time': createTime,
-        'to_comment_id': toCommentId,
-        'obj_cover': objCover,
-        'obj_name': objName,
-        'page_url': pageUrl,
-        'masterComment': mastercomment,
-      };
+    'comment_id': commentId,
+    'content': content,
+    'reply_amount': replyAmount,
+    'like_amount': likeAmount,
+    'origin_comment_id': originCommentId,
+    'obj_id': objId,
+    'create_time': createTime,
+    'to_comment_id': toCommentId,
+    'obj_cover': objCover,
+    'obj_name': objName,
+    'page_url': pageUrl,
+    'masterComment': mastercomment,
+  };
 }
 
 class UserMasterComment {
@@ -112,12 +113,12 @@ class UserMasterComment {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'content': content,
-        'sender_uid': senderUid,
-        'like_amount': likeAmount,
-        'create_time': createTime,
-        'reply_amount': replyAmount,
-        'nickname': nickname,
-      };
+    'id': id,
+    'content': content,
+    'sender_uid': senderUid,
+    'like_amount': likeAmount,
+    'create_time': createTime,
+    'reply_amount': replyAmount,
+    'nickname': nickname,
+  };
 }

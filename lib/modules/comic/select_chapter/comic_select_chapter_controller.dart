@@ -1,8 +1,8 @@
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/comic/detail_info.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/models/comic/detail_info.dart';
+import 'package:zaix/requests/comic_request.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/services/comic_download_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -28,8 +28,10 @@ class ComicSelectChapterController extends BaseController {
 
   void refreshV1() async {
     try {
-      var result =
-          await request.comicDetail(comicId: comicId, priorityV1: true);
+      var result = await request.comicDetail(
+        comicId: comicId,
+        priorityV1: true,
+      );
       if (result.volumes.isEmpty) {
         SmartDialog.showToast("没有找到任何章节");
         return;
@@ -118,8 +120,9 @@ class ComicSelectChapterController extends BaseController {
       ComicDetailVolume? volume;
       ComicDetailChapterItem? chapter;
       for (var item in volumes) {
-        var chapterItem =
-            item.chapters.firstWhereOrNull((y) => y.chapterId == id);
+        var chapterItem = item.chapters.firstWhereOrNull(
+          (y) => y.chapterId == id,
+        );
         if (chapterItem != null) {
           volume = item;
           chapter = chapterItem;

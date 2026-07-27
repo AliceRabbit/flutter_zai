@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/modules/common/empty_page.dart';
-import 'package:flutter_dmzj/modules/index/index_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/routes/app_pages.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/modules/common/empty_page.dart';
+import 'package:zaix/modules/index/index_controller.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/routes/app_pages.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
 class IndexPage extends GetView<IndexController> {
-  const IndexPage({Key? key}) : super(key: key);
+  const IndexPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +31,7 @@ class IndexPage extends GetView<IndexController> {
           () => Scaffold(
             body: indexStack,
             bottomNavigationBar: Theme(
-              data: Theme.of(context).copyWith(
-                splashColor: Colors.transparent,
-              ),
+              data: Theme.of(context).copyWith(splashColor: Colors.transparent),
               child: BottomNavigationBar(
                 currentIndex: controller.index.value,
                 onTap: controller.setIndex,
@@ -72,7 +70,7 @@ class IndexPage extends GetView<IndexController> {
             ignoring: !controller.showContent.value,
             child: content,
           ),
-        )
+        ),
       ],
     );
   }
@@ -89,9 +87,7 @@ class IndexPage extends GetView<IndexController> {
                 labelType: NavigationRailLabelType.all,
                 onDestinationSelected: controller.setIndex,
                 selectedIndex: controller.index.value,
-                leading: SizedBox(
-                  height: AppStyle.statusBarHeight,
-                ),
+                leading: SizedBox(height: AppStyle.statusBarHeight),
                 selectedLabelTextStyle: TextStyle(
                   fontSize: 10,
                   color: Theme.of(context).colorScheme.secondary,
@@ -126,16 +122,12 @@ class IndexPage extends GetView<IndexController> {
             width: 450,
             decoration: BoxDecoration(
               border: Border(
-                right: BorderSide(
-                  color: Colors.grey.withOpacity(.1),
-                ),
+                right: BorderSide(color: Colors.grey.withValues(alpha: .1)),
               ),
             ),
             child: indexStack,
           ),
-          Expanded(
-            child: content,
-          ),
+          Expanded(child: content),
         ],
       ),
     );
@@ -156,7 +148,7 @@ class IndexPage extends GetView<IndexController> {
     /// 拦截子路由的返回
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, _) {
         if (!didPop) {
           if (Navigator.canPop(Get.context!)) {
             Get.back();
@@ -188,12 +180,9 @@ class IndexPage extends GetView<IndexController> {
         child: Navigator(
           key: AppNavigator.subNavigatorKey,
           initialRoute: '/',
-          onUnknownRoute: (settings) => GetPageRoute(
-            page: () => const EmptyPage(),
-          ),
-          observers: [
-            SubNavigatorObserver(),
-          ],
+          onUnknownRoute: (settings) =>
+              GetPageRoute(page: () => const EmptyPage()),
+          observers: [SubNavigatorObserver()],
           onGenerateRoute: AppPages.generateSubRoute,
         ),
       ),

@@ -1,17 +1,17 @@
 import 'dart:async';
 
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/app/event_bus.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/db/novel_history.dart';
-import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
-import 'package:flutter_dmzj/requests/novel_request.dart';
-import 'package:flutter_dmzj/requests/user_request.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/app_constant.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/app/event_bus.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/models/db/novel_history.dart';
+import 'package:zaix/models/novel/novel_detail_model.dart';
+import 'package:zaix/requests/novel_request.dart';
+import 'package:zaix/requests/user_request.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/services/db_service.dart';
+import 'package:zaix/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -46,8 +46,9 @@ class NovelDetailControler extends BaseController {
       },
     );
     // 从本地读取订阅状态
-    subscribeStatus.value =
-        UserService.instance.subscribedNovelIds.contains(novelId);
+    subscribeStatus.value = UserService.instance.subscribedNovelIds.contains(
+      novelId,
+    );
     getHistory();
     loadDetail();
     loadSubscribeStatus();
@@ -104,8 +105,9 @@ class NovelDetailControler extends BaseController {
   Future loadChapter() async {
     try {
       var result = await request.novelChapter(novelId: novelId);
-      detail.value.volume.value =
-          result.map((e) => NovelDetailVolume.fromJson(e)).toList();
+      detail.value.volume.value = result
+          .map((e) => NovelDetailVolume.fromJson(e))
+          .toList();
     } catch (e) {
       SmartDialog.showToast("无法读取小说章节:$e");
     }
@@ -145,8 +147,9 @@ class NovelDetailControler extends BaseController {
   /// 订阅
   void subscribe() async {
     var result = await (subscribeStatus.value
-        ? UserService.instance
-            .cancelSubscribe([novelId], AppConstant.kTypeNovel)
+        ? UserService.instance.cancelSubscribe([
+            novelId,
+          ], AppConstant.kTypeNovel)
         : UserService.instance.addSubscribe([novelId], AppConstant.kTypeNovel));
     if (result) {
       subscribeStatus.value = !subscribeStatus.value;

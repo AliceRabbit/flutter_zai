@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/app_color.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/services/user_service.dart';
 import 'package:get/get.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
@@ -22,7 +22,8 @@ class WebViewPageController extends BaseController {
     webViewController.setJavaScriptMode(JavaScriptMode.unrestricted);
 
     webViewController.setBackgroundColor(
-        Get.isDarkMode ? Colors.black : AppColor.backgroundColor);
+      Get.isDarkMode ? Colors.black : AppColor.backgroundColor,
+    );
     webViewController.setNavigationDelegate(
       NavigationDelegate(
         onPageStarted: (String url) {
@@ -43,9 +44,12 @@ class WebViewPageController extends BaseController {
         },
       ),
     );
-    webViewController.loadRequest(Uri.parse(url), headers: {
-      "Cookie": UserService.instance.userProfile.value?.cookieVal ?? "",
-    });
+    webViewController.loadRequest(
+      Uri.parse(url),
+      headers: {
+        "Cookie": UserService.instance.userProfile.value?.cookieVal ?? "",
+      },
+    );
 
     /// TODO 无法加载Mixed Content
     /// 19年的问题了，Flutter还没解决...

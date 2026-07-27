@@ -31,8 +31,8 @@ class ComicCategoryItemModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'tagId': tagId,
-        'title': title,
-        'cover': cover,
-      };
+    'tagId': tagId,
+    'title': title,
+    'cover': cover,
+  };
 }

@@ -48,13 +48,15 @@ class UserProfileModel {
       }
     }
 
-    final List<UserPorfileBindModel>? bind =
-        json['bind'] is List ? <UserPorfileBindModel>[] : null;
+    final List<UserPorfileBindModel>? bind = json['bind'] is List
+        ? <UserPorfileBindModel>[]
+        : null;
     if (bind != null) {
       for (final dynamic item in json['bind']!) {
         if (item != null) {
           bind.add(
-              UserPorfileBindModel.fromJson(asT<Map<String, dynamic>>(item)!));
+            UserPorfileBindModel.fromJson(asT<Map<String, dynamic>>(item)!),
+          );
         }
       }
     }
@@ -77,12 +79,14 @@ class UserProfileModel {
       userDelInfo: json['user_del_info'] == null
           ? null
           : UserDelInfoModel.fromJson(
-              asT<Map<String, dynamic>>(json['user_del_info'])!),
+              asT<Map<String, dynamic>>(json['user_del_info'])!,
+            ),
       ip: asT<String?>(json['ip']),
       ipRegion: json['ip_region'] == null
           ? null
           : UserIpRegionModel.fromJson(
-              asT<Map<String, dynamic>>(json['ip_region'])!),
+              asT<Map<String, dynamic>>(json['ip_region'])!,
+            ),
       isModifyName: asT<int?>(json['is_modify_name']),
       data: data,
       amount: asT<int?>(json['amount']),
@@ -91,7 +95,8 @@ class UserProfileModel {
       userfeeinfo: json['userFeeInfo'] == null
           ? null
           : UserfeeInfo.fromJson(
-              asT<Map<String, dynamic>>(json['userFeeInfo'])!),
+              asT<Map<String, dynamic>>(json['userFeeInfo'])!,
+            ),
       userLevel: asT<String?>(json['user_level']),
       cookieVal: asT<String?>(json['cookie_val']),
       isBbsAdmin: asT<int?>(json['is_bbs_admin']),
@@ -132,34 +137,34 @@ class UserProfileModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'nickname': nickname,
-        'description': description,
-        'birthday': birthday,
-        'sex': sex,
-        'cover': cover,
-        'blood': blood,
-        'constellation': constellation,
-        'bind_phone': bindPhone,
-        'email': email,
-        'channel': channel,
-        'channelid': channelid,
-        'is_verify': isVerify,
-        'status': status,
-        'reason': reason,
-        'submit_logout': submitLogout,
-        'user_del_info': userDelInfo,
-        'ip': ip,
-        'ip_region': ipRegion,
-        'is_modify_name': isModifyName,
-        'data': data,
-        'amount': amount,
-        'is_set_pwd': isSetPwd,
-        'bind': bind,
-        'userFeeInfo': userfeeinfo,
-        'user_level': userLevel,
-        'cookie_val': cookieVal,
-        'is_bbs_admin': isBbsAdmin,
-      };
+    'nickname': nickname,
+    'description': description,
+    'birthday': birthday,
+    'sex': sex,
+    'cover': cover,
+    'blood': blood,
+    'constellation': constellation,
+    'bind_phone': bindPhone,
+    'email': email,
+    'channel': channel,
+    'channelid': channelid,
+    'is_verify': isVerify,
+    'status': status,
+    'reason': reason,
+    'submit_logout': submitLogout,
+    'user_del_info': userDelInfo,
+    'ip': ip,
+    'ip_region': ipRegion,
+    'is_modify_name': isModifyName,
+    'data': data,
+    'amount': amount,
+    'is_set_pwd': isSetPwd,
+    'bind': bind,
+    'userFeeInfo': userfeeinfo,
+    'user_level': userLevel,
+    'cookie_val': cookieVal,
+    'is_bbs_admin': isBbsAdmin,
+  };
 }
 
 class UserDelInfoModel {
@@ -198,23 +203,18 @@ class UserDelInfoModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'uid': uid,
-        'logout_id': logoutId,
-        'status': status,
-        'sub_time': subTime,
-        'cancel_time': cancelTime,
-        'cancel_user_type': cancelUserType,
-        'current_time': currentTime,
-      };
+    'uid': uid,
+    'logout_id': logoutId,
+    'status': status,
+    'sub_time': subTime,
+    'cancel_time': cancelTime,
+    'cancel_user_type': cancelUserType,
+    'current_time': currentTime,
+  };
 }
 
 class UserIpRegionModel {
-  UserIpRegionModel({
-    this.country,
-    this.province,
-    this.city,
-    this.provider,
-  });
+  UserIpRegionModel({this.country, this.province, this.city, this.provider});
 
   factory UserIpRegionModel.fromJson(Map<String, dynamic> json) =>
       UserIpRegionModel(
@@ -235,18 +235,15 @@ class UserIpRegionModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'country': country,
-        'province': province,
-        'city': city,
-        'provider': provider,
-      };
+    'country': country,
+    'province': province,
+    'city': city,
+    'provider': provider,
+  };
 }
 
 class UserPorfileBindModel {
-  UserPorfileBindModel({
-    this.type,
-    this.name,
-  });
+  UserPorfileBindModel({this.type, this.name});
 
   factory UserPorfileBindModel.fromJson(Map<String, dynamic> json) =>
       UserPorfileBindModel(
@@ -263,21 +260,18 @@ class UserPorfileBindModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'type': type,
-        'name': name,
-      };
+    'type': type,
+    'name': name,
+  };
 }
 
 class UserfeeInfo {
-  UserfeeInfo({
-    this.mCate,
-    this.mPeriod,
-  });
+  UserfeeInfo({this.mCate, this.mPeriod});
 
   factory UserfeeInfo.fromJson(Map<String, dynamic> json) => UserfeeInfo(
-        mCate: asT<int?>(json['m_cate']),
-        mPeriod: asT<int?>(json['m_period']),
-      );
+    mCate: asT<int?>(json['m_cate']),
+    mPeriod: asT<int?>(json['m_period']),
+  );
 
   int? mCate;
   int? mPeriod;
@@ -292,7 +286,7 @@ class UserfeeInfo {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'm_cate': mCate,
-        'm_period': mPeriod,
-      };
+    'm_cate': mCate,
+    'm_period': mPeriod,
+  };
 }

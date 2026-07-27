@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/news/news_tag_model.dart';
-import 'package:flutter_dmzj/modules/news/home/news_list_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/page_list_view.dart';
-import 'package:flutter_swiper_view/flutter_swiper_view.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/models/news/news_tag_model.dart';
+import 'package:zaix/modules/news/home/news_list_controller.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/widgets/auto_play_banner.dart';
+import 'package:zaix/widgets/keep_alive_wrapper.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/page_list_view.dart';
 import 'package:get/get.dart';
 
 class NewsListView extends StatelessWidget {
   final NewsTagModel tag;
   final NewsListController controller;
-  NewsListView({Key? key, required this.tag})
-      : controller = Get.put(NewsListController(tag), tag: tag.id.toString()),
-        super(key: key);
+  NewsListView({super.key, required this.tag})
+    : controller = Get.put(NewsListController(tag), tag: tag.id.toString());
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class NewsListView extends StatelessWidget {
         separatorBuilder: (context, i) => Divider(
           endIndent: 12,
           indent: 12,
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues(alpha: .2),
           height: 1,
         ),
         header: tag.id == 0 ? buildBanner() : null,
@@ -72,7 +71,9 @@ class NewsListView extends StatelessWidget {
                               Text(
                                 Utils.formatTimestamp(item.createTime ?? 0),
                                 style: const TextStyle(
-                                    color: Colors.grey, fontSize: 12),
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
                               ),
                               // Row(
                               //   children: <Widget>[
@@ -106,7 +107,7 @@ class NewsListView extends StatelessWidget {
                               //   ],
                               // )
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -130,67 +131,15 @@ class NewsListView extends StatelessWidget {
             aspectRatio: 75 / 40,
             child: controller.banners.isEmpty
                 ? const SizedBox()
-                : Swiper(
-                    itemWidth: 750,
-                    itemHeight: 400,
-                    autoplay: true,
+                : AutoPlayBanner(
                     itemCount: controller.banners.length,
-                    onTap: (i) {
-                      controller.openBanner(controller.banners[i]);
-                    },
                     itemBuilder: (_, i) => NetImage(
                       controller.banners[i].picUrl,
                       width: 750,
                       height: 400,
                     ),
-                    pagination: SwiperCustomPagination(
-                      builder:
-                          (BuildContext context, SwiperPluginConfig config) {
-                        return Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                              left: 8,
-                              right: 12,
-                              top: 4,
-                              bottom: 4,
-                            ),
-                            //color: Colors.black12,
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                                colors: [
-                                  Colors.black38,
-                                  Colors.transparent,
-                                ],
-                              ),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    controller
-                                        .banners[config.activeIndex].title,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 14, color: Colors.white),
-                                  ),
-                                ),
-                                AppStyle.hGap8,
-                                PageIndicator(
-                                  controller: config.pageController!,
-                                  count: config.itemCount,
-                                  size: 10,
-                                  layout: PageIndicatorLayout.SCALE,
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                    titleBuilder: (i) => controller.banners[i].title,
+                    onTap: (i) => controller.openBanner(controller.banners[i]),
                   ),
           ),
         ),

@@ -8,7 +8,7 @@ part of 'novel_download_info.dart';
 
 class NovelDownloadInfoAdapter extends TypeAdapter<NovelDownloadInfo> {
   @override
-  final int typeId = 5;
+  final typeId = 5;
 
   @override
   NovelDownloadInfo read(BinaryReader reader) {
@@ -18,10 +18,10 @@ class NovelDownloadInfoAdapter extends TypeAdapter<NovelDownloadInfo> {
     };
     return NovelDownloadInfo(
       addTime: fields[16] as DateTime,
-      chapterId: fields[4] as int,
-      chapterSort: fields[9] as int,
+      chapterId: (fields[4] as num).toInt(),
+      chapterSort: (fields[9] as num).toInt(),
       novelCover: fields[3] as String,
-      novelId: fields[1] as int,
+      novelId: (fields[1] as num).toInt(),
       novelName: fields[2] as String,
       fileName: fields[11] as String,
       imageFiles: (fields[13] as List).cast<String>(),
@@ -30,11 +30,11 @@ class NovelDownloadInfoAdapter extends TypeAdapter<NovelDownloadInfo> {
       taskId: fields[0] as String,
       isImage: fields[12] as bool,
       volumeName: fields[7] as String,
-      progress: fields[14] as int,
+      progress: (fields[14] as num).toInt(),
       chapterName: fields[5] as String,
-      volumeID: fields[6] as int,
+      volumeID: (fields[6] as num).toInt(),
       isVip: fields[17] as bool,
-      volumeOrder: fields[8] as int,
+      volumeOrder: (fields[8] as num).toInt(),
       imageUrls: (fields[18] as List).cast<String>(),
     );
   }

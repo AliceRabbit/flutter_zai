@@ -1,57 +1,56 @@
-name: flutter_dmzj
+name: zaix
 version: 1.0.9
 publish_to: none
 description: "ZAI-X"
 environment:
-  sdk: '>=3.4.0 <4.0.0'
-  flutter: '>=3.22.0'
+  sdk: '>=3.12.0 <4.0.0'
+  flutter: '>=3.44.0'
 
 dependencies: 
-  #图标ICON
-  cupertino_icons: ^1.0.5 #Cupertino图标
-  remixicon: ^1.0.0 #Remix图标
+  # Icons
+  remixicon: ^4.9.3
 
-  #框架、工具
-  get: ^4.6.6 #状态管理
-  dio: ^5.4.1 #网络请求
-  hive: ^2.2.3 #持久化存储
-  hive_flutter: ^1.1.0 #持久化存储
-  crypton: ^2.1.0 #加解密
-  crypto: ^3.0.2 #加解密
-  logger: ^2.0.2+1 #日志输出
-  protobuf: ^2.1.0 #Protobuf
-  intl: any
-  universal_html: ^2.2.4 #HTML解析
-  html_unescape: ^2.0.0 #HTML解码
-  csslib: ^1.0.0 #CSS解析
+  # Framework and utilities
+  get: ^4.7.3
+  dio: ^5.11.0
+  hive_ce: ^2.19.3
+  hive_ce_flutter: ^2.3.4
+  crypton: ^2.2.1
+  crypto: ^3.0.7
+  logger: ^2.7.0
+  protobuf: ^6.0.0
+  fixnum: ^1.1.1
+  # flutter_localizations in Flutter 3.44.8 pins intl to 0.20.2.
+  intl: ^0.20.2
+  collection: ^1.19.1
+  path: ^1.9.1
+  universal_html: ^2.3.0
+  html_unescape: ^2.0.0
 
-  #Widget
-  flutter_smart_dialog: ^4.9.6 #各种弹窗 Toast\Dialog\Popup
-  flutter_staggered_grid_view: ^0.7.0 #瀑布流/GridView
-  multi_split_view: ^2.4.0 #SplitView
-  tab_indicator_styler: ^2.0.0  #Tab样式
-  extended_image: ^8.2.0  #拓展Image
-  flutter_swiper_view: ^1.1.8 #幻灯片
-  easy_refresh: ^3.4.0 #下拉刷新、上拉加载
-  lottie: ^3.0.0 #lottie动画
-  photo_view: ^0.14.0 #图片浏览
-  preload_page_view: ^0.2.0 #预加载PageView
+  # Widgets
+  flutter_smart_dialog: ^5.1.1
+  flutter_staggered_grid_view: ^0.7.0
+  multi_split_view: ^3.6.2
+  extended_image: ^10.1.0
+  easy_refresh: ^3.5.1
+  lottie: ^3.5.1
+  photo_view: ^0.15.0
   scrollable_positioned_list: ^0.3.8
-  
 
-  #系统交互
-  url_launcher: ^6.2.4 #打开链接
-  webview_flutter: ^4.7.0 #WebView
-  package_info_plus: ^5.0.1 #包信息
-  flutter_widget_from_html_core: ^0.14.11 #HTML转Widget
-  share_plus: ^7.2.2 #分享
-  permission_handler: ^11.3.0 #权限检查
-  path_provider: ^2.1.2 #常用目录
-  image_gallery_saver: ^2.0.3 #保存图片至相册
-  connectivity_plus: ^5.0.2 #连接状态
-  battery_plus: ^5.0.3 #电池状态
-  file_selector: ^1.0.3 #文件选择
-  windows_single_instance: ^1.0.1 #Windows单实例
+  # Platform integration
+  url_launcher: ^6.3.2
+  webview_flutter: ^4.14.1
+  device_info_plus: ^13.2.0
+  package_info_plus: ^10.2.1
+  flutter_widget_from_html_core: ^0.17.2
+  share_plus: ^13.3.0
+  permission_handler: ^12.0.3
+  path_provider: ^2.1.6
+  saver_gallery: ^5.1.0
+  connectivity_plus: ^7.3.1
+  battery_plus: ^7.1.1
+  file_selector: ^1.1.0
+  windows_single_instance: ^1.2.0
   
   flutter: 
     sdk: flutter
@@ -59,14 +58,21 @@ dependencies:
     sdk: flutter
   
 dev_dependencies: 
-  flutter_lints: ^2.0.0
-  build_runner: ^2.3.3
-  hive_generator: ^2.0.0
-  msix: ^3.9.1
+  flutter_lints: ^6.0.0
+  # 2.15.2+ requires analyzer 13.3, while hive_ce_generator 1.11.2 uses analyzer 12.
+  build_runner: 2.15.1
+  hive_ce_generator: ^1.11.2
+  msix: ^3.18.0
   flutter_test: 
     sdk: flutter
 
-flutter: 
+# jni 1.0.1 requires AGP 9 built-in Kotlin, while Flutter 3.44.8 still requires
+# its legacy Kotlin compatibility mode. Remove this override with the two
+# compatibility switches in android/gradle.properties.
+dependency_overrides:
+  jni: 1.0.0
+
+flutter:
   uses-material-design: true
   assets: 
     - assets/lotties/

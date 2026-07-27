@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/novel/recommend_model.dart';
-import 'package:flutter_dmzj/modules/novel/home/novel_home_controller.dart';
-import 'package:flutter_dmzj/requests/novel_request.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/models/novel/recommend_model.dart';
+import 'package:zaix/modules/novel/home/novel_home_controller.dart';
+import 'package:zaix/requests/novel_request.dart';
+import 'package:zaix/routes/app_navigator.dart';
 
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -23,19 +23,13 @@ class NovelRecommendController extends BasePageController<NovelRecommendModel> {
   void openDetail(NovelRecommendItemModel item) {
     //漫画=1
     if (item.type == null || item.type == 2) {
-      AppNavigator.toNovelDetail(
-        item.objId ?? item.id ?? 0,
-      );
+      AppNavigator.toNovelDetail(item.objId ?? item.id ?? 0);
     } else if (item.type == 1) {
       //专题=5
-      AppNavigator.toComicDetail(
-        item.objId ?? 0,
-      );
+      AppNavigator.toComicDetail(item.objId ?? 0);
     } else if (item.type == 5) {
       //专题=5
-      AppNavigator.toSpecialDetail(
-        item.objId ?? 0,
-      );
+      AppNavigator.toSpecialDetail(item.objId ?? 0);
     } else if (item.type == 6) {
       //网页=6
       AppNavigator.toWebView(item.url ?? "");
@@ -48,15 +42,13 @@ class NovelRecommendController extends BasePageController<NovelRecommendModel> {
       );
     } else if (item.type == 8) {
       //作者=8
-      AppNavigator.toComicAuthorDetail(
-        item.objId ?? 0,
-        authorName: item.title,
-      );
+      AppNavigator.toComicAuthorDetail(item.objId ?? 0, authorName: item.title);
     } else if (item.type == 13) {
       //社区=13
       //直接跳转至网页
       launchUrlString(
-          "http://m.forum.idmzj.com/thread/detail?tid=${item.objId}");
+        "http://m.forum.idmzj.com/thread/detail?tid=${item.objId}",
+      );
     } else {
       SmartDialog.showToast("未知类型，无法跳转");
     }

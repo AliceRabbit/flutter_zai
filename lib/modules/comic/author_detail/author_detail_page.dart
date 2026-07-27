@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/comic/author_model.dart';
-import 'package:flutter_dmzj/modules/comic/author_detail/author_detail_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
+import 'package:zaix/app/app_constant.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/models/comic/author_model.dart';
+import 'package:zaix/modules/comic/author_detail/author_detail_controller.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/services/user_service.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/status/app_error_widget.dart';
+import 'package:zaix/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
@@ -16,10 +16,10 @@ class ComicAuthorDetailPage extends StatelessWidget {
   final String authorName;
   final ComicAuthorDetailController controller;
   ComicAuthorDetailPage(this.id, this.authorName, {super.key})
-      : controller = Get.put(
-          ComicAuthorDetailController(id, authorName),
-          tag: "${id}_$authorName",
-        );
+    : controller = Get.put(
+        ComicAuthorDetailController(id, authorName),
+        tag: "${id}_$authorName",
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class ComicAuthorDetailPage extends StatelessWidget {
                 separatorBuilder: (context, i) => Divider(
                   endIndent: 12,
                   indent: 12,
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.grey.withValues(alpha: .2),
                   height: 1,
                 ),
                 itemBuilder: (_, i) {
@@ -76,13 +76,11 @@ class ComicAuthorDetailPage extends StatelessWidget {
               ),
             ),
             Offstage(
-              offstage: controller.detail.value == null ||
+              offstage:
+                  controller.detail.value == null ||
                   controller.detail.value!.data.isNotEmpty,
               child: const Center(
-                child: Text(
-                  "该作者暂无作品",
-                  style: TextStyle(color: Colors.grey),
-                ),
+                child: Text("该作者暂无作品", style: TextStyle(color: Colors.grey)),
               ),
             ),
             Obx(
@@ -116,25 +114,18 @@ class ComicAuthorDetailPage extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            NetImage(
-              item.cover,
-              width: 80,
-              height: 110,
-              borderRadius: 4,
-            ),
+            NetImage(item.cover, width: 80, height: 110, borderRadius: 4),
             AppStyle.hGap12,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    item.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  Text(item.name, maxLines: 1, overflow: TextOverflow.ellipsis),
                   AppStyle.vGap4,
-                  Text(item.status,
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                  Text(
+                    item.status,
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
                 ],
               ),
             ),
@@ -144,23 +135,21 @@ class ComicAuthorDetailPage extends StatelessWidget {
                     ? IconButton(
                         icon: const Icon(Icons.favorite),
                         onPressed: () {
-                          UserService.instance.cancelSubscribe(
-                            [item.id],
-                            AppConstant.kTypeComic,
-                          );
+                          UserService.instance.cancelSubscribe([
+                            item.id,
+                          ], AppConstant.kTypeComic);
                         },
                       )
                     : IconButton(
                         icon: const Icon(Icons.favorite_border),
                         onPressed: () {
-                          UserService.instance.addSubscribe(
-                            [item.id],
-                            AppConstant.kTypeComic,
-                          );
+                          UserService.instance.addSubscribe([
+                            item.id,
+                          ], AppConstant.kTypeComic);
                         },
                       ),
               ),
-            )
+            ),
           ],
         ),
       ),

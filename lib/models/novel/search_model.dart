@@ -49,14 +49,14 @@ class NovelSearchModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'title': title,
-        'authors': authors,
-        'cover': cover,
-        'hot_hits': hotHits,
-        'last_name': lastName,
-        'status': status,
-        'types': types,
-        'sub_nums': subNums,
-      };
+    'id': id,
+    'title': title,
+    'authors': authors,
+    'cover': cover,
+    'hot_hits': hotHits,
+    'last_name': lastName,
+    'status': status,
+    'types': types,
+    'sub_nums': subNums,
+  };
 }

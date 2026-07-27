@@ -7,12 +7,16 @@ on:
 jobs:
   # Android 镜像
   build-android:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
     steps:
       # 1.1 签出代码
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+      - name: Read Flutter version
+        id: flutter-version
+        shell: bash
+        run: echo "version=$(tr -d '\r\n' < .flutter-version)" >> "$GITHUB_OUTPUT"
       # 1.2 写出相关签名
       - name: Get Android Keystore
         id: android_keystore
@@ -28,7 +32,7 @@ jobs:
           echo "keyAlias=${{ secrets.ZAI_KEY_ALIAS }}" >> android/zai_key.properties
       # 1.2 设置JAVA环境
       - name: Setup JAVA
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: "zulu"
           java-version: "17"
@@ -37,7 +41,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.22.3"
+          flutter-version: ${{ steps.flutter-version.outputs.version }}
           channel: stable
           cache: true
       # 1.4 更新Flutter的packages
@@ -48,7 +52,7 @@ jobs:
         run: flutter build apk --release
       # 1.6 上传APK
       - name: Upload Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           body_path: document/RELEASE.txt
           token: ${{ github.token }}
@@ -58,32 +62,99 @@ jobs:
       - run: echo "Android job's status is ${{ job.status }}."
   # Windows 镜像
   build-windows:
-    runs-on: windows-latest
+    runs-on: windows-2025
     permissions:
       contents: write
     steps:
       # 3.1 签出代码
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+      - name: Read Flutter version
+        id: flutter-version
+        shell: pwsh
+        run: '"version=$((Get-Content -Raw .flutter-version).Trim())" >> $env:GITHUB_OUTPUT'
       # 3.2 设置Flutter环境
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.22.3"
+          flutter-version: ${{ steps.flutter-version.outputs.version }}
           channel: stable
           cache: true
       - name: Enable Flutter Desktop
         run: flutter config --enable-windows-desktop
       - name: Restore Packages
         run: flutter pub get --enforce-lockfile
-      # 3.3 设置flutter_distributor环境
-      - name: Install flutter_distributor
-        run: dart pub global activate flutter_distributor
+      # 3.3 设置 Fastforge 环境
+      - name: Install Fastforge
+        run: dart pub global activate fastforge 0.6.10
       # 3.4 build Windows ZIP\MSIX
       - name: Build Windows
-        run: flutter_distributor package --platform windows --targets msix,zip --skip-clean
+        run: fastforge package --platform windows --targets msix,zip --skip-clean
+      - name: Sign MSIX
+        shell: pwsh
+        env:
+          WINDOWS_CERTIFICATE_BASE64: ${{ secrets.ZAI_WINDOWS_CERTIFICATE_BASE64 }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.ZAI_WINDOWS_CERTIFICATE_PASSWORD }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          if ([string]::IsNullOrWhiteSpace($env:WINDOWS_CERTIFICATE_BASE64) -or
+              [string]::IsNullOrWhiteSpace($env:WINDOWS_CERTIFICATE_PASSWORD)) {
+            throw "ZAI_WINDOWS_CERTIFICATE_BASE64 and ZAI_WINDOWS_CERTIFICATE_PASSWORD are required."
+          }
+
+          $certificatePath = Join-Path $env:RUNNER_TEMP "zaix-signing.pfx"
+          try {
+            [IO.File]::WriteAllBytes(
+              $certificatePath,
+              [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE_BASE64)
+            )
+            $certificate = [Security.Cryptography.X509Certificates.X509Certificate2]::new(
+              $certificatePath,
+              $env:WINDOWS_CERTIFICATE_PASSWORD
+            )
+            try {
+              if (-not $certificate.HasPrivateKey) {
+                throw "The configured Windows signing certificate has no private key."
+              }
+              if ($certificate.Subject -ne "CN=AliceRabbit") {
+                throw "The Windows signing certificate Subject must be CN=AliceRabbit."
+              }
+            } finally {
+              $certificate.Dispose()
+            }
+
+            $signTool = Get-ChildItem `
+              -LiteralPath "${env:ProgramFiles(x86)}\Windows Kits\10\bin" `
+              -Recurse `
+              -Filter "signtool.exe" |
+              Where-Object { $_.FullName -match '\\x64\\signtool\.exe$' } |
+              Sort-Object FullName -Descending |
+              Select-Object -First 1
+            if (-not $signTool) {
+              throw "Windows SDK SignTool was not found."
+            }
+
+            $packages = Get-ChildItem -LiteralPath "build\dist" -Recurse -Filter "*.msix"
+            if (-not $packages) {
+              throw "Fastforge did not produce an MSIX package."
+            }
+            foreach ($package in $packages) {
+              & $signTool.FullName sign `
+                /fd SHA256 `
+                /td SHA256 `
+                /tr http://timestamp.digicert.com `
+                /f $certificatePath `
+                /p $env:WINDOWS_CERTIFICATE_PASSWORD `
+                $package.FullName
+              if ($LASTEXITCODE -ne 0) {
+                throw "SignTool failed for $($package.FullName)."
+              }
+            }
+          } finally {
+            Remove-Item -LiteralPath $certificatePath -Force -ErrorAction SilentlyContinue
+          }
       # 3.5 上传ZIP\MSIX
       - name: Upload Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           body_path: document/RELEASE.txt
           token: ${{ github.token }}

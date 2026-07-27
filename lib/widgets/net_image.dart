@@ -1,6 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:zaix/app/app_style.dart';
 
 class NetImage extends StatefulWidget {
   final String picUrl;
@@ -9,14 +9,15 @@ class NetImage extends StatefulWidget {
   final BoxFit? fit;
   final double borderRadius;
   final bool progress;
-  const NetImage(this.picUrl,
-      {this.width,
-      this.height,
-      this.fit = BoxFit.cover,
-      this.borderRadius = 0,
-      this.progress = false,
-      Key? key})
-      : super(key: key);
+  const NetImage(
+    this.picUrl, {
+    this.width,
+    this.height,
+    this.fit = BoxFit.cover,
+    this.borderRadius = 0,
+    this.progress = false,
+    super.key,
+  });
 
   @override
   State<NetImage> createState() => _NetImageState();
@@ -41,14 +42,8 @@ class _NetImageState extends State<NetImage>
 
     if (picUrl.isEmpty) {
       return Container(
-        decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(.1),
-        ),
-        child: const Icon(
-          Icons.image,
-          color: Colors.grey,
-          size: 24,
-        ),
+        decoration: BoxDecoration(color: Colors.grey.withValues(alpha: .1)),
+        child: const Icon(Icons.image, color: Colors.grey, size: 24),
       );
     }
     return ClipRRect(
@@ -67,17 +62,15 @@ class _NetImageState extends State<NetImage>
             animationController.reset();
             final double? progress =
                 e.loadingProgress?.expectedTotalBytes != null
-                    ? e.loadingProgress!.cumulativeBytesLoaded /
-                        e.loadingProgress!.expectedTotalBytes!
-                    : null;
+                ? e.loadingProgress!.cumulativeBytesLoaded /
+                      e.loadingProgress!.expectedTotalBytes!
+                : null;
             if (widget.progress) {
               return Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    CircularProgressIndicator(
-                      value: progress,
-                    ),
+                    CircularProgressIndicator(value: progress),
                     AppStyle.vGap4,
                     Text(
                       '${((progress ?? 0.0) * 100).toInt()}%',
@@ -90,20 +83,16 @@ class _NetImageState extends State<NetImage>
             }
             return Container(
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(.1),
+                color: Colors.grey.withValues(alpha: .1),
               ),
-              child: const Icon(
-                Icons.image,
-                color: Colors.grey,
-                size: 24,
-              ),
+              child: const Icon(Icons.image, color: Colors.grey, size: 24),
             );
           }
           if (e.extendedImageLoadState == LoadState.failed) {
             animationController.reset();
             return Container(
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(.1),
+                color: Colors.grey.withValues(alpha: .1),
               ),
               child: const Icon(
                 Icons.broken_image,

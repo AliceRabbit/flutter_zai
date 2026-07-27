@@ -3,18 +3,18 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/requests/news_request.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/app_color.dart';
+import 'package:zaix/app/app_constant.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/app/dialog_utils.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/requests/news_request.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/services/app_settings_service.dart';
+import 'package:zaix/services/db_service.dart';
+import 'package:zaix/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:universal_html/html.dart' as html;
@@ -27,19 +27,25 @@ class NewsDetailController extends BaseController {
   final int id;
   final NewsRequest request = NewsRequest();
   AppSettingsService get settings => AppSettingsService.instance;
-  NewsDetailController(
-      {required this.newsUrl, this.title = "资讯详情", required this.id}) {
+  NewsDetailController({
+    required this.newsUrl,
+    this.title = "资讯详情",
+    required this.id,
+  }) {
     newsTitle.value = title;
     if (id == 0) {
-      newsId = int.tryParse(
-              RegExp(r"/(\d+).html").firstMatch(newsUrl)?.group(1) ?? "0") ??
+      newsId =
+          int.tryParse(
+            RegExp(r"/(\d+).html").firstMatch(newsUrl)?.group(1) ?? "0",
+          ) ??
           0;
     } else {
       newsId = id;
     }
   }
-  WebViewController? webViewController =
-      (Platform.isAndroid || Platform.isIOS) ? WebViewController() : null;
+  WebViewController? webViewController = (Platform.isAndroid || Platform.isIOS)
+      ? WebViewController()
+      : null;
 
   /// 评论数
   var commentAmount = 0.obs;
@@ -82,7 +88,8 @@ class NewsDetailController extends BaseController {
   void initWebView() {
     webViewController!.setJavaScriptMode(JavaScriptMode.unrestricted);
     webViewController!.setBackgroundColor(
-        Get.isDarkMode ? Colors.black : AppColor.backgroundColor);
+      Get.isDarkMode ? Colors.black : AppColor.backgroundColor,
+    );
     webViewController!.setNavigationDelegate(
       NavigationDelegate(
         onPageStarted: (String url) {
@@ -110,8 +117,8 @@ document.getElementsByClassName("min_box_tit")[0].style.color="#fff";
 });""");
             //读取全部的图片
 
-            var imagesResult =
-                await webViewController?.runJavaScriptReturningResult('''
+            var imagesResult = await webViewController
+                ?.runJavaScriptReturningResult('''
 function getImgLinks(){
 	var imgLinks = [];
   \$('img').each(function() {
@@ -154,9 +161,7 @@ getImgLinks();
       pageLoadding.value = true;
       var result = await Dio().get(
         newsUrl,
-        options: Options(
-          responseType: ResponseType.plain,
-        ),
+        options: Options(responseType: ResponseType.plain),
       );
       final htmlDocument = parseHtmlDocument(result.data);
       var news = htmlDocument.documentElement!.querySelector('.news_box');
@@ -268,16 +273,13 @@ getImgLinks();
       return;
     }
     if (images.contains(imgSrc)) {
-      DialogUtils.showImageViewer(
-        images.indexOf(imgSrc),
-        images,
-      );
+      DialogUtils.showImageViewer(images.indexOf(imgSrc), images);
     } else {
       DialogUtils.showImageViewer(0, [imgSrc]);
     }
   }
 
-  Future<bool> onTapUrl(url) async {
+  Future<bool> onTapUrl(String url) async {
     //iOS处理
     if (url == currentUrl) {
       return false;
@@ -325,10 +327,7 @@ getImgLinks();
               ),
               contentPadding: AppStyle.edgeInsetsL12,
             ),
-            Divider(
-              height: 1.0,
-              color: Colors.grey.withOpacity(.2),
-            ),
+            Divider(height: 1.0, color: Colors.grey.withValues(alpha: .2)),
             Obx(
               () => ListTile(
                 title: const Text("字体大小"),
@@ -343,10 +342,7 @@ getImgLinks();
                         );
                         setFontSize();
                       },
-                      child: const Icon(
-                        Icons.add,
-                        color: Colors.grey,
-                      ),
+                      child: const Icon(Icons.add, color: Colors.grey),
                     ),
                     AppStyle.hGap12,
                     Text("${settings.newsFontSize.value}"),
@@ -358,10 +354,7 @@ getImgLinks();
                         );
                         setFontSize();
                       },
-                      child: const Icon(
-                        Icons.remove,
-                        color: Colors.grey,
-                      ),
+                      child: const Icon(Icons.remove, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -388,9 +381,10 @@ getImgLinks();
         return;
       }
       await webViewController!.runJavaScript(
-          '''document.getElementsByClassName("news_box")[0].style.fontSize="${settings.newsFontSize}px";
+        '''document.getElementsByClassName("news_box")[0].style.fontSize="${settings.newsFontSize}px";
 document.getElementsByClassName("news_box")[0].style.lineHeight="1.6em";
-''');
+''',
+      );
     } catch (e) {
       Log.logPrint(e);
     }

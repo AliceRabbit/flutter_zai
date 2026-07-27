@@ -18,13 +18,15 @@ class ComicSpecialDetailModel {
   });
 
   factory ComicSpecialDetailModel.fromJson(Map<String, dynamic> json) {
-    final List<ComicSpecialComicModel>? comics =
-        json['comics'] is List ? <ComicSpecialComicModel>[] : null;
+    final List<ComicSpecialComicModel>? comics = json['comics'] is List
+        ? <ComicSpecialComicModel>[]
+        : null;
     if (comics != null) {
       for (final dynamic item in json['comics']!) {
         if (item != null) {
-          comics.add(ComicSpecialComicModel.fromJson(
-              asT<Map<String, dynamic>>(item)!));
+          comics.add(
+            ComicSpecialComicModel.fromJson(asT<Map<String, dynamic>>(item)!),
+          );
         }
       }
     }
@@ -51,13 +53,13 @@ class ComicSpecialDetailModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'mobile_header_pic': mobileHeaderPic,
-        'title': title,
-        'page_url': pageUrl,
-        'description': description,
-        'comics': comics,
-        'comment_amount': commentAmount,
-      };
+    'mobile_header_pic': mobileHeaderPic,
+    'title': title,
+    'page_url': pageUrl,
+    'description': description,
+    'comics': comics,
+    'comment_amount': commentAmount,
+  };
 }
 
 class ComicSpecialComicModel {
@@ -93,11 +95,11 @@ class ComicSpecialComicModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'cover': cover,
-        'recommend_brief': recommendBrief,
-        'recommend_reason': recommendReason,
-        'id': id,
-        'name': name,
-        'alias_name': aliasName,
-      };
+    'cover': cover,
+    'recommend_brief': recommendBrief,
+    'recommend_reason': recommendReason,
+    'id': id,
+    'name': name,
+    'alias_name': aliasName,
+  };
 }

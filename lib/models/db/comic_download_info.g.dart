@@ -8,7 +8,7 @@ part of 'comic_download_info.dart';
 
 class ComicDownloadInfoAdapter extends TypeAdapter<ComicDownloadInfo> {
   @override
-  final int typeId = 3;
+  final typeId = 3;
 
   @override
   ComicDownloadInfo read(BinaryReader reader) {
@@ -18,22 +18,22 @@ class ComicDownloadInfoAdapter extends TypeAdapter<ComicDownloadInfo> {
     };
     return ComicDownloadInfo(
       addTime: fields[13] as DateTime,
-      chapterId: fields[4] as int,
-      chapterSort: fields[7] as int,
+      chapterId: (fields[4] as num).toInt(),
+      chapterSort: (fields[7] as num).toInt(),
       comicCover: fields[3] as String,
-      comicId: fields[1] as int,
+      comicId: (fields[1] as num).toInt(),
       comicName: fields[2] as String,
       files: (fields[9] as List).cast<String>(),
-      index: fields[10] as int,
+      index: (fields[10] as num).toInt(),
       savePath: fields[8] as String,
       status: fields[12] as DownloadStatus,
       taskId: fields[0] as String,
-      total: fields[11] as int,
+      total: (fields[11] as num).toInt(),
       volumeName: fields[6] as String,
       urls: (fields[14] as List).cast<String>(),
       chapterName: fields[5] as String,
-      isVip: (fields[15] ?? false) as bool,
-      isLongComic: (fields[16] ?? false) as bool,
+      isVip: fields[15] == null ? false : fields[15] as bool,
+      isLongComic: fields[16] == null ? false : fields[16] as bool,
     );
   }
 

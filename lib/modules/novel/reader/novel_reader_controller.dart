@@ -5,25 +5,25 @@ import 'package:battery_plus/battery_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/db/download_status.dart';
-import 'package:flutter_dmzj/models/db/novel_download_info.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
-import 'package:flutter_dmzj/requests/novel_request.dart';
-import 'package:flutter_dmzj/services/novel_download_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/app_color.dart';
+import 'package:zaix/app/app_constant.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/connectivity_utils.dart';
+import 'package:zaix/models/db/download_status.dart';
+import 'package:zaix/models/db/novel_download_info.dart';
+import 'package:zaix/services/app_settings_service.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/models/novel/novel_detail_model.dart';
+import 'package:zaix/requests/novel_request.dart';
+import 'package:zaix/services/novel_download_service.dart';
+import 'package:zaix/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
 
 class NovelReaderController extends BaseController {
@@ -62,14 +62,15 @@ class NovelReaderController extends BaseController {
   final ScrollController scrollController = ScrollController();
 
   /// 连接信息监听
-  StreamSubscription<ConnectivityResult>? connectivitySubscription;
+  StreamSubscription<List<ConnectivityResult>>? connectivitySubscription;
 
   /// 电量信息监听
   StreamSubscription<BatteryState>? batterySubscription;
 
   /// 连接类型
-  Rx<ConnectivityResult> connectivityType =
-      Rx<ConnectivityResult>(ConnectivityResult.other);
+  Rx<ConnectivityResult> connectivityType = Rx<ConnectivityResult>(
+    ConnectivityResult.other,
+  );
 
   /// 电量信息
   Rx<int> batteryLevel = 0.obs;
@@ -126,8 +127,9 @@ class NovelReaderController extends BaseController {
         return;
       }
       var battery = Battery();
-      batterySubscription =
-          battery.onBatteryStateChanged.listen((BatteryState state) async {
+      batterySubscription = battery.onBatteryStateChanged.listen((
+        BatteryState state,
+      ) async {
         try {
           var level = await battery.batteryLevel;
           batteryLevel.value = level;
@@ -146,8 +148,10 @@ class NovelReaderController extends BaseController {
   /// 初始化连接状态
   void initConnectivity() async {
     var connectivity = Connectivity();
-    connectivitySubscription =
-        connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+    connectivitySubscription = connectivity.onConnectivityChanged.listen((
+      results,
+    ) {
+      final result = primaryConnectivityResult(results);
       //提醒
       if (connectivityType.value != result &&
           result == ConnectivityResult.mobile) {
@@ -155,13 +159,16 @@ class NovelReaderController extends BaseController {
       }
       connectivityType.value = result;
     });
-    connectivityType.value = await connectivity.checkConnectivity();
+    connectivityType.value = primaryConnectivityResult(
+      await connectivity.checkConnectivity(),
+    );
   }
 
   /// 监听竖向模式时滚动百分比
   void listenVertical() {
     if (scrollController.position.maxScrollExtent > 0) {
-      progress.value = scrollController.position.pixels /
+      progress.value =
+          scrollController.position.pixels /
           scrollController.position.maxScrollExtent;
     }
   }
@@ -187,8 +194,9 @@ class NovelReaderController extends BaseController {
       chapter = chapters[chapterIndex.value];
 
       //查询本地是否存在
-      var localInfo = NovelDownloadService.instance.box
-          .get("${novelId}_${chapter.volumeId}_${chapter.chapterId}");
+      var localInfo = NovelDownloadService.instance.box.get(
+        "${novelId}_${chapter.volumeId}_${chapter.chapterId}",
+      );
       if (localInfo != null && localInfo.status == DownloadStatus.complete) {
         return await loadFromLocal(localInfo);
       }
@@ -204,8 +212,11 @@ class NovelReaderController extends BaseController {
       //检查是否是插画
       if (subStr.contains(RegExp('<img.*?>'))) {
         List<String> imgs = [];
-        for (var item
-            in RegExp(r'<img.*?src=[' '""](.*?)[' '""].*?>').allMatches(text)) {
+        for (var item in RegExp(
+          r'<img.*?src=['
+          '""](.*?)['
+          '""].*?>',
+        ).allMatches(text)) {
           var src = item.group(1);
           if (src != null && src.isNotEmpty) {
             imgs.add(src);
@@ -255,16 +266,26 @@ class NovelReaderController extends BaseController {
   Future loadFromLocal(NovelDownloadInfo local) async {
     try {
       isLocal = true;
-      var file = File(p.join(NovelDownloadService.instance.savePath,
-          local.taskId, local.fileName));
+      var file = File(
+        p.join(
+          NovelDownloadService.instance.savePath,
+          local.taskId,
+          local.fileName,
+        ),
+      );
 
       var text = await file.readAsString();
 
       //检查是否是插画
       if (local.isImage) {
         List<String> imgs = local.imageFiles
-            .map((e) =>
-                p.join(NovelDownloadService.instance.savePath, local.taskId, e))
+            .map(
+              (e) => p.join(
+                NovelDownloadService.instance.savePath,
+                local.taskId,
+                e,
+              ),
+            )
             .toList();
 
         isPicture.value = true;
@@ -397,8 +418,11 @@ class NovelReaderController extends BaseController {
       scrollController.jumpTo(viewportHeight * page);
     } else {
       anime && pageAnimation
-          ? pageController.animateToPage(page,
-              duration: const Duration(milliseconds: 200), curve: Curves.linear)
+          ? pageController.animateToPage(
+              page,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.linear,
+            )
           : pageController.jumpToPage(page);
     }
   }
@@ -415,9 +439,7 @@ class NovelReaderController extends BaseController {
           topRight: Radius.circular(12),
         ),
       ),
-      constraints: const BoxConstraints(
-        maxWidth: 500,
-      ),
+      constraints: const BoxConstraints(maxWidth: 500),
       backgroundColor: AppStyle.darkTheme.scaffoldBackgroundColor,
       builder: (context) => Theme(
         data: AppStyle.darkTheme,
@@ -446,7 +468,8 @@ class NovelReaderController extends BaseController {
                               onTap: () {
                                 setDirection(ReaderDirection.kLeftToRight);
                               },
-                              selected: settings.novelReaderDirection.value ==
+                              selected:
+                                  settings.novelReaderDirection.value ==
                                   ReaderDirection.kLeftToRight,
                               child: const Icon(Remix.arrow_right_line),
                             ),
@@ -455,7 +478,8 @@ class NovelReaderController extends BaseController {
                               onTap: () {
                                 setDirection(ReaderDirection.kRightToLeft);
                               },
-                              selected: settings.novelReaderDirection.value ==
+                              selected:
+                                  settings.novelReaderDirection.value ==
                                   ReaderDirection.kRightToLeft,
                               child: const Icon(Remix.arrow_left_line),
                             ),
@@ -464,10 +488,11 @@ class NovelReaderController extends BaseController {
                               onTap: () {
                                 setDirection(ReaderDirection.kUpToDown);
                               },
-                              selected: settings.novelReaderDirection.value ==
+                              selected:
+                                  settings.novelReaderDirection.value ==
                                   ReaderDirection.kUpToDown,
                               child: const Icon(Remix.arrow_down_line),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -493,7 +518,8 @@ class NovelReaderController extends BaseController {
                                       borderRadius: AppStyle.radius24,
                                     ),
                                     child: Visibility(
-                                      visible: AppColor.novelThemes.keys
+                                      visible:
+                                          AppColor.novelThemes.keys
                                               .toList()
                                               .indexOf(e) ==
                                           settings.novelReaderTheme.value,
@@ -553,10 +579,7 @@ class NovelReaderController extends BaseController {
                                   settings.novelReaderFontSize.value + 1,
                                 );
                               },
-                              child: const Icon(
-                                Icons.add,
-                                color: Colors.grey,
-                              ),
+                              child: const Icon(Icons.add, color: Colors.grey),
                             ),
                             AppStyle.hGap12,
                             Text("${settings.novelReaderFontSize.value}"),
@@ -589,14 +612,13 @@ class NovelReaderController extends BaseController {
                                   settings.novelReaderLineSpacing.value + 0.1,
                                 );
                               },
-                              child: const Icon(
-                                Icons.add,
-                                color: Colors.grey,
-                              ),
+                              child: const Icon(Icons.add, color: Colors.grey),
                             ),
                             AppStyle.hGap12,
-                            Text((settings.novelReaderLineSpacing.value)
-                                .toStringAsFixed(1)),
+                            Text(
+                              (settings.novelReaderLineSpacing.value)
+                                  .toStringAsFixed(1),
+                            ),
                             AppStyle.hGap12,
                             OutlinedButton(
                               onPressed: () {
@@ -639,14 +661,15 @@ class NovelReaderController extends BaseController {
     );
   }
 
-  Widget buildSelectedButton(
-      {required Widget child, bool selected = false, Function()? onTap}) {
+  Widget buildSelectedButton({
+    required Widget child,
+    bool selected = false,
+    Function()? onTap,
+  }) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         foregroundColor: selected ? Colors.blue : Colors.grey,
-        side: BorderSide(
-          color: selected ? Colors.blue : Colors.grey,
-        ),
+        side: BorderSide(color: selected ? Colors.blue : Colors.grey),
       ),
       onPressed: onTap,
       child: child,
@@ -664,9 +687,7 @@ class NovelReaderController extends BaseController {
           topRight: Radius.circular(12),
         ),
       ),
-      constraints: const BoxConstraints(
-        maxWidth: 500,
-      ),
+      constraints: const BoxConstraints(maxWidth: 500),
       backgroundColor: AppStyle.darkTheme.scaffoldBackgroundColor,
       builder: (context) => Theme(
         data: AppStyle.darkTheme,
@@ -680,10 +701,7 @@ class NovelReaderController extends BaseController {
               ),
               contentPadding: AppStyle.edgeInsetsL12,
             ),
-            Divider(
-              height: 1.0,
-              color: Colors.grey.withOpacity(.2),
-            ),
+            Divider(height: 1.0, color: Colors.grey.withValues(alpha: .2)),
             Expanded(
               child: ScrollablePositionedList.separated(
                 initialScrollIndex: chapterIndex.value,
@@ -692,7 +710,7 @@ class NovelReaderController extends BaseController {
                   indent: 12,
                   endIndent: 12,
                   height: 1.0,
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.grey.withValues(alpha: .2),
                 ),
                 itemBuilder: (_, i) {
                   var item = chapters[i];
@@ -732,10 +750,7 @@ class NovelReaderController extends BaseController {
 
   /// 进入全屏
   void setFull() {
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: [],
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   }
 
   /// 进入全屏edgeToEdge模式
@@ -744,12 +759,14 @@ class NovelReaderController extends BaseController {
       SystemUiMode.edgeToEdge,
       overlays: SystemUiOverlay.values,
     );
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.light,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
   }
 
   /// 退出全屏

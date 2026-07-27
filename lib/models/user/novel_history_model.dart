@@ -59,17 +59,17 @@ class UserNovelHistoryModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'uid': uid,
-        'type': type,
-        'lnovel_id': lnovelId,
-        'volume_id': volumeId,
-        'chapter_id': chapterId,
-        'record': record,
-        'viewing_time': viewingTime,
-        'total_num': totalNum,
-        'cover': cover,
-        'novel_name': novelName,
-        'volume_name': volumeName,
-        'chapter_name': chapterName,
-      };
+    'uid': uid,
+    'type': type,
+    'lnovel_id': lnovelId,
+    'volume_id': volumeId,
+    'chapter_id': chapterId,
+    'record': record,
+    'viewing_time': viewingTime,
+    'total_num': totalNum,
+    'cover': cover,
+    'novel_name': novelName,
+    'volume_name': volumeName,
+    'chapter_name': chapterName,
+  };
 }

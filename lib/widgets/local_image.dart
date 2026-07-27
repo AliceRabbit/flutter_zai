@@ -10,27 +10,22 @@ class LocalImage extends StatelessWidget {
   final BoxFit? fit;
   final double borderRadius;
   final bool progress;
-  const LocalImage(this.path,
-      {this.width,
-      this.height,
-      this.fit = BoxFit.cover,
-      this.borderRadius = 0,
-      this.progress = false,
-      Key? key})
-      : super(key: key);
+  const LocalImage(
+    this.path, {
+    this.width,
+    this.height,
+    this.fit = BoxFit.cover,
+    this.borderRadius = 0,
+    this.progress = false,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     if (path.isEmpty) {
       return Container(
-        decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(.1),
-        ),
-        child: const Icon(
-          Icons.image,
-          color: Colors.grey,
-          size: 24,
-        ),
+        decoration: BoxDecoration(color: Colors.grey.withValues(alpha: .1)),
+        child: const Icon(Icons.image, color: Colors.grey, size: 24),
       );
     }
     return ClipRRect(
@@ -41,7 +36,7 @@ class LocalImage extends StatelessWidget {
           if (snap.hasError) {
             return Container(
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(.1),
+                color: Colors.grey.withValues(alpha: .1),
               ),
               child: const Icon(
                 Icons.broken_image,
@@ -51,9 +46,7 @@ class LocalImage extends StatelessWidget {
             );
           }
           if (!snap.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           return Image.memory(

@@ -52,15 +52,15 @@ class ComicUpdateItemModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'comic_id': comicId,
-        'title': title,
-        'islong': islong,
-        'authors': authors,
-        'types': types,
-        'cover': cover,
-        'status': status,
-        'last_update_chapter_name': lastUpdateChapterName,
-        'last_update_chapter_id': lastUpdateChapterId,
-        'last_updatetime': lastUpdatetime,
-      };
+    'comic_id': comicId,
+    'title': title,
+    'islong': islong,
+    'authors': authors,
+    'types': types,
+    'cover': cover,
+    'status': status,
+    'last_update_chapter_name': lastUpdateChapterName,
+    'last_update_chapter_id': lastUpdateChapterId,
+    'last_updatetime': lastUpdatetime,
+  };
 }

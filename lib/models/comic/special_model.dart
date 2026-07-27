@@ -46,13 +46,13 @@ class ComicSpecialModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'title': title,
-        'short_title': shortTitle,
-        'create_time': createTime,
-        'small_cover': smallCover,
-        'page_type': pageType,
-        'sort': sort,
-        'page_url': pageUrl,
-      };
+    'id': id,
+    'title': title,
+    'short_title': shortTitle,
+    'create_time': createTime,
+    'small_cover': smallCover,
+    'page_type': pageType,
+    'sort': sort,
+    'page_url': pageUrl,
+  };
 }

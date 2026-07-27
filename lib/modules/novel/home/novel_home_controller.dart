@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/app/event_bus.dart';
-import 'package:flutter_dmzj/modules/novel/home/category/novel_category_controller.dart';
-import 'package:flutter_dmzj/modules/novel/home/latest/novel_latest_controller.dart';
-import 'package:flutter_dmzj/modules/novel/home/rank/novel_rank_controller.dart';
-import 'package:flutter_dmzj/modules/novel/home/recommend/novel_recommend_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/app/event_bus.dart';
+import 'package:zaix/modules/novel/home/category/novel_category_controller.dart';
+import 'package:zaix/modules/novel/home/latest/novel_latest_controller.dart';
+import 'package:zaix/modules/novel/home/rank/novel_rank_controller.dart';
+import 'package:zaix/modules/novel/home/recommend/novel_recommend_controller.dart';
+import 'package:zaix/routes/app_navigator.dart';
 import 'package:get/get.dart';
 
 class NovelHomeController extends GetxController

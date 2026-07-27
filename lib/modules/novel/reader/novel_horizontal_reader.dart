@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_dmzj/app/log.dart';
+import 'package:zaix/app/log.dart';
 import 'package:get/get.dart';
 
 class NovelHorizontalReader extends StatefulWidget {
@@ -18,8 +18,8 @@ class NovelHorizontalReader extends StatefulWidget {
     this.padding,
     this.reverse = false,
     this.onPageChanged,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<NovelHorizontalReader> createState() => _NovelHorizontalReaderState();
@@ -66,7 +66,8 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
 
     padding = widget.padding ?? EdgeInsets.zero;
     maxWidth = Get.width - padding.left - padding.right;
-    maxHeight = Get.height -
+    maxHeight =
+        Get.height -
         //AppStyle.statusBarHeight -
         //AppStyle.bottomBarHeight -
         padding.top -
@@ -102,15 +103,27 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
     var fontSize = (textStyle.fontSize ?? 16).toDouble();
     var lineHeight = textStyle.height ?? 1.5;
     // 计算出出各个类型的大小
-    Size chineseCharSize = calcFontSize("中",
-        fontSize: fontSize.toDouble(), lineHeight: lineHeight);
+    Size chineseCharSize = calcFontSize(
+      "中",
+      fontSize: fontSize.toDouble(),
+      lineHeight: lineHeight,
+    );
     fontHieght = chineseCharSize.height;
-    Size englishCharSize = calcFontSize("z",
-        fontSize: fontSize.toDouble(), lineHeight: lineHeight);
-    Size symbolCharSize = calcFontSize(",",
-        fontSize: fontSize.toDouble(), lineHeight: lineHeight);
-    Size spaceCharSize = calcFontSize(" ",
-        fontSize: fontSize.toDouble(), lineHeight: lineHeight);
+    Size englishCharSize = calcFontSize(
+      "z",
+      fontSize: fontSize.toDouble(),
+      lineHeight: lineHeight,
+    );
+    Size symbolCharSize = calcFontSize(
+      ",",
+      fontSize: fontSize.toDouble(),
+      lineHeight: lineHeight,
+    );
+    Size spaceCharSize = calcFontSize(
+      " ",
+      fontSize: fontSize.toDouble(),
+      lineHeight: lineHeight,
+    );
     // 计算可渲染的最大行数
     int maxLine = (maxHeight / chineseCharSize.height).floor();
     // 在新线程中进行分页
@@ -141,9 +154,7 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
   /// 由于TextPainter.layout无法在isolate中使用，且计算极其耗时，所以手动写一个处理方法
   /// 处理一段12万字的文本，TextPainter.layout需要耗时16000ms左右；此方法则可以到1600ms，且能用isolate
   /// 该方法还不是很完善，符号换行等还未实现，速度也可以再优化
-  static List<List<String>> splitText(
-    ComputeParameter parameter,
-  ) {
+  static List<List<String>> splitText(ComputeParameter parameter) {
     var str = parameter.content;
 
     Log.w("字数:${str.length}");
@@ -153,8 +164,10 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
     RegExp reg = RegExp(r"([^\x00-\xff]|\b\w+\b|\p{P}|\x20|\S|\u3000|\n)");
 
     // 使用正则表达式分割字符串
-    List<String> resultList =
-        reg.allMatches(str).map((match) => match.group(0) ?? "").toList();
+    List<String> resultList = reg
+        .allMatches(str)
+        .map((match) => match.group(0) ?? "")
+        .toList();
     List<CharInfo> chars = [];
     final chineseExp = RegExp(r"[^\x00-\xff]");
     final wordExp = RegExp(r"\w+");
@@ -177,16 +190,15 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
       if (wordExp.hasMatch(item)) {
         chars.add(
           CharInfo(
-              text: item,
-              width: parameter.englishWidth * item.length,
-              type: CharType.word),
+            text: item,
+            width: parameter.englishWidth * item.length,
+            type: CharType.word,
+          ),
         );
         continue;
       }
       if (newLineExp.hasMatch(item)) {
-        chars.add(
-          CharInfo(text: "", width: 0, type: CharType.newline),
-        );
+        chars.add(CharInfo(text: "", width: 0, type: CharType.newline));
         continue;
       }
       if (item == " ") {
@@ -202,7 +214,10 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
       if (symbolExp.hasMatch(item)) {
         chars.add(
           CharInfo(
-              text: item, width: parameter.symbolWidth, type: CharType.symbol),
+            text: item,
+            width: parameter.symbolWidth,
+            type: CharType.symbol,
+          ),
         );
         continue;
       }
@@ -279,12 +294,7 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
   @override
   Widget build(BuildContext context) {
     return textPages.isEmpty
-        ? Center(
-            child: Text(
-              "加载中...",
-              style: widget.style,
-            ),
-          )
+        ? Center(child: Text("加载中...", style: widget.style))
         : PageView.builder(
             controller: widget.controller,
             reverse: widget.reverse,
@@ -313,21 +323,14 @@ class NovelTextPainter extends CustomPainter {
   final TextStyle style;
   final double fontHieght;
   final List<String> text;
-  NovelTextPainter(
-    this.text, {
-    required this.style,
-    required this.fontHieght,
-  });
+  NovelTextPainter(this.text, {required this.style, required this.fontHieght});
   @override
   void paint(Canvas canvas, Size size) {
     var startTime = DateTime.now().millisecondsSinceEpoch;
 
     var i = 0;
     for (var item in text) {
-      TextSpan textSpan = TextSpan(
-        text: item,
-        style: style,
-      );
+      TextSpan textSpan = TextSpan(text: item, style: style);
 
       final textPainter = TextPainter(
         text: textSpan,
@@ -363,18 +366,14 @@ enum CharType {
   //符号
   symbol,
   //换行符
-  newline
+  newline,
 }
 
 class CharInfo {
   CharType type;
   String text;
   double width;
-  CharInfo({
-    required this.text,
-    required this.width,
-    required this.type,
-  });
+  CharInfo({required this.text, required this.width, required this.type});
   @override
   String toString() {
     return "($type,$width,$text)";

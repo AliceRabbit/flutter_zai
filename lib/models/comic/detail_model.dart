@@ -8,17 +8,16 @@ T? asT<T>(dynamic value) {
 }
 
 class ComicDetailModel {
-  ComicDetailModel({
-    required this.data,
-    required this.readingRecord,
-  });
+  ComicDetailModel({required this.data, required this.readingRecord});
 
   factory ComicDetailModel.fromJson(Map<String, dynamic> json) =>
       ComicDetailModel(
         data: ComicDetailDataModel.fromJson(
-            asT<Map<String, dynamic>>(json['data'])!),
+          asT<Map<String, dynamic>>(json['data'])!,
+        ),
         readingRecord: ComicDetailReadingRecordModel.fromJson(
-            asT<Map<String, dynamic>>(json['readingRecord'])!),
+          asT<Map<String, dynamic>>(json['readingRecord'])!,
+        ),
       );
 
   ComicDetailDataModel data;
@@ -30,9 +29,9 @@ class ComicDetailModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'data': data,
-        'readingRecord': readingRecord,
-      };
+    'data': data,
+    'readingRecord': readingRecord,
+  };
 }
 
 class ComicDetailDataModel {
@@ -56,52 +55,61 @@ class ComicDetailDataModel {
   });
 
   factory ComicDetailDataModel.fromJson(Map<String, dynamic> json) {
-    final List<ComicDetailDataTagModel>? types =
-        json['types'] is List ? <ComicDetailDataTagModel>[] : null;
+    final List<ComicDetailDataTagModel>? types = json['types'] is List
+        ? <ComicDetailDataTagModel>[]
+        : null;
     if (types != null) {
       for (final dynamic item in json['types']!) {
         if (item != null) {
-          types.add(ComicDetailDataTagModel.fromJson(
-              asT<Map<String, dynamic>>(item)!));
+          types.add(
+            ComicDetailDataTagModel.fromJson(asT<Map<String, dynamic>>(item)!),
+          );
         }
       }
     }
 
-    final List<ComicDetailDataTagModel>? status =
-        json['status'] is List ? <ComicDetailDataTagModel>[] : null;
+    final List<ComicDetailDataTagModel>? status = json['status'] is List
+        ? <ComicDetailDataTagModel>[]
+        : null;
     if (status != null) {
       for (final dynamic item in json['status']!) {
         if (item != null) {
-          status.add(ComicDetailDataTagModel.fromJson(
-              asT<Map<String, dynamic>>(item)!));
+          status.add(
+            ComicDetailDataTagModel.fromJson(asT<Map<String, dynamic>>(item)!),
+          );
         }
       }
     }
 
-    final List<ComicDetailDataTagModel>? authors =
-        json['authors'] is List ? <ComicDetailDataTagModel>[] : null;
+    final List<ComicDetailDataTagModel>? authors = json['authors'] is List
+        ? <ComicDetailDataTagModel>[]
+        : null;
     if (authors != null) {
       for (final dynamic item in json['authors']!) {
         if (item != null) {
-          authors.add(ComicDetailDataTagModel.fromJson(
-              asT<Map<String, dynamic>>(item)!));
+          authors.add(
+            ComicDetailDataTagModel.fromJson(asT<Map<String, dynamic>>(item)!),
+          );
         }
       }
     }
 
-    final List<ComicDetailChapterModel>? chapters =
-        json['chapters'] is List ? <ComicDetailChapterModel>[] : null;
+    final List<ComicDetailChapterModel>? chapters = json['chapters'] is List
+        ? <ComicDetailChapterModel>[]
+        : null;
     if (chapters != null) {
       for (final dynamic item in json['chapters']!) {
         if (item != null) {
-          chapters.add(ComicDetailChapterModel.fromJson(
-              asT<Map<String, dynamic>>(item)!));
+          chapters.add(
+            ComicDetailChapterModel.fromJson(asT<Map<String, dynamic>>(item)!),
+          );
         }
       }
     }
 
-    final List<DhUrlLinks>? dhUrlLinks =
-        json['dh_url_links'] is List ? <DhUrlLinks>[] : null;
+    final List<DhUrlLinks>? dhUrlLinks = json['dh_url_links'] is List
+        ? <DhUrlLinks>[]
+        : null;
     if (dhUrlLinks != null) {
       for (final dynamic item in json['dh_url_links']!) {
         if (item != null) {
@@ -152,30 +160,27 @@ class ComicDetailDataModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'title': title,
-        'direction': direction,
-        'islong': islong,
-        'cover': cover,
-        'description': description,
-        'last_updatetime': lastUpdatetime,
-        'last_update_chapter_name': lastUpdateChapterName,
-        'first_letter': firstLetter,
-        'comic_py': comicPy,
-        'last_update_chapter_id': lastUpdateChapterId,
-        'types': types,
-        'status': status,
-        'authors': authors,
-        'chapters': chapters,
-        'dh_url_links': dhUrlLinks,
-      };
+    'id': id,
+    'title': title,
+    'direction': direction,
+    'islong': islong,
+    'cover': cover,
+    'description': description,
+    'last_updatetime': lastUpdatetime,
+    'last_update_chapter_name': lastUpdateChapterName,
+    'first_letter': firstLetter,
+    'comic_py': comicPy,
+    'last_update_chapter_id': lastUpdateChapterId,
+    'types': types,
+    'status': status,
+    'authors': authors,
+    'chapters': chapters,
+    'dh_url_links': dhUrlLinks,
+  };
 }
 
 class ComicDetailDataTagModel {
-  ComicDetailDataTagModel({
-    required this.tagId,
-    required this.tagName,
-  });
+  ComicDetailDataTagModel({required this.tagId, required this.tagName});
 
   factory ComicDetailDataTagModel.fromJson(Map<String, dynamic> json) =>
       ComicDetailDataTagModel(
@@ -192,25 +197,26 @@ class ComicDetailDataTagModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'tag_id': tagId,
-        'tag_name': tagName,
-      };
+    'tag_id': tagId,
+    'tag_name': tagName,
+  };
 }
 
 class ComicDetailChapterModel {
-  ComicDetailChapterModel({
-    this.title,
-    this.data,
-  });
+  ComicDetailChapterModel({this.title, this.data});
 
   factory ComicDetailChapterModel.fromJson(Map<String, dynamic> json) {
-    final List<ComicDetailChapterDataModel>? data =
-        json['data'] is List ? <ComicDetailChapterDataModel>[] : null;
+    final List<ComicDetailChapterDataModel>? data = json['data'] is List
+        ? <ComicDetailChapterDataModel>[]
+        : null;
     if (data != null) {
       for (final dynamic item in json['data']!) {
         if (item != null) {
-          data.add(ComicDetailChapterDataModel.fromJson(
-              asT<Map<String, dynamic>>(item)!));
+          data.add(
+            ComicDetailChapterDataModel.fromJson(
+              asT<Map<String, dynamic>>(item)!,
+            ),
+          );
         }
       }
     }
@@ -229,9 +235,9 @@ class ComicDetailChapterModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'title': title,
-        'data': data,
-      };
+    'title': title,
+    'data': data,
+  };
 }
 
 class ComicDetailChapterDataModel {
@@ -261,21 +267,18 @@ class ComicDetailChapterDataModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'chapter_id': chapterId,
-        'chapter_title': chapterTitle,
-        'updatetime': updatetime,
-        'chapter_order': chapterOrder,
-      };
+    'chapter_id': chapterId,
+    'chapter_title': chapterTitle,
+    'updatetime': updatetime,
+    'chapter_order': chapterOrder,
+  };
 }
 
 class DhUrlLinks {
-  DhUrlLinks({
-    this.title,
-  });
+  DhUrlLinks({this.title});
 
-  factory DhUrlLinks.fromJson(Map<String, dynamic> json) => DhUrlLinks(
-        title: asT<String?>(json['title']),
-      );
+  factory DhUrlLinks.fromJson(Map<String, dynamic> json) =>
+      DhUrlLinks(title: asT<String?>(json['title']));
 
   String? title;
 
@@ -284,9 +287,7 @@ class DhUrlLinks {
     return jsonEncode(this);
   }
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'title': title,
-      };
+  Map<String, dynamic> toJson() => <String, dynamic>{'title': title};
 }
 
 class ComicDetailReadingRecordModel {
@@ -337,16 +338,16 @@ class ComicDetailReadingRecordModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'type_name': typeName,
-        'uid': uid,
-        'source': source,
-        'biz_id': bizId,
-        'chapter_id': chapterId,
-        'viewing_time': viewingTime,
-        'record': record,
-        'volume_id': volumeId,
-        'total_num': totalNum,
-        'chapter_name': chapterName,
-        'volume_name': volumeName,
-      };
+    'type_name': typeName,
+    'uid': uid,
+    'source': source,
+    'biz_id': bizId,
+    'chapter_id': chapterId,
+    'viewing_time': viewingTime,
+    'record': record,
+    'volume_id': volumeId,
+    'total_num': totalNum,
+    'chapter_name': chapterName,
+    'volume_name': volumeName,
+  };
 }

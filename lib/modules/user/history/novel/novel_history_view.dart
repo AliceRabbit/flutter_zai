@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/user/novel_history_model.dart';
-import 'package:flutter_dmzj/modules/user/history/novel/novel_history_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/page_list_view.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/models/user/novel_history_model.dart';
+import 'package:zaix/modules/user/history/novel/novel_history_controller.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/widgets/keep_alive_wrapper.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/page_list_view.dart';
 import 'package:get/get.dart';
 
 class NovelHistoryView extends StatelessWidget {
   final NovelHistoryController controller;
   NovelHistoryView({super.key})
-      : controller = Get.put(NovelHistoryController());
+    : controller = Get.put(NovelHistoryController());
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class NovelHistoryView extends StatelessWidget {
         separatorBuilder: (context, i) => Divider(
           endIndent: 12,
           indent: 12,
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues(alpha: .2),
           height: 1,
         ),
         itemBuilder: (context, i) {
@@ -45,12 +45,7 @@ class NovelHistoryView extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            NetImage(
-              item.cover,
-              width: 80,
-              height: 110,
-              borderRadius: 4,
-            ),
+            NetImage(item.cover, width: 80, height: 110, borderRadius: 4),
             AppStyle.hGap12,
             Expanded(
               child: Column(
@@ -63,11 +58,14 @@ class NovelHistoryView extends StatelessWidget {
                   ),
                   AppStyle.vGap4,
                   Text(
-                      "看到${item.volumeName} ${item.chapterName} ${item.record}页",
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                    "看到${item.volumeName} ${item.chapterName} ${item.record}页",
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
                   AppStyle.vGap4,
-                  Text("观看于${Utils.formatTimestamp(item.viewingTime ?? 0)}",
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                  Text(
+                    "观看于${Utils.formatTimestamp(item.viewingTime ?? 0)}",
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
                 ],
               ),
             ),

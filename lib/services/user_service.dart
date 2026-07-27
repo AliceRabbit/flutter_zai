@@ -2,18 +2,18 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/event_bus.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/db/comic_history.dart';
-import 'package:flutter_dmzj/models/db/novel_history.dart';
-import 'package:flutter_dmzj/models/user/login_result_model.dart';
-import 'package:flutter_dmzj/models/user/user_profile_model.dart';
-import 'package:flutter_dmzj/modules/user/login/user_login_dialog.dart';
-import 'package:flutter_dmzj/requests/user_request.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
-import 'package:flutter_dmzj/services/local_storage_service.dart';
+import 'package:zaix/app/app_constant.dart';
+import 'package:zaix/app/event_bus.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/models/db/comic_history.dart';
+import 'package:zaix/models/db/novel_history.dart';
+import 'package:zaix/models/user/login_result_model.dart';
+import 'package:zaix/models/user/user_profile_model.dart';
+import 'package:zaix/modules/user/login/user_login_dialog.dart';
+import 'package:zaix/requests/user_request.dart';
+import 'package:zaix/services/db_service.dart';
+import 'package:zaix/services/local_storage_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -274,10 +274,7 @@ class UserService extends GetxService {
       if (!await login()) {
         return false;
       }
-      await request.addSubscribe(
-        ids: ids,
-        type: type,
-      );
+      await request.addSubscribe(ids: ids, type: type);
       if (type == AppConstant.kTypeComic) {
         subscribedComicIds.addAll(ids);
       } else if (type == AppConstant.kTypeNovel) {
@@ -298,10 +295,7 @@ class UserService extends GetxService {
       if (!await login()) {
         return false;
       }
-      await request.removeSubscribe(
-        ids: ids,
-        type: type,
-      );
+      await request.removeSubscribe(ids: ids, type: type);
       if (type == AppConstant.kTypeComic) {
         subscribedComicIds.removeAll(ids);
       } else if (type == AppConstant.kTypeNovel) {

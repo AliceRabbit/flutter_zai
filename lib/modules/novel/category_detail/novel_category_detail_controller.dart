@@ -1,7 +1,7 @@
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/novel/category_filter_model.dart';
-import 'package:flutter_dmzj/models/novel/category_novel_model.dart';
-import 'package:flutter_dmzj/requests/novel_request.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/models/novel/category_filter_model.dart';
+import 'package:zaix/models/novel/category_novel_model.dart';
+import 'package:zaix/requests/novel_request.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -25,8 +25,10 @@ class NovelCategoryDetailController
       return "全部小说";
     } else {
       return items
-          .map((e) =>
-              e.items.firstWhere((x) => x.tagId == e.selectId.value).tagName)
+          .map(
+            (e) =>
+                e.items.firstWhere((x) => x.tagId == e.selectId.value).tagName,
+          )
           .join("-");
     }
   }
@@ -77,7 +79,11 @@ class NovelCategoryDetailController
           filters.firstWhereOrNull((x) => x.title == "题材")?.selectId.value ?? 0;
 
       return await request.categoryNovel(
-          cateId: cateId, status: status, sort: sort, page: page - 1);
+        cateId: cateId,
+        status: status,
+        sort: sort,
+        page: page - 1,
+      );
     }
   }
 }

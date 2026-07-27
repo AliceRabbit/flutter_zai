@@ -4,24 +4,25 @@ import 'dart:io';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/app_error.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/comic/chapter_info.dart';
-import 'package:flutter_dmzj/models/comic/detail_info.dart';
-import 'package:flutter_dmzj/models/comic/view_point_model.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/app_constant.dart';
+import 'package:zaix/app/connectivity_utils.dart';
+import 'package:zaix/app/app_error.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/services/app_settings_service.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/app/log.dart';
+import 'package:zaix/models/comic/chapter_info.dart';
+import 'package:zaix/models/comic/detail_info.dart';
+import 'package:zaix/models/comic/view_point_model.dart';
+import 'package:zaix/requests/comic_request.dart';
+import 'package:zaix/services/db_service.dart';
+import 'package:zaix/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
-import 'package:preload_page_view/preload_page_view.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -49,8 +50,10 @@ class ComicReaderController extends BaseController {
   /// APP设置控制器
   final settings = AppSettingsService.instance;
 
-  /// 预加载控制器
-  final PreloadPageController preloadPageController = PreloadPageController();
+  /// 横向阅读控制器
+  final PageController pageController = PageController();
+
+  int? _lastPrecachedPage;
 
   /// 上下模式控制器
   final ItemScrollController itemScrollController = ItemScrollController();
@@ -60,11 +63,12 @@ class ComicReaderController extends BaseController {
       ItemPositionsListener.create();
 
   /// 章节详情
-  Rx<ComicChapterDetail> detail =
-      Rx<ComicChapterDetail>(ComicChapterDetail.empty());
+  Rx<ComicChapterDetail> detail = Rx<ComicChapterDetail>(
+    ComicChapterDetail.empty(),
+  );
 
   /// 连接信息监听
-  StreamSubscription<ConnectivityResult>? connectivitySubscription;
+  StreamSubscription<List<ConnectivityResult>>? connectivitySubscription;
 
   /// 电量信息监听
   StreamSubscription<BatteryState>? batterySubscription;
@@ -97,8 +101,9 @@ class ComicReaderController extends BaseController {
   RxList<ComicViewPointModel> viewPoints = RxList<ComicViewPointModel>();
 
   /// 连接类型
-  Rx<ConnectivityResult> connectivityType =
-      Rx<ConnectivityResult>(ConnectivityResult.other);
+  Rx<ConnectivityResult> connectivityType = Rx<ConnectivityResult>(
+    ConnectivityResult.other,
+  );
 
   /// 电量信息
   Rx<int> batteryLevel = 0.obs;
@@ -135,8 +140,9 @@ class ComicReaderController extends BaseController {
         return;
       }
       var battery = Battery();
-      batterySubscription =
-          battery.onBatteryStateChanged.listen((BatteryState state) async {
+      batterySubscription = battery.onBatteryStateChanged.listen((
+        BatteryState state,
+      ) async {
         try {
           var level = await battery.batteryLevel;
           batteryLevel.value = level;
@@ -155,8 +161,10 @@ class ComicReaderController extends BaseController {
   /// 初始化连接状态
   void initConnectivity() async {
     var connectivity = Connectivity();
-    connectivitySubscription =
-        connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+    connectivitySubscription = connectivity.onConnectivityChanged.listen((
+      results,
+    ) {
+      final result = primaryConnectivityResult(results);
       //提醒
       if (connectivityType.value != result &&
           result == ConnectivityResult.mobile) {
@@ -164,12 +172,15 @@ class ComicReaderController extends BaseController {
       }
       connectivityType.value = result;
     });
-    connectivityType.value = await connectivity.checkConnectivity();
+    connectivityType.value = primaryConnectivityResult(
+      await connectivity.checkConnectivity(),
+    );
   }
 
   @override
   void onClose() {
     focusNode.dispose();
+    pageController.dispose();
     connectivitySubscription?.cancel();
     batterySubscription?.cancel();
     exitFull();
@@ -186,8 +197,10 @@ class ComicReaderController extends BaseController {
 
     var index = items
         .where((ItemPosition position) => position.itemTrailingEdge > 0)
-        .reduce((ItemPosition min, ItemPosition position) =>
-            position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
+        .reduce(
+          (ItemPosition min, ItemPosition position) =>
+              position.itemTrailingEdge < min.itemTrailingEdge ? position : min,
+        )
         .index;
 
     currentIndex.value = index;
@@ -223,6 +236,7 @@ class ComicReaderController extends BaseController {
         initialIndex = 0;
       }
       currentIndex.value = initialIndex;
+      _lastPrecachedPage = null;
       // if (settings.comicReaderShowViewPoint.value) {
       //   result.pageUrls.add("TC");
       // }
@@ -283,9 +297,7 @@ class ComicReaderController extends BaseController {
           topRight: Radius.circular(12),
         ),
       ),
-      constraints: const BoxConstraints(
-        maxWidth: 500,
-      ),
+      constraints: const BoxConstraints(maxWidth: 500),
       backgroundColor: AppStyle.darkTheme.scaffoldBackgroundColor,
       builder: (context) => Theme(
         data: AppStyle.darkTheme,
@@ -299,10 +311,7 @@ class ComicReaderController extends BaseController {
               ),
               contentPadding: AppStyle.edgeInsetsL12,
             ),
-            Divider(
-              height: 1.0,
-              color: Colors.grey.withOpacity(.2),
-            ),
+            Divider(height: 1.0, color: Colors.grey.withValues(alpha: .2)),
             Expanded(
               child: ScrollablePositionedList.separated(
                 initialScrollIndex: chapterIndex.value,
@@ -311,7 +320,7 @@ class ComicReaderController extends BaseController {
                   indent: 12,
                   endIndent: 12,
                   height: 1.0,
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.grey.withValues(alpha: .2),
                 ),
                 itemBuilder: (_, i) {
                   var item = chapters[i];
@@ -320,7 +329,8 @@ class ComicReaderController extends BaseController {
                     title: Text(item.chapterTitle),
                     subtitle: item.updateTime != 0
                         ? Text(
-                            "更新于${Utils.formatTimestampToDate(item.updateTime)}")
+                            "更新于${Utils.formatTimestampToDate(item.updateTime)}",
+                          )
                         : null,
                     onTap: () {
                       chapterIndex.value = i;
@@ -390,9 +400,36 @@ class ComicReaderController extends BaseController {
       itemScrollController.jumpTo(index: page);
     } else {
       anime && pageAnimation
-          ? preloadPageController.animateToPage(page,
-              duration: const Duration(milliseconds: 200), curve: Curves.linear)
-          : preloadPageController.jumpToPage(page);
+          ? pageController.animateToPage(
+              page,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.linear,
+            )
+          : pageController.jumpToPage(page);
+    }
+  }
+
+  /// Precache the current page and nearby pages without retaining an obsolete
+  /// third-party PageView implementation.
+  void precacheNearbyPages(BuildContext context, int page) {
+    if (_lastPrecachedPage == page || detail.value.pageUrls.isEmpty) {
+      return;
+    }
+    _lastPrecachedPage = page;
+
+    for (var offset = -1; offset <= 4; offset++) {
+      final index = page + offset;
+      if (index < 0 || index >= detail.value.pageUrls.length) {
+        continue;
+      }
+      final url = detail.value.pageUrls[index];
+      if (url == "TC") {
+        continue;
+      }
+      final ImageProvider imageProvider = detail.value.isLocal
+          ? FileImage(File(url))
+          : ExtendedNetworkImageProvider(url, cache: true);
+      unawaited(precacheImage(imageProvider, context, onError: (_, _) {}));
     }
   }
 
@@ -408,9 +445,7 @@ class ComicReaderController extends BaseController {
           topRight: Radius.circular(12),
         ),
       ),
-      constraints: const BoxConstraints(
-        maxWidth: 500,
-      ),
+      constraints: const BoxConstraints(maxWidth: 500),
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: AppStyle.darkTheme.scaffoldBackgroundColor,
@@ -426,10 +461,7 @@ class ComicReaderController extends BaseController {
               ),
               contentPadding: AppStyle.edgeInsetsL12,
             ),
-            Divider(
-              height: 1.0,
-              color: Colors.grey.withOpacity(.2),
-            ),
+            Divider(height: 1.0, color: Colors.grey.withValues(alpha: .2)),
             Expanded(
               child: EasyRefresh(
                 header: const MaterialHeader(),
@@ -460,8 +492,9 @@ class ComicReaderController extends BaseController {
                                     ),
                                     child: Text(
                                       item.content,
-                                      style:
-                                          const TextStyle(color: Colors.white),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 );
@@ -476,13 +509,15 @@ class ComicReaderController extends BaseController {
                             indent: 12,
                             endIndent: 12,
                             height: 1.0,
-                            color: Colors.grey.withOpacity(.2),
+                            color: Colors.grey.withValues(alpha: .2),
                           ),
                           itemBuilder: (_, i) {
                             var item = viewPoints[i];
                             return Padding(
-                              padding: AppStyle.edgeInsetsA12
-                                  .copyWith(top: 8, bottom: 8),
+                              padding: AppStyle.edgeInsetsA12.copyWith(
+                                top: 8,
+                                bottom: 8,
+                              ),
                               child: Row(
                                 children: [
                                   Expanded(
@@ -558,9 +593,7 @@ class ComicReaderController extends BaseController {
           topRight: Radius.circular(12),
         ),
       ),
-      constraints: const BoxConstraints(
-        maxWidth: 500,
-      ),
+      constraints: const BoxConstraints(maxWidth: 500),
       backgroundColor: AppStyle.darkTheme.scaffoldBackgroundColor,
       builder: (context) => Theme(
         data: AppStyle.darkTheme,
@@ -608,7 +641,7 @@ class ComicReaderController extends BaseController {
                                   },
                                   selected:
                                       settings.comicReaderDirection.value ==
-                                          ReaderDirection.kLeftToRight,
+                                      ReaderDirection.kLeftToRight,
                                   child: const Icon(Remix.arrow_right_line),
                                 ),
                                 AppStyle.hGap8,
@@ -618,7 +651,7 @@ class ComicReaderController extends BaseController {
                                   },
                                   selected:
                                       settings.comicReaderDirection.value ==
-                                          ReaderDirection.kRightToLeft,
+                                      ReaderDirection.kRightToLeft,
                                   child: const Icon(Remix.arrow_left_line),
                                 ),
                                 AppStyle.hGap8,
@@ -628,9 +661,9 @@ class ComicReaderController extends BaseController {
                                   },
                                   selected:
                                       settings.comicReaderDirection.value ==
-                                          ReaderDirection.kUpToDown,
+                                      ReaderDirection.kUpToDown,
                                   child: const Icon(Remix.arrow_down_line),
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -724,14 +757,15 @@ class ComicReaderController extends BaseController {
     );
   }
 
-  Widget buildSelectedButton(
-      {required Widget child, bool selected = false, Function()? onTap}) {
+  Widget buildSelectedButton({
+    required Widget child,
+    bool selected = false,
+    Function()? onTap,
+  }) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         foregroundColor: selected ? Colors.blue : Colors.grey,
-        side: BorderSide(
-          color: selected ? Colors.blue : Colors.grey,
-        ),
+        side: BorderSide(color: selected ? Colors.blue : Colors.grey),
       ),
       onPressed: onTap,
       child: child,
@@ -779,10 +813,7 @@ class ComicReaderController extends BaseController {
 
   /// 进入全屏
   void setFull() {
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: [],
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   }
 
   /// 进入全屏edgeToEdge模式
@@ -791,12 +822,14 @@ class ComicReaderController extends BaseController {
       SystemUiMode.edgeToEdge,
       overlays: SystemUiOverlay.values,
     );
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.light,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
   }
 
   /// 退出全屏

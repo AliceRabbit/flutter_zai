@@ -1,12 +1,12 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/modules/novel/detail/novel_detail_controller.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
+import 'package:zaix/app/app_color.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/modules/novel/detail/novel_detail_controller.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/status/app_error_widget.dart';
+import 'package:zaix/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
@@ -14,10 +14,10 @@ class NovelDetailPage extends StatelessWidget {
   final int id;
   final NovelDetailControler controller;
   NovelDetailPage(this.id, {super.key})
-      : controller = Get.put(
-          NovelDetailControler(id),
-          tag: DateTime.now().millisecondsSinceEpoch.toString(),
-        );
+    : controller = Get.put(
+        NovelDetailControler(id),
+        tag: DateTime.now().millisecondsSinceEpoch.toString(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class NovelDetailPage extends StatelessWidget {
                               },
                             ),
                             Divider(
-                              color: Colors.grey.withOpacity(.2),
+                              color: Colors.grey.withValues(alpha: .2),
                               height: 1.0,
                             ),
                           ],
@@ -129,10 +129,7 @@ class NovelDetailPage extends StatelessWidget {
                     textStyle: const TextStyle(fontSize: 14),
                   ),
                   onPressed: controller.comment,
-                  icon: const Icon(
-                    Remix.chat_2_line,
-                    size: 20,
-                  ),
+                  icon: const Icon(Remix.chat_2_line, size: 20),
                   label: const Text("评论"),
                 ),
               ),
@@ -142,10 +139,7 @@ class NovelDetailPage extends StatelessWidget {
                     textStyle: const TextStyle(fontSize: 14),
                   ),
                   onPressed: controller.download,
-                  icon: const Icon(
-                    Remix.download_line,
-                    size: 20,
-                  ),
+                  icon: const Icon(Remix.download_line, size: 20),
                   label: const Text("下载"),
                 ),
               ),
@@ -206,8 +200,9 @@ class NovelDetailPage extends StatelessWidget {
                         .toList(),
                   ),
                   _buildInfo(
-                    title:
-                        controller.detail.value.types.map((e) => e).join("/"),
+                    title: controller.detail.value.types
+                        .map((e) => e)
+                        .join("/"),
                     iconData: Remix.hashtag,
                   ),
                   _buildInfo(
@@ -236,19 +231,13 @@ class NovelDetailPage extends StatelessWidget {
           },
           child: Text(
             controller.detail.value.introduction,
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 14,
-            ),
+            style: const TextStyle(color: Colors.grey, fontSize: 14),
             maxLines: controller.expandDescription.value ? 999 : 2,
             overflow: TextOverflow.ellipsis,
           ),
         ),
         AppStyle.vGap12,
-        Divider(
-          color: Colors.grey.withOpacity(.2),
-          height: 1.0,
-        ),
+        Divider(color: Colors.grey.withValues(alpha: .2), height: 1.0),
       ],
     );
   }
@@ -270,9 +259,7 @@ class NovelDetailPage extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: item.chapters.length,
-                    separatorBuilder: (_, i) => const Divider(
-                      height: 1,
-                    ),
+                    separatorBuilder: (_, i) => const Divider(height: 1),
                     itemBuilder: (context, i) {
                       var chapter = item.chapters[i];
                       return ListTile(
@@ -281,7 +268,8 @@ class NovelDetailPage extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Get.textTheme.bodyMedium!.copyWith(
-                            color: controller.history.value?.chapterId ==
+                            color:
+                                controller.history.value?.chapterId ==
                                     chapter.chapterId
                                 ? Colors.blue
                                 : null,
@@ -289,7 +277,8 @@ class NovelDetailPage extends StatelessWidget {
                         ),
                         contentPadding: AppStyle.edgeInsetsA4,
                         visualDensity: const VisualDensity(
-                            vertical: VisualDensity.minimumDensity),
+                          vertical: VisualDensity.minimumDensity,
+                        ),
                         onTap: () {
                           controller.readChapter(item, chapter);
                         },
@@ -304,20 +293,13 @@ class NovelDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildInfo({
-    required String title,
-    IconData iconData = Icons.tag,
-  }) {
+  Widget _buildInfo({required String title, IconData iconData = Icons.tag}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(
-            iconData,
-            color: Colors.grey,
-            size: 16,
-          ),
+          Icon(iconData, color: Colors.grey, size: 16),
           AppStyle.hGap8,
           Expanded(
             child: Text(
@@ -342,18 +324,9 @@ class NovelDetailPage extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(
-            iconData,
-            color: Colors.grey,
-            size: 16,
-          ),
+          Icon(iconData, color: Colors.grey, size: 16),
           AppStyle.hGap8,
-          Expanded(
-            child: Wrap(
-              spacing: 8,
-              children: children,
-            ),
-          ),
+          Expanded(child: Wrap(spacing: 8, children: children)),
         ],
       ),
     );

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:zaix/app/app_style.dart';
 import 'package:get/get.dart';
 
 class TabAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Tab> tabs;
   final TabController? controller;
   final Widget? action;
-  const TabAppBar({required this.tabs, this.controller, this.action, Key? key})
-      : super(key: key);
+  const TabAppBar({
+    required this.tabs,
+    this.controller,
+    this.action,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +25,10 @@ class TabAppBar extends StatelessWidget implements PreferredSizeWidget {
               systemNavigationBarColor: Colors.transparent,
             ),
       child: Container(
-        padding:
-            EdgeInsets.only(top: MediaQuery.of(context).padding.top, right: 4),
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top,
+          right: 4,
+        ),
         height: 56 + MediaQuery.of(context).padding.top,
         child: Row(
           children: [
@@ -32,8 +38,9 @@ class TabAppBar extends StatelessWidget implements PreferredSizeWidget {
                 controller: controller,
                 labelColor: Theme.of(context).colorScheme.primary,
                 tabAlignment: TabAlignment.start,
-                unselectedLabelColor:
-                    Get.isDarkMode ? Colors.white70 : Colors.black87,
+                unselectedLabelColor: Get.isDarkMode
+                    ? Colors.white70
+                    : Colors.black87,
                 labelStyle: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

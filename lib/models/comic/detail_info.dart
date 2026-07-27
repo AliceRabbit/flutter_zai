@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter_dmzj/models/comic/detail_model.dart';
-import 'package:flutter_dmzj/models/comic/detail_v1_model.dart';
+import 'package:zaix/models/comic/detail_model.dart';
+import 'package:zaix/models/comic/detail_v1_model.dart';
 import 'package:get/get.dart';
 
 T? asT<T>(dynamic value) {
@@ -35,77 +35,60 @@ class ComicDetailInfo {
     this.isVip = false,
   });
 
-  factory ComicDetailInfo.empty() => ComicDetailInfo(
-        types: [],
-        status: [],
-        authors: [],
-        volumes: [],
-      );
+  factory ComicDetailInfo.empty() =>
+      ComicDetailInfo(types: [], status: [], authors: [], volumes: []);
 
   factory ComicDetailInfo.fromV4(ComicDetailModel data) => ComicDetailInfo(
-        id: data.data.id,
-        title: data.data.title,
-        direction: data.data.direction ?? 0,
-        isLong: data.data.islong == 1,
-        cover: data.data.cover ?? "",
-        description: data.data.description ?? "",
-        lastUpdateChapterId: data.data.lastUpdateChapterId ?? 0,
-        lastUpdatechapterName: data.data.lastUpdateChapterName ?? "",
-        lastUpdatetime: data.data.lastUpdatetime ?? 0,
-        hitNum: 0,
-        hotNum: 0,
-        subscribeNum: 0,
-        firstLetter: data.data.firstLetter ?? "",
-        comicPy: data.data.comicPy ?? "",
-        isVip: false,
-        types: (data.data.types ?? [])
-            .map(
-              (e) => ComicDetailTag(
-                tagId: e.tagId.toInt(),
-                tagName: e.tagName,
-              ),
-            )
-            .toList(),
-        status: (data.data.status ?? [])
-            .map(
-              (e) => ComicDetailTag(
-                tagId: e.tagId.toInt(),
-                tagName: e.tagName,
-              ),
-            )
-            .toList(),
-        authors: (data.data.authors ?? [])
-            .map(
-              (e) => ComicDetailTag(
-                tagId: e.tagId,
-                tagName: e.tagName,
-              ),
-            )
-            .toList(),
-        volumes: (data.data.chapters ?? [])
-            .map(
-              (e) => ComicDetailVolume(
-                title: e.title!,
-                chapters: RxList<ComicDetailChapterItem>(
-                  (e.data ?? [])
-                      .map(
-                        (x) => ComicDetailChapterItem(
-                          chapterId: x.chapterId.toInt(),
-                          chapterTitle: x.chapterTitle,
-                          updateTime: x.updatetime ?? 0,
-                          fileSize: 0,
-                          chapterOrder: x.chapterOrder,
-                          isVip: false,
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
-            )
-            .toList(),
-      );
-  factory ComicDetailInfo.fromV1(ComicDetailV1Model model,
-      {bool isHide = false}) {
+    id: data.data.id,
+    title: data.data.title,
+    direction: data.data.direction ?? 0,
+    isLong: data.data.islong == 1,
+    cover: data.data.cover ?? "",
+    description: data.data.description ?? "",
+    lastUpdateChapterId: data.data.lastUpdateChapterId ?? 0,
+    lastUpdatechapterName: data.data.lastUpdateChapterName ?? "",
+    lastUpdatetime: data.data.lastUpdatetime ?? 0,
+    hitNum: 0,
+    hotNum: 0,
+    subscribeNum: 0,
+    firstLetter: data.data.firstLetter ?? "",
+    comicPy: data.data.comicPy ?? "",
+    isVip: false,
+    types: (data.data.types ?? [])
+        .map((e) => ComicDetailTag(tagId: e.tagId.toInt(), tagName: e.tagName))
+        .toList(),
+    status: (data.data.status ?? [])
+        .map((e) => ComicDetailTag(tagId: e.tagId.toInt(), tagName: e.tagName))
+        .toList(),
+    authors: (data.data.authors ?? [])
+        .map((e) => ComicDetailTag(tagId: e.tagId, tagName: e.tagName))
+        .toList(),
+    volumes: (data.data.chapters ?? [])
+        .map(
+          (e) => ComicDetailVolume(
+            title: e.title!,
+            chapters: RxList<ComicDetailChapterItem>(
+              (e.data ?? [])
+                  .map(
+                    (x) => ComicDetailChapterItem(
+                      chapterId: x.chapterId.toInt(),
+                      chapterTitle: x.chapterTitle,
+                      updateTime: x.updatetime ?? 0,
+                      fileSize: 0,
+                      chapterOrder: x.chapterOrder,
+                      isVip: false,
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        )
+        .toList(),
+  );
+  factory ComicDetailInfo.fromV1(
+    ComicDetailV1Model model, {
+    bool isHide = false,
+  }) {
     var lastChapterId = 0;
     List<ComicDetailVolume> volumes = [];
     List<ComicDetailChapterItem> serialItems = [];
@@ -137,14 +120,16 @@ class ComicDetailInfo {
     }
     volumes.add(
       ComicDetailVolume(
-          title: isHide ? "神隐" : "连载",
-          chapters: RxList<ComicDetailChapterItem>(serialItems)),
+        title: isHide ? "神隐" : "连载",
+        chapters: RxList<ComicDetailChapterItem>(serialItems),
+      ),
     );
     if (aloneItems.isNotEmpty) {
       volumes.add(
         ComicDetailVolume(
-            title: isHide ? "神隐-单行本" : "单行本",
-            chapters: RxList<ComicDetailChapterItem>(aloneItems)),
+          title: isHide ? "神隐-单行本" : "单行本",
+          chapters: RxList<ComicDetailChapterItem>(aloneItems),
+        ),
       );
     }
     return ComicDetailInfo(
@@ -165,27 +150,12 @@ class ComicDetailInfo {
       isHide: isHide,
       types: model.info.types
           .split("/")
-          .map(
-            (e) => ComicDetailTag(
-              tagId: 0,
-              tagName: e,
-            ),
-          )
+          .map((e) => ComicDetailTag(tagId: 0, tagName: e))
           .toList(),
-      status: [
-        ComicDetailTag(
-          tagId: 0,
-          tagName: model.info.status,
-        )
-      ],
+      status: [ComicDetailTag(tagId: 0, tagName: model.info.status)],
       authors: model.info.authors
           .split("/")
-          .map(
-            (e) => ComicDetailTag(
-              tagId: 0,
-              tagName: e,
-            ),
-          )
+          .map((e) => ComicDetailTag(tagId: 0, tagName: e))
           .toList(),
       volumes: volumes,
     );
@@ -222,20 +192,14 @@ class ComicDetailInfo {
 }
 
 class ComicDetailTag {
-  ComicDetailTag({
-    required this.tagId,
-    required this.tagName,
-  });
+  ComicDetailTag({required this.tagId, required this.tagName});
 
   int tagId;
   String tagName;
 }
 
 class ComicDetailVolume {
-  ComicDetailVolume({
-    required this.title,
-    required this.chapters,
-  }) {
+  ComicDetailVolume({required this.title, required this.chapters}) {
     sort();
   }
 

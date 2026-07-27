@@ -50,14 +50,14 @@ class UserComicHistoryModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'uid': uid,
-        'type': type,
-        'comic_id': comicId,
-        'chapter_id': chapterId,
-        'record': record,
-        'viewing_time': viewingTime,
-        'comic_name': comicName,
-        'cover': cover,
-        'chapter_name': chapterName,
-      };
+    'uid': uid,
+    'type': type,
+    'comic_id': comicId,
+    'chapter_id': chapterId,
+    'record': record,
+    'viewing_time': viewingTime,
+    'comic_name': comicName,
+    'cover': cover,
+    'chapter_name': chapterName,
+  };
 }

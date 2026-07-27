@@ -5,5 +5,5 @@
   Created by xiaoyaocz on 2023/3/15.
   
 */
-"CFBundleDisplayName" = "DMZJX";
-"NSPhotoLibraryUsageDescription" = "Save pictures to your gallery";
+"CFBundleDisplayName" = "ZAI-X";
+"NSPhotoLibraryAddUsageDescription" = "Save pictures to your gallery";

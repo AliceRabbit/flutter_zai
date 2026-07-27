@@ -55,16 +55,16 @@ class ComicRankListItemModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'comic_id': comicId,
-        'title': title,
-        'authors': authors,
-        'status': status,
-        'cover': cover,
-        'types': types,
-        'last_updatetime': lastUpdatetime,
-        'last_update_chapter_name': lastUpdateChapterName,
-        'comic_py': comicPy,
-        'num': num,
-        'tag_id': tagId,
-      };
+    'comic_id': comicId,
+    'title': title,
+    'authors': authors,
+    'status': status,
+    'cover': cover,
+    'types': types,
+    'last_updatetime': lastUpdatetime,
+    'last_update_chapter_name': lastUpdateChapterName,
+    'comic_py': comicPy,
+    'num': num,
+    'tag_id': tagId,
+  };
 }

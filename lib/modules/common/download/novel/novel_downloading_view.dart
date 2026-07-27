@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/db/download_status.dart';
-import 'package:flutter_dmzj/services/novel_download_service.dart';
-import 'package:flutter_dmzj/services/download_task/novel_downloader.dart';
-import 'package:flutter_dmzj/widgets/status/app_empty_widget.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/models/db/download_status.dart';
+import 'package:zaix/services/novel_download_service.dart';
+import 'package:zaix/services/download_task/novel_downloader.dart';
+import 'package:zaix/widgets/status/app_empty_widget.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
 class NovelDownloadingView extends StatelessWidget {
-  const NovelDownloadingView({Key? key}) : super(key: key);
+  const NovelDownloadingView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +20,7 @@ class NovelDownloadingView extends StatelessWidget {
               children: [
                 ListView.separated(
                   itemCount: NovelDownloadService.instance.taskQueues.length,
-                  separatorBuilder: (_, i) => const Divider(
-                    height: 1,
-                  ),
+                  separatorBuilder: (_, i) => const Divider(height: 1),
                   itemBuilder: (_, i) {
                     var task = NovelDownloadService.instance.taskQueues[i];
                     return buildItem(task);
@@ -47,10 +45,7 @@ class NovelDownloadingView extends StatelessWidget {
                       textStyle: const TextStyle(fontSize: 14),
                     ),
                     onPressed: NovelDownloadService.instance.pauseAll,
-                    icon: const Icon(
-                      Remix.pause_line,
-                      size: 20,
-                    ),
+                    icon: const Icon(Remix.pause_line, size: 20),
                     label: const Text("暂停全部"),
                   ),
                 ),
@@ -60,10 +55,7 @@ class NovelDownloadingView extends StatelessWidget {
                       textStyle: const TextStyle(fontSize: 14),
                     ),
                     onPressed: NovelDownloadService.instance.resumeAll,
-                    icon: const Icon(
-                      Remix.download_line,
-                      size: 20,
-                    ),
+                    icon: const Icon(Remix.download_line, size: 20),
                     label: const Text("开始全部"),
                   ),
                 ),
@@ -85,10 +77,7 @@ class NovelDownloadingView extends StatelessWidget {
             Text(
               "${task.info.value.volumeName} - ${task.info.value.chapterName}",
             ),
-            Text(
-              task.info.value.novelName,
-              style: Get.textTheme.bodySmall,
-            ),
+            Text(task.info.value.novelName, style: Get.textTheme.bodySmall),
             Row(
               children: [
                 Expanded(
@@ -103,7 +92,8 @@ class NovelDownloadingView extends StatelessWidget {
                     buildButton(
                       icon: Icons.refresh_rounded,
                       text: "重试",
-                      visible: task.status == DownloadStatus.error ||
+                      visible:
+                          task.status == DownloadStatus.error ||
                           task.status == DownloadStatus.errorLoad,
                       onPressed: () {
                         task.retry();
@@ -111,7 +101,8 @@ class NovelDownloadingView extends StatelessWidget {
                     ),
                     buildButton(
                       icon: Icons.play_arrow_rounded,
-                      visible: task.status == DownloadStatus.wait ||
+                      visible:
+                          task.status == DownloadStatus.wait ||
                           task.status == DownloadStatus.pauseCellular,
                       text: "开始",
                       onPressed: () {
@@ -173,8 +164,6 @@ class NovelDownloadingView extends StatelessWidget {
         return "等待下载";
       case DownloadStatus.waitNetwork:
         return "等待网络连接";
-      default:
-        return status.toString();
     }
   }
 
@@ -194,10 +183,7 @@ class NovelDownloadingView extends StatelessWidget {
             textStyle: const TextStyle(fontSize: 14),
           ),
           onPressed: onPressed,
-          icon: Icon(
-            icon,
-            size: 16,
-          ),
+          icon: Icon(icon, size: 16),
           label: Text(text),
         ),
       ),

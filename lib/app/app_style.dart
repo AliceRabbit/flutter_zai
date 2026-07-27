@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
+import 'package:zaix/app/app_color.dart';
 import 'package:get/get.dart';
 
 class AppStyle {
-  static ThemeData lightTheme = ThemeData.light(
-    useMaterial3: false,
-  ).copyWith(
+  static ThemeData lightTheme = ThemeData.light(useMaterial3: false).copyWith(
     brightness: Brightness.light,
     colorScheme: AppColor.colorSchemeLight,
     scaffoldBackgroundColor: Colors.white,
@@ -17,92 +15,50 @@ class AppStyle {
       foregroundColor: AppColor.black333,
       centerTitle: false,
       shape: Border(
-        bottom: BorderSide(
-          color: Colors.grey.withOpacity(.2),
-          width: 1,
-        ),
+        bottom: BorderSide(color: Colors.grey.withValues(alpha: .2), width: 1),
       ),
-      iconTheme: const IconThemeData(
-        color: AppColor.black333,
-      ),
-      titleTextStyle: const TextStyle(
-        fontSize: 16,
-        color: AppColor.black333,
-      ),
+      iconTheme: const IconThemeData(color: AppColor.black333),
+      titleTextStyle: const TextStyle(fontSize: 16, color: AppColor.black333),
       systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
         systemNavigationBarColor: Colors.transparent,
       ),
     ),
   );
-  static ThemeData darkTheme = ThemeData.dark(
-    useMaterial3: false,
-  ).copyWith(
+  static ThemeData darkTheme = ThemeData.dark(useMaterial3: false).copyWith(
     brightness: Brightness.dark,
     primaryColor: Colors.blue,
     cardColor: const Color(0xff424242),
     colorScheme: AppColor.colorSchemeDark,
     scaffoldBackgroundColor: Colors.black,
-    tabBarTheme: const TabBarTheme(
-      indicatorColor: Colors.blue,
-    ),
+    tabBarTheme: const TabBarThemeData(indicatorColor: Colors.blue),
     appBarTheme: AppBarTheme(
       elevation: 0,
       backgroundColor: Colors.transparent,
       foregroundColor: Colors.white,
       centerTitle: false,
       shape: Border(
-        bottom: BorderSide(
-          color: Colors.grey.withOpacity(.2),
-          width: 1,
-        ),
+        bottom: BorderSide(color: Colors.grey.withValues(alpha: .2), width: 1),
       ),
-      titleTextStyle: const TextStyle(
-        fontSize: 16,
-        color: Colors.white,
-      ),
-      iconTheme: const IconThemeData(
-        color: Colors.white,
-      ),
+      titleTextStyle: const TextStyle(fontSize: 16, color: Colors.white),
+      iconTheme: const IconThemeData(color: Colors.white),
       systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
         systemNavigationBarColor: Colors.transparent,
       ),
     ),
   );
-  static const vGap4 = SizedBox(
-    height: 4,
-  );
-  static const vGap8 = SizedBox(
-    height: 8,
-  );
-  static const vGap12 = SizedBox(
-    height: 12,
-  );
-  static const vGap24 = SizedBox(
-    height: 24,
-  );
-  static const vGap32 = SizedBox(
-    height: 32,
-  );
+  static const vGap4 = SizedBox(height: 4);
+  static const vGap8 = SizedBox(height: 8);
+  static const vGap12 = SizedBox(height: 12);
+  static const vGap24 = SizedBox(height: 24);
+  static const vGap32 = SizedBox(height: 32);
 
-  static const hGap4 = SizedBox(
-    width: 4,
-  );
-  static const hGap8 = SizedBox(
-    width: 8,
-  );
-  static const hGap12 = SizedBox(
-    width: 12,
-  );
-  static const hGap16 = SizedBox(
-    width: 16,
-  );
+  static const hGap4 = SizedBox(width: 4);
+  static const hGap8 = SizedBox(width: 8);
+  static const hGap12 = SizedBox(width: 12);
+  static const hGap16 = SizedBox(width: 16);
 
-  static const hGap24 = SizedBox(
-    width: 24,
-  );
-  static const hGap32 = SizedBox(
-    width: 32,
-  );
+  static const hGap24 = SizedBox(width: 24);
+  static const hGap32 = SizedBox(width: 32);
 
   static const edgeInsetsH4 = EdgeInsets.symmetric(horizontal: 4);
   static const edgeInsetsH8 = EdgeInsets.symmetric(horizontal: 8);

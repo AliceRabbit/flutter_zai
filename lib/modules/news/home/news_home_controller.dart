@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/app/event_bus.dart';
-import 'package:flutter_dmzj/models/news/news_tag_model.dart';
-import 'package:flutter_dmzj/modules/news/home/news_list_controller.dart';
-import 'package:flutter_dmzj/requests/news_request.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/app/event_bus.dart';
+import 'package:zaix/models/news/news_tag_model.dart';
+import 'package:zaix/modules/news/home/news_list_controller.dart';
+import 'package:zaix/requests/news_request.dart';
 import 'package:get/get.dart';
 
 class NewsHomeController extends GetxController

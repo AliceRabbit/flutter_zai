@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:flutter_dmzj/app/event_bus.dart';
-import 'package:flutter_dmzj/models/comic/detail_info.dart';
-import 'package:flutter_dmzj/models/db/comic_history.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
+import 'package:zaix/app/event_bus.dart';
+import 'package:zaix/models/comic/detail_info.dart';
+import 'package:zaix/models/db/comic_history.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/services/comic_download_service.dart';
+import 'package:zaix/services/db_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -174,7 +174,7 @@ class ComicDownloadedDetailController extends GetxController {
 
   void selectItem(ComicDetailChapterItem item) {
     if (selectItems.contains(item)) {
-      selectItems.remove(item.chapterId);
+      selectItems.remove(item);
     } else {
       selectItems.add(item);
     }

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/novel/search_model.dart';
-import 'package:flutter_dmzj/modules/novel/search/novel_search_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/page_list_view.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/models/novel/search_model.dart';
+import 'package:zaix/modules/novel/search/novel_search_controller.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/widgets/net_image.dart';
+import 'package:zaix/widgets/page_list_view.dart';
 import 'package:get/get.dart';
 
 class NovelSearchPage extends StatelessWidget {
   final String keyword;
   final NovelSearchController controller;
   NovelSearchPage({this.keyword = "", super.key})
-      : controller = Get.put(NovelSearchController(keyword));
+    : controller = Get.put(NovelSearchController(keyword));
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class NovelSearchPage extends StatelessWidget {
             separatorBuilder: (context, i) => Divider(
               endIndent: 12,
               indent: 12,
-              color: Colors.grey.withOpacity(.2),
+              color: Colors.grey.withValues(alpha: .2),
               height: 1,
             ),
             itemBuilder: (context, i) {
@@ -75,9 +75,7 @@ class NovelSearchPage extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      const ListTile(
-                        title: Text("热门搜索"),
-                      ),
+                      const ListTile(title: Text("热门搜索")),
                       Padding(
                         padding: AppStyle.edgeInsetsH12.copyWith(bottom: 12),
                         child: Wrap(
@@ -98,7 +96,7 @@ class NovelSearchPage extends StatelessWidget {
                               )
                               .toList(),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -120,12 +118,7 @@ class NovelSearchPage extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            NetImage(
-              item.cover ?? "",
-              width: 80,
-              height: 110,
-              borderRadius: 4,
-            ),
+            NetImage(item.cover ?? "", width: 80, height: 110, borderRadius: 4),
             AppStyle.hGap12,
             Expanded(
               child: Column(
@@ -138,28 +131,36 @@ class NovelSearchPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text.rich(
-                    TextSpan(children: [
-                      const WidgetSpan(
+                    TextSpan(
+                      children: [
+                        const WidgetSpan(
                           child: Icon(
-                        Icons.account_circle,
-                        color: Colors.grey,
-                        size: 18,
-                      )),
-                      const TextSpan(
-                        text: " ",
-                      ),
-                      TextSpan(
+                            Icons.account_circle,
+                            color: Colors.grey,
+                            size: 18,
+                          ),
+                        ),
+                        const TextSpan(text: " "),
+                        TextSpan(
                           text: item.authors,
-                          style:
-                              const TextStyle(color: Colors.grey, fontSize: 14))
-                    ]),
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   AppStyle.vGap4,
-                  Text(item.types ?? "",
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                  Text(
+                    item.types ?? "",
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
                   AppStyle.vGap4,
-                  Text(item.lastName ?? "",
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                  Text(
+                    item.lastName ?? "",
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
                 ],
               ),
             ),

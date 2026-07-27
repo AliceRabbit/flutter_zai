@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:zaix/app/app_style.dart';
 import 'package:get/get.dart';
 
 class ShadowCard extends StatelessWidget {
@@ -12,8 +12,8 @@ class ShadowCard extends StatelessWidget {
     this.radius = 8.0,
     this.onTap,
     this.onLongPress,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,8 @@ class ShadowCard extends StatelessWidget {
             : [
                 BoxShadow(
                   blurRadius: 4,
-                  color: Colors.grey.withOpacity(.2),
-                )
+                  color: Colors.grey.withValues(alpha: .2),
+                ),
               ],
       ),
       child: ClipRRect(
@@ -39,9 +39,7 @@ class ShadowCard extends StatelessWidget {
             onTap: onTap,
             onLongPress: onLongPress,
             child: Container(
-              decoration: BoxDecoration(
-                borderRadius: AppStyle.radius8,
-              ),
+              decoration: BoxDecoration(borderRadius: AppStyle.radius8),
               child: child,
             ),
           ),

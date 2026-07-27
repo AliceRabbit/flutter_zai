@@ -1,7 +1,7 @@
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/comic/category_item_model.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:zaix/app/controller/base_controller.dart';
+import 'package:zaix/models/comic/category_item_model.dart';
+import 'package:zaix/requests/comic_request.dart';
+import 'package:zaix/routes/app_navigator.dart';
 
 class ComicCategoryController
     extends BasePageController<ComicCategoryItemModel> {

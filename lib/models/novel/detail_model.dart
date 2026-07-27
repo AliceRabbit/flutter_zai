@@ -8,17 +8,16 @@ T? asT<T>(dynamic value) {
 }
 
 class NovelDetailModel {
-  NovelDetailModel({
-    required this.data,
-    required this.readingRecord,
-  });
+  NovelDetailModel({required this.data, required this.readingRecord});
 
   factory NovelDetailModel.fromJson(Map<String, dynamic> json) =>
       NovelDetailModel(
         data: NovelDetailDataModel.fromJson(
-            asT<Map<String, dynamic>>(json['data'])!),
+          asT<Map<String, dynamic>>(json['data'])!,
+        ),
         readingRecord: NovelDetailReadingRecordModel.fromJson(
-            asT<Map<String, dynamic>>(json['readingRecord'])!),
+          asT<Map<String, dynamic>>(json['readingRecord'])!,
+        ),
       );
 
   NovelDetailDataModel data;
@@ -30,9 +29,9 @@ class NovelDetailModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'data': data,
-        'readingRecord': readingRecord,
-      };
+    'data': data,
+    'readingRecord': readingRecord,
+  };
 }
 
 class NovelDetailDataModel {
@@ -116,23 +115,23 @@ class NovelDetailDataModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'novel_id': novelId,
-        'name': name,
-        'zone': zone,
-        'status': status,
-        'last_update_volume_name': lastUpdateVolumeName,
-        'last_update_chapter_name': lastUpdateChapterName,
-        'last_update_volume_id': lastUpdateVolumeId,
-        'last_update_chapter_id': lastUpdateChapterId,
-        'last_update_time': lastUpdateTime,
-        'cover': cover,
-        'hot_hits': hotHits,
-        'introduction': introduction,
-        'types': types,
-        'authors': authors,
-        'first_letter': firstLetter,
-        'volume': volume,
-      };
+    'novel_id': novelId,
+    'name': name,
+    'zone': zone,
+    'status': status,
+    'last_update_volume_name': lastUpdateVolumeName,
+    'last_update_chapter_name': lastUpdateChapterName,
+    'last_update_volume_id': lastUpdateVolumeId,
+    'last_update_chapter_id': lastUpdateChapterId,
+    'last_update_time': lastUpdateTime,
+    'cover': cover,
+    'hot_hits': hotHits,
+    'introduction': introduction,
+    'types': types,
+    'authors': authors,
+    'first_letter': firstLetter,
+    'volume': volume,
+  };
 }
 
 class Volume {
@@ -146,13 +145,13 @@ class Volume {
   });
 
   factory Volume.fromJson(Map<String, dynamic> json) => Volume(
-        volumeId: asT<int>(json['volume_id'])!,
-        lnovelId: asT<int>(json['lnovel_id'])!,
-        volumeName: asT<String>(json['volume_name'])!,
-        volumeOrder: asT<int>(json['volume_order'])!,
-        addtime: asT<int>(json['addtime'])!,
-        sumChapters: asT<int>(json['sum_chapters'])!,
-      );
+    volumeId: asT<int>(json['volume_id'])!,
+    lnovelId: asT<int>(json['lnovel_id'])!,
+    volumeName: asT<String>(json['volume_name'])!,
+    volumeOrder: asT<int>(json['volume_order'])!,
+    addtime: asT<int>(json['addtime'])!,
+    sumChapters: asT<int>(json['sum_chapters'])!,
+  );
 
   int volumeId;
   int lnovelId;
@@ -167,13 +166,13 @@ class Volume {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'volume_id': volumeId,
-        'lnovel_id': lnovelId,
-        'volume_name': volumeName,
-        'volume_order': volumeOrder,
-        'addtime': addtime,
-        'sum_chapters': sumChapters,
-      };
+    'volume_id': volumeId,
+    'lnovel_id': lnovelId,
+    'volume_name': volumeName,
+    'volume_order': volumeOrder,
+    'addtime': addtime,
+    'sum_chapters': sumChapters,
+  };
 }
 
 class NovelDetailReadingRecordModel {
@@ -224,16 +223,16 @@ class NovelDetailReadingRecordModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'type_name': typeName,
-        'uid': uid,
-        'source': source,
-        'biz_id': bizId,
-        'chapter_id': chapterId,
-        'viewing_time': viewingTime,
-        'record': record,
-        'volume_id': volumeId,
-        'total_num': totalNum,
-        'chapter_name': chapterName,
-        'volume_name': volumeName,
-      };
+    'type_name': typeName,
+    'uid': uid,
+    'source': source,
+    'biz_id': bizId,
+    'chapter_id': chapterId,
+    'viewing_time': viewingTime,
+    'record': record,
+    'volume_id': volumeId,
+    'total_num': totalNum,
+    'chapter_name': chapterName,
+    'volume_name': volumeName,
+  };
 }

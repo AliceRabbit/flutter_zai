@@ -10,19 +10,20 @@ T? asT<T>(dynamic value) {
 }
 
 class NovelCategoryFilterModel {
-  NovelCategoryFilterModel({
-    required this.title,
-    required this.items,
-  });
+  NovelCategoryFilterModel({required this.title, required this.items});
 
   factory NovelCategoryFilterModel.fromJson(Map<String, dynamic> json) {
-    final List<NovelCategoryFilterItemModel>? items =
-        json['items'] is List ? <NovelCategoryFilterItemModel>[] : null;
+    final List<NovelCategoryFilterItemModel>? items = json['items'] is List
+        ? <NovelCategoryFilterItemModel>[]
+        : null;
     if (items != null) {
       for (final dynamic item in json['items']!) {
         if (item != null) {
-          items.add(NovelCategoryFilterItemModel.fromJson(
-              asT<Map<String, dynamic>>(item)!));
+          items.add(
+            NovelCategoryFilterItemModel.fromJson(
+              asT<Map<String, dynamic>>(item)!,
+            ),
+          );
         }
       }
     }
@@ -41,16 +42,13 @@ class NovelCategoryFilterModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'title': title,
-        'items': items,
-      };
+    'title': title,
+    'items': items,
+  };
 }
 
 class NovelCategoryFilterItemModel {
-  NovelCategoryFilterItemModel({
-    required this.tagId,
-    required this.tagName,
-  });
+  NovelCategoryFilterItemModel({required this.tagId, required this.tagName});
 
   factory NovelCategoryFilterItemModel.fromJson(Map<String, dynamic> json) =>
       NovelCategoryFilterItemModel(
@@ -67,7 +65,7 @@ class NovelCategoryFilterItemModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'tag_id': tagId,
-        'tag_name': tagName,
-      };
+    'tag_id': tagId,
+    'tag_name': tagName,
+  };
 }

@@ -1,7 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/services/local_storage_service.dart';
+import 'package:zaix/services/app_settings_service.dart';
+import 'package:zaix/services/local_storage_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -55,42 +55,52 @@ class SettingsController extends GetxController {
 
   void setDownloadComicTask() {
     Get.dialog(
-      SimpleDialog(
-        title: const Text("漫画最大任务数"),
-        children: [0, 1, 2, 3, 4, 5]
-            .map(
-              (e) => RadioListTile<int>(
-                title: Text(e == 0 ? "无限制" : "$e个"),
-                value: e,
-                groupValue: settings.downloadComicTaskCount.value,
-                onChanged: (e) {
-                  Get.back();
-                  settings.setDownloadComicTaskCount(e ?? 0);
-                },
-              ),
-            )
-            .toList(),
+      RadioGroup<int>(
+        groupValue: settings.downloadComicTaskCount.value,
+        onChanged: (value) {
+          if (value == null) {
+            return;
+          }
+          Get.back();
+          settings.setDownloadComicTaskCount(value);
+        },
+        child: SimpleDialog(
+          title: const Text("漫画最大任务数"),
+          children: [0, 1, 2, 3, 4, 5]
+              .map(
+                (value) => RadioListTile<int>(
+                  title: Text(value == 0 ? "无限制" : "$value个"),
+                  value: value,
+                ),
+              )
+              .toList(),
+        ),
       ),
     );
   }
 
   void setDownloadNovelTask() {
     Get.dialog(
-      SimpleDialog(
-        title: const Text("小说最大任务数"),
-        children: [0, 1, 2, 3, 4, 5]
-            .map(
-              (e) => RadioListTile<int>(
-                title: Text(e == 0 ? "无限制" : "$e个"),
-                value: e,
-                groupValue: settings.downloadNovelTaskCount.value,
-                onChanged: (e) {
-                  Get.back();
-                  settings.setDownloadNovelTaskCount(e ?? 0);
-                },
-              ),
-            )
-            .toList(),
+      RadioGroup<int>(
+        groupValue: settings.downloadNovelTaskCount.value,
+        onChanged: (value) {
+          if (value == null) {
+            return;
+          }
+          Get.back();
+          settings.setDownloadNovelTaskCount(value);
+        },
+        child: SimpleDialog(
+          title: const Text("小说最大任务数"),
+          children: [0, 1, 2, 3, 4, 5]
+              .map(
+                (value) => RadioListTile<int>(
+                  title: Text(value == 0 ? "无限制" : "$value个"),
+                  value: value,
+                ),
+              )
+              .toList(),
+        ),
       ),
     );
   }

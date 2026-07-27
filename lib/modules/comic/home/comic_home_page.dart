@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/modules/comic/home/category/comic_category_view.dart';
-import 'package:flutter_dmzj/modules/comic/home/comic_home_controller.dart';
-import 'package:flutter_dmzj/modules/comic/home/latest/comic_latest_view.dart';
-import 'package:flutter_dmzj/modules/comic/home/rank/comic_rank_view.dart';
-import 'package:flutter_dmzj/modules/comic/home/recommend/comic_recommend_view.dart';
-//import 'package:flutter_dmzj/modules/comic/home/special/comic_special_view.dart';
-import 'package:flutter_dmzj/widgets/tab_appbar.dart';
+import 'package:zaix/modules/comic/home/category/comic_category_view.dart';
+import 'package:zaix/modules/comic/home/comic_home_controller.dart';
+import 'package:zaix/modules/comic/home/latest/comic_latest_view.dart';
+import 'package:zaix/modules/comic/home/rank/comic_rank_view.dart';
+import 'package:zaix/modules/comic/home/recommend/comic_recommend_view.dart';
+//import 'package:zaix/modules/comic/home/special/comic_special_view.dart';
+import 'package:zaix/widgets/tab_appbar.dart';
 import 'package:get/get.dart';
 
 class ComicHomePage extends GetView<ComicHomeController> {
-  const ComicHomePage({Key? key}) : super(key: key);
+  const ComicHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +25,7 @@ class ComicHomePage extends GetView<ComicHomeController> {
         controller: controller.tabController,
         action: IconButton(
           onPressed: controller.search,
-          icon: const Icon(
-            Icons.search,
-          ),
+          icon: const Icon(Icons.search),
         ),
       ),
       body: TabBarView(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:zaix/app/app_style.dart';
 import 'package:remixicon/remixicon.dart';
 
 /// 一个加载图标会旋转的加载按钮。加载图标（[Remix.refresh_line]）在左，文字（[text])在

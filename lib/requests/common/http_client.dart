@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_dmzj/app/app_error.dart';
-import 'package:flutter_dmzj/requests/common/api.dart';
-import 'package:flutter_dmzj/requests/common/custom_interceptor.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/app_error.dart';
+import 'package:zaix/requests/common/api.dart';
+import 'package:zaix/requests/common/custom_interceptor.dart';
+import 'package:zaix/services/user_service.dart';
 
 class HttpClient {
   static HttpClient? _httpUtil;
@@ -60,10 +60,7 @@ class HttpClient {
       var result = await dio.get(
         baseUrl + path,
         queryParameters: queryParameters,
-        options: Options(
-          responseType: responseType,
-          headers: header,
-        ),
+        options: Options(responseType: responseType, headers: header),
         cancelToken: cancel,
       );
       if (checkCode && result.data is Map) {
@@ -229,8 +226,9 @@ class HttpClient {
         options: Options(
           responseType: ResponseType.json,
           headers: header,
-          contentType:
-              formUrlEncoded ? Headers.formUrlEncodedContentType : null,
+          contentType: formUrlEncoded
+              ? Headers.formUrlEncodedContentType
+              : null,
         ),
         cancelToken: cancel,
       );

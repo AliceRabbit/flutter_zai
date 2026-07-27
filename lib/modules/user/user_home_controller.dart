@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zaix/app/app_style.dart';
+import 'package:zaix/services/app_settings_service.dart';
+import 'package:zaix/app/dialog_utils.dart';
+import 'package:zaix/app/utils.dart';
+import 'package:zaix/routes/app_navigator.dart';
+import 'package:zaix/services/user_service.dart';
 
 import 'package:get/get.dart';
 
@@ -25,10 +25,7 @@ class UserHomeController extends GetxController {
 
   /// 退出登录
   void logout() async {
-    var result = await DialogUtils.showAlertDialog(
-      "确定要退出登录吗？",
-      title: "退出登录",
-    );
+    var result = await DialogUtils.showAlertDialog("确定要退出登录吗？", title: "退出登录");
     if (result) {
       UserService.instance.logout();
     }
@@ -53,27 +50,23 @@ class UserHomeController extends GetxController {
 
   /// 关于我们
   void about() {
-    Get.dialog(AboutDialog(
-      applicationIcon: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.grey.withOpacity(.2),
+    Get.dialog(
+      AboutDialog(
+        applicationIcon: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.withValues(alpha: .2)),
+            borderRadius: AppStyle.radius12,
           ),
-          borderRadius: AppStyle.radius12,
-        ),
-        child: ClipRRect(
-          borderRadius: AppStyle.radius12,
-          child: Image.asset(
-            'assets/images/logo.png',
-            width: 48,
-            height: 48,
+          child: ClipRRect(
+            borderRadius: AppStyle.radius12,
+            child: Image.asset('assets/images/logo.png', width: 48, height: 48),
           ),
         ),
+        applicationName: "ZAI-X",
+        applicationVersion: "Ver ${Utils.packageInfo.version}",
+        applicationLegalese: "AliceRabbit · Based on xiaoyaocz/flutter_dmzj",
       ),
-      applicationName: "ZAI-X",
-      applicationVersion: "Ver ${Utils.packageInfo.version}",
-      applicationLegalese: "AliceRabbit · Based on xiaoyaocz/flutter_dmzj",
-    ));
+    );
   }
 
   /// 检查更新

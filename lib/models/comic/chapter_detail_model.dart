@@ -29,8 +29,9 @@ class ComicChapterDetailModel {
       }
     }
 
-    final List<String>? pageUrlHd =
-        json['page_url_hd'] is List ? <String>[] : null;
+    final List<String>? pageUrlHd = json['page_url_hd'] is List
+        ? <String>[]
+        : null;
     if (pageUrlHd != null) {
       for (final dynamic item in json['page_url_hd']!) {
         if (item != null) {
@@ -65,13 +66,13 @@ class ComicChapterDetailModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'chapter_id': chapterId,
-        'comic_id': comicId,
-        'title': title,
-        'chapter_order': chapterOrder,
-        'direction': direction,
-        'page_url': pageUrl,
-        'picnum': picnum,
-        'page_url_hd': pageUrlHd,
-      };
+    'chapter_id': chapterId,
+    'comic_id': comicId,
+    'title': title,
+    'chapter_order': chapterOrder,
+    'direction': direction,
+    'page_url': pageUrl,
+    'picnum': picnum,
+    'page_url_hd': pageUrlHd,
+  };
 }
