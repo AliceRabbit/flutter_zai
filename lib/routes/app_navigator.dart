@@ -110,8 +110,14 @@ class AppNavigator {
   }
 
   /// 打开漫画作者详情
-  static void toComicAuthorDetail(int id) {
-    toContentPage(RoutePath.kComicAuthorDetail, arg: id);
+  static void toComicAuthorDetail(int id, {String authorName = ""}) {
+    toContentPage(
+      RoutePath.kComicAuthorDetail,
+      arg: {
+        "id": id,
+        "authorName": authorName,
+      },
+    );
   }
 
   /// 打开专题详情

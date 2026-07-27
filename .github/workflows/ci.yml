@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "zaix/*"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze-test-android:
+    name: Analyze, test, and build Android
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Read Flutter version
+        id: flutter-version
+        shell: bash
+        run: echo "version=$(tr -d '\r\n' < .flutter-version)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: "17"
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.flutter-version.outputs.version }}
+          channel: stable
+          cache: true
+
+      - name: Restore locked dependencies
+        run: flutter pub get --enforce-lockfile
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test --coverage --test-randomize-ordering-seed random
+
+      - name: Build debug APK
+        run: flutter build apk --debug
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/lcov.info
+          if-no-files-found: ignore
+          retention-days: 7
+
+  build-windows:
+    name: Build Windows
+    needs: analyze-test-android
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Read Flutter version
+        id: flutter-version
+        shell: pwsh
+        run: '"version=$((Get-Content -Raw .flutter-version).Trim())" >> $env:GITHUB_OUTPUT'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.flutter-version.outputs.version }}
+          channel: stable
+          cache: true
+
+      - name: Restore locked dependencies
+        run: flutter pub get --enforce-lockfile
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Build Windows debug app
+        run: flutter build windows --debug

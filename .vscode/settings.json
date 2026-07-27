@@ -1,3 +1,5 @@
 {
+    "dart.flutterSdkPath": ".tooling/flutter",
+    "dart.runPubGetOnPubspecChanges": false,
     "java.configuration.updateBuildConfiguration": "interactive"
 }

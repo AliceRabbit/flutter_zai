@@ -34,6 +34,49 @@ class ComicAuthorModel {
     );
   }
 
+  factory ComicAuthorModel.fromSearch({
+    required String authorName,
+    required Iterable<Map<String, dynamic>> results,
+  }) {
+    final normalizedAuthorName = _normalizeAuthorName(authorName);
+    final data = <ComicAuthorComicModel>[];
+
+    for (final item in results) {
+      final authors = asT<String?>(item['authors']) ?? "";
+      final matches = _normalizeAuthorName(authors) == normalizedAuthorName ||
+          authors
+              .split(RegExp(r'[/／,，、;；&＆]'))
+              .map(_normalizeAuthorName)
+              .contains(normalizedAuthorName);
+      if (!matches) {
+        continue;
+      }
+
+      final id = asT<int?>(item['id']);
+      final name = asT<String?>(item['title']);
+      if (id == null || name == null) {
+        continue;
+      }
+      data.add(
+        ComicAuthorComicModel(
+          id: id,
+          name: name,
+          cover: asT<String?>(item['cover']) ?? "",
+          status: asT<String?>(item['status']) ??
+              asT<String?>(item['last_name']) ??
+              "",
+        ),
+      );
+    }
+
+    return ComicAuthorModel(
+      nickname: authorName,
+      description: "",
+      cover: "",
+      data: data,
+    );
+  }
+
   String nickname;
   String? description;
   String cover;
@@ -51,6 +94,9 @@ class ComicAuthorModel {
         'data': data,
       };
 }
+
+String _normalizeAuthorName(String value) =>
+    value.replaceAll(RegExp(r'\s+'), '').toLowerCase();
 
 class ComicAuthorComicModel {
   ComicAuthorComicModel({

@@ -144,18 +144,17 @@ class ComicRequest {
     int status = 0,
   }) async {
     var list = <ComicCategoryComicModel>[];
-    var result = await HttpClient.instance.getJson(
-      '/comic/filter/list',
-      queryParameters: {
-        "theme": id,
-        "status": 0,
-        "sortType": sort,
-        "page": page,
-        "size": 20,
-      },
-      checkCode: true,
-      needLogin: true // 登录可以更多内容
-    );
+    var result = await HttpClient.instance.getJson('/comic/filter/list',
+        queryParameters: {
+          "theme": id,
+          "status": 0,
+          "sortType": sort,
+          "page": page,
+          "size": 20,
+        },
+        checkCode: true,
+        needLogin: true // 登录可以更多内容
+        );
     for (var item in result["comicList"]) {
       list.add(ComicCategoryComicModel.fromJson(item));
     }
@@ -192,10 +191,7 @@ class ComicRequest {
       queryParameters: {"source": 1},
       checkCode: true,
     );
-    Map<int, String> map = {
-      0: "全部分类",
-      3243: "ゆり"
-    };
+    Map<int, String> map = {0: "全部分类", 3243: "ゆり"};
     for (var item in result["cateList"]) {
       map.addAll({
         item["tagId"]: item["title"],
@@ -228,7 +224,32 @@ class ComicRequest {
   }
 
   /// 作者详情
-  Future<ComicAuthorModel> authorDetail({required int id}) async {
+  Future<ComicAuthorModel> authorDetail({
+    required int id,
+    String authorName = "",
+  }) async {
+    final name = authorName.trim();
+    if (name.isNotEmpty) {
+      var result = await HttpClient.instance.getJson(
+        '/search/index',
+        queryParameters: {
+          "keyword": name,
+          "page": 1,
+          "size": 100,
+        },
+        checkCode: true,
+      );
+      final items = (result["list"] as List? ?? const [])
+          .whereType<Map>()
+          .map((item) => Map<String, dynamic>.from(item))
+          .toList();
+      return ComicAuthorModel.fromSearch(
+        authorName: name,
+        results: items,
+      );
+    }
+
+    // 兼容没有作者名称的旧入口。
     var result = await HttpClient.instance.getJson(
       '/UCenter/author/$id.json',
     );

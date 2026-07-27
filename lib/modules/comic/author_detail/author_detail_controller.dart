@@ -7,7 +7,8 @@ import 'package:get/get.dart';
 
 class ComicAuthorDetailController extends BaseController {
   final int id;
-  ComicAuthorDetailController(this.id);
+  final String authorName;
+  ComicAuthorDetailController(this.id, this.authorName);
 
   final ComicRequest request = ComicRequest();
 
@@ -23,7 +24,10 @@ class ComicAuthorDetailController extends BaseController {
     try {
       pageLoadding.value = true;
       pageError.value = false;
-      var result = await request.authorDetail(id: id);
+      var result = await request.authorDetail(
+        id: id,
+        authorName: authorName,
+      );
       detail.value = result;
     } catch (e) {
       pageError.value = true;

@@ -278,12 +278,10 @@ class ComicDetailControler extends BaseController {
   }
 
   void toAuthorDetail(ComicDetailTag e) {
-    if (e.tagId == 0) {
-      //神隐漫画没有ID，直接跳转搜索
-      AppNavigator.toComicSearch(keyword: e.tagName);
-    } else {
-      AppNavigator.toComicAuthorDetail(e.tagId);
-    }
+    AppNavigator.toComicAuthorDetail(
+      e.tagId,
+      authorName: e.tagName,
+    );
   }
 
   void toCategoryDetail(ComicDetailTag e) {

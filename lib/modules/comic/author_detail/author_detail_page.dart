@@ -13,11 +13,12 @@ import 'package:remixicon/remixicon.dart';
 
 class ComicAuthorDetailPage extends StatelessWidget {
   final int id;
+  final String authorName;
   final ComicAuthorDetailController controller;
-  ComicAuthorDetailPage(this.id, {super.key})
+  ComicAuthorDetailPage(this.id, this.authorName, {super.key})
       : controller = Get.put(
-          ComicAuthorDetailController(id),
-          tag: "$id",
+          ComicAuthorDetailController(id, authorName),
+          tag: "${id}_$authorName",
         );
 
   @override
@@ -29,14 +30,20 @@ class ComicAuthorDetailPage extends StatelessWidget {
           () => Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              NetImage(
-                controller.detail.value?.cover ?? "",
-                borderRadius: 24,
-                width: 32,
-                height: 32,
-              ),
+              if ((controller.detail.value?.cover ?? "").isEmpty)
+                const Icon(Remix.user_smile_line, size: 32)
+              else
+                NetImage(
+                  controller.detail.value!.cover,
+                  borderRadius: 24,
+                  width: 32,
+                  height: 32,
+                ),
               AppStyle.hGap8,
-              Text(controller.detail.value?.nickname ?? "作者"),
+              Text(
+                controller.detail.value?.nickname ??
+                    (authorName.isEmpty ? "作者" : authorName),
+              ),
             ],
           ),
         ),
@@ -66,6 +73,16 @@ class ComicAuthorDetailPage extends StatelessWidget {
                   var item = controller.detail.value!.data[i];
                   return buildItem(item);
                 },
+              ),
+            ),
+            Offstage(
+              offstage: controller.detail.value == null ||
+                  controller.detail.value!.data.isNotEmpty,
+              child: const Center(
+                child: Text(
+                  "该作者暂无作品",
+                  style: TextStyle(color: Colors.grey),
+                ),
               ),
             ),
             Obx(

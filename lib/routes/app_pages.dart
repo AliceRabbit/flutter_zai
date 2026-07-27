@@ -151,10 +151,15 @@ class AppPages {
           ),
         );
       case RoutePath.kComicAuthorDetail:
+        final arguments = settings.arguments;
+        final id = arguments is Map ? arguments["id"] as int : arguments as int;
+        final authorName =
+            arguments is Map ? arguments["authorName"]?.toString() ?? "" : "";
         return GetPageRoute(
           settings: settings,
           page: () => ComicAuthorDetailPage(
-            settings.arguments as int,
+            id,
+            authorName,
           ),
         );
       case RoutePath.kComicDetail:

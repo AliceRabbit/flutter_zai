@@ -38,7 +38,10 @@ class ComicDetailRelatedPage extends StatelessWidget {
                     .map(
                       (e) =>
                           buildCard("${e.authorName}的其他作品", e.data, onTap: () {
-                        AppNavigator.toComicAuthorDetail(e.authorId);
+                        AppNavigator.toComicAuthorDetail(
+                          e.authorId,
+                          authorName: e.authorName,
+                        );
                       }),
                     )
                     .toList(),

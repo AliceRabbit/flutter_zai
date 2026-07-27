@@ -48,7 +48,10 @@ class NovelRecommendController extends BasePageController<NovelRecommendModel> {
       );
     } else if (item.type == 8) {
       //作者=8
-      AppNavigator.toComicAuthorDetail(item.objId ?? 0);
+      AppNavigator.toComicAuthorDetail(
+        item.objId ?? 0,
+        authorName: item.title,
+      );
     } else if (item.type == 13) {
       //社区=13
       //直接跳转至网页

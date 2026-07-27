@@ -33,6 +33,7 @@ keystore.base64.txt
 .pub-cache/
 .pub/
 /build/
+/.tooling/
 
 # Web related
 lib/generated_plugin_registrant.dart
