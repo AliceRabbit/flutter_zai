@@ -44,7 +44,7 @@ dependencies:
   package_info_plus: ^10.2.1
   flutter_widget_from_html_core: ^0.17.2
   share_plus: ^13.3.0
-  permission_handler: ^12.0.3
+  permission_handler: ^13.0.1
   path_provider: ^2.1.6
   saver_gallery: ^5.1.0
   connectivity_plus: ^7.3.1
@@ -60,7 +60,7 @@ dependencies:
 dev_dependencies: 
   flutter_lints: ^6.0.0
   # 2.15.2+ requires analyzer 13.3, while hive_ce_generator 1.11.2 uses analyzer 12.
-  build_runner: 2.15.1
+  build_runner: 2.16.0
   hive_ce_generator: ^1.11.2
   msix: ^3.18.0
   flutter_test: 
