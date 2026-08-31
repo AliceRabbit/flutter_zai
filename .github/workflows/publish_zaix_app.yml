@@ -19,7 +19,7 @@ jobs:
       contents: write
     steps:
       # 1.1 签出代码
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Read Flutter version
         id: flutter-version
         shell: bash
@@ -27,7 +27,7 @@ jobs:
       # 1.2 写出相关签名
       - name: Get Android Keystore
         id: android_keystore
-        uses: timheuer/base64-to-file@v1.2
+        uses: timheuer/base64-to-file@v2.0
         with:
           fileName: keystore.jks
           encodedString: ${{ secrets.ZAI_KEYSTORE_BASE64 }}
@@ -39,7 +39,7 @@ jobs:
           echo "keyAlias=${{ secrets.ZAI_KEY_ALIAS }}" >> android/zai_key.properties
       # 1.2 设置JAVA环境
       - name: Setup JAVA
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: "zulu"
           java-version: "17"
@@ -77,7 +77,7 @@ jobs:
       RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref_name }}
     steps:
       # 3.1 签出代码
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ env.RELEASE_TAG }}
       - name: Validate release tag
