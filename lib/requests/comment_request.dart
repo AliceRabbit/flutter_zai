@@ -13,7 +13,7 @@ class CommentRequest {
   /// 读取最新的评论
   /// - [type] 类型
   /// - [objId] ID
-  /// - [page] 页数
+  /// - [page] 页数,从1开始
   /// - [pageSize] 每页数量
   Future<List<CommentItem>> getComment({
     required int type,
@@ -26,11 +26,13 @@ class CommentRequest {
     Map result = await HttpClient.instance.getJson(
       '/comment/list',
       baseUrl: Api.BASE_URL,
+      needLogin: true,
       queryParameters: {
         "type": type,
         "objId": objId,
-        "sort": sort,
-        "page": page - 1,
+        "sortBy": sort,
+        // 接口从第1页开始，传0也会返回第1页，不能再减1。
+        "page": page,
         "size": pageSize,
       },
     );

@@ -15,15 +15,12 @@ class CommentListController extends BasePageController<CommentItem> {
 
   @override
   Future<List<CommentItem>> getData(int page, int pageSize) async {
-    if (isHot) {
-      return await request.getComment(
-        type: type,
-        objId: objId,
-        page: page,
-        sort: 2,
-      );
-    } else {
-      return await request.getComment(type: type, objId: objId, page: page);
-    }
+    return await request.getComment(
+      type: type,
+      objId: objId,
+      page: page,
+      pageSize: pageSize,
+      sort: isHot ? 2 : 1,
+    );
   }
 }
