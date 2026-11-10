@@ -3,7 +3,6 @@ import 'package:zaix/models/comment/comment_item.dart';
 import 'package:zaix/models/comment/user_comment_item.dart';
 import 'package:zaix/requests/common/api.dart';
 import 'package:zaix/requests/common/http_client.dart';
-import 'package:zaix/services/user_service.dart';
 import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
 
@@ -92,33 +91,25 @@ class CommentRequest {
   /// - [type] 类型 ,见AppConstant
   /// - [content] 内容
   /// - [toCommentId] 回复评论ID
-  /// - [originCommentId] 原始评论ID
-  /// - [toUid] 回复用户
   Future<bool> sendComment({
     required int objId,
     required int type,
     required String content,
-    String toCommentId = "0",
-    String originCommentId = "0",
-    String toUid = "0",
+    int toCommentId = 0,
   }) async {
-    var result = await HttpClient.instance.postJson(
-      "/v1/$type/new/add/app",
+    await HttpClient.instance.postJson(
+      "/comment/create",
       baseUrl: Api.BASE_URL,
+      needLogin: true,
+      checkCode: true,
       data: {
+        "type": type,
         "obj_id": objId,
         "to_comment_id": toCommentId,
-        "origin_comment_id": originCommentId,
-        "to_uid": toUid,
-        "sender_terminal": 1,
         "content": content,
-        "dmzj_token": UserService.instance.dmzjToken,
-        "_debug": 0,
+        "mentions": [],
       },
     );
-    if (result["code"] != 0) {
-      throw AppError(result["msg"].toString());
-    }
     return true;
   }
 

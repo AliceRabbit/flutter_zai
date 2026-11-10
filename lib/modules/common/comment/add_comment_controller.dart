@@ -35,9 +35,7 @@ class AddCommentController extends BaseController {
           objId: objId,
           type: type,
           content: textEditingController.text,
-          toCommentId: replyItem!.id.toString(),
-          originCommentId: replyItem!.originId.toString(),
-          toUid: replyItem!.userId.toString(),
+          toCommentId: replyItem!.id,
         );
       }
 
