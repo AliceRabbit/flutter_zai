@@ -1,7 +1,7 @@
 {
-    "version": "1.0.3-test",
-    "version_num": 10003,
-    "version_desc": "1. 修复漫画下载失败",
-    "prerelease":true,
-    "download_url": "https://github.com/AliceRabbit/flutter_zai/releases"
+    "version": "2.0.2",
+    "version_num": 20002,
+    "version_desc": "修复发表评论时出现 404 的问题；更新评论登录认证和回复参数，正确显示提交失败原因。",
+    "prerelease": false,
+    "download_url": "https://github.com/AliceRabbit/flutter_zai/releases/tag/zaix/v2.0.2"
 }
