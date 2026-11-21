@@ -119,8 +119,6 @@ class ComicReaderController extends BaseController {
   bool get isOnViewPointPage =>
       hasViewPointPage && currentIndex.value >= imagePageCount;
 
-  bool get hasNextChapter => chapterIndex.value < chapters.length - 1;
-
   /// 连接类型
   Rx<ConnectivityResult> connectivityType = Rx<ConnectivityResult>(
     ConnectivityResult.other,

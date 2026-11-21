@@ -1,7 +1,7 @@
 {
-    "version": "2.0.3",
-    "version_num": 20003,
-    "version_desc": "新增经典漫画章节末尾吐槽页，对接再漫画 v4 章节吐槽查询与发表接口，恢复阅读器底栏吐槽角标、完整吐槽面板及设置开关；优化吐槽页点击热区、页码显示与阅读历史记录。",
+    "version": "2.0.4",
+    "version_num": 20004,
+    "version_desc": "优化漫画章节末尾吐槽页交互：恢复左右边缘点击返回本话末页或直接进入下一话，与普通漫画页保持一致，并移除多余的「下一话」按钮。",
     "prerelease": false,
-    "download_url": "https://github.com/AliceRabbit/flutter_zai/releases/tag/zaix/v2.0.3"
+    "download_url": "https://github.com/AliceRabbit/flutter_zai/releases/tag/zaix/v2.0.4"
 }

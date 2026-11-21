@@ -52,48 +52,43 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                 ),
               ),
               Positioned.fill(
-                child: Obx(() {
-                  if (controller.isOnViewPointPage) {
-                    return const SizedBox.shrink();
-                  }
-                  return Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            controller.leftHandMode
-                                ? controller.nextPage()
-                                : controller.forwardPage();
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            height: double.infinity,
-                            color: Colors.transparent,
-                          ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          controller.leftHandMode
+                              ? controller.nextPage()
+                              : controller.forwardPage();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          color: Colors.transparent,
                         ),
                       ),
-                      Expanded(flex: 8, child: Container()),
-                      Expanded(
-                        flex: 1,
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            controller.leftHandMode
-                                ? controller.forwardPage()
-                                : controller.nextPage();
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            height: double.infinity,
-                            color: Colors.transparent,
-                          ),
+                    ),
+                    Expanded(flex: 8, child: Container()),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          controller.leftHandMode
+                              ? controller.forwardPage()
+                              : controller.nextPage();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          color: Colors.transparent,
                         ),
                       ),
-                    ],
-                  );
-                }),
+                    ),
+                  ],
+                ),
               ),
               Obx(
                 () => Offstage(
@@ -536,95 +531,91 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         );
       }
 
-      final content = Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 640),
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-              16,
-              shrinkWrap ? 20 : 24,
-              16,
-              shrinkWrap ? 32 + AppStyle.bottomBarHeight : 24,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (shrinkWrap) ...[
-                  Divider(color: Colors.white.withValues(alpha: 0.12)),
-                  AppStyle.vGap12,
-                ],
-                if (chapterTitle.isNotEmpty)
-                  Text(
-                    "$chapterTitle · 本章已读完",
-                    style: const TextStyle(fontSize: 13, color: Colors.white54),
-                  ),
-                AppStyle.vGap4,
-                Row(
+      final content = LayoutBuilder(
+        builder: (context, constraints) {
+          final minSidePadding = constraints.maxWidth * 0.1 + 8;
+          final sidePadding = minSidePadding < 20 ? 20.0 : minSidePadding;
+          return Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 640),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  sidePadding,
+                  shrinkWrap ? 20 : 24,
+                  sidePadding,
+                  shrinkWrap ? 32 + AppStyle.bottomBarHeight : 24,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Text(
-                        "本章吐槽 (${points.length})",
+                    if (shrinkWrap) ...[
+                      Divider(color: Colors.white.withValues(alpha: 0.12)),
+                      AppStyle.vGap12,
+                    ],
+                    if (chapterTitle.isNotEmpty)
+                      Text(
+                        "$chapterTitle · 本章已读完",
                         style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                          fontSize: 13,
+                          color: Colors.white54,
                         ),
                       ),
+                    AppStyle.vGap4,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "本章吐槽 (${points.length})",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: "刷新吐槽",
+                          onPressed: controller.loadViewPoints,
+                          icon: const Icon(
+                            Remix.refresh_line,
+                            size: 20,
+                            color: Colors.white70,
+                          ),
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      tooltip: "刷新吐槽",
-                      onPressed: controller.loadViewPoints,
-                      icon: const Icon(
-                        Remix.refresh_line,
-                        size: 20,
-                        color: Colors.white70,
-                      ),
+                    AppStyle.vGap12,
+                    body,
+                    AppStyle.vGap24,
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 10,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            controller.showComment(
+                              hideControls: false,
+                              autoFocusInput: true,
+                            );
+                          },
+                          icon: const Icon(Icons.edit_outlined, size: 16),
+                          label: const Text("发表吐槽"),
+                        ),
+                        OutlinedButton.icon(
+                          onPressed: () {
+                            controller.showComment(hideControls: false);
+                          },
+                          icon: const Icon(Remix.chat_smile_2_line, size: 16),
+                          label: Text("全部吐槽 (${points.length})"),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                AppStyle.vGap12,
-                body,
-                AppStyle.vGap24,
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 10,
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        controller.showComment(
-                          hideControls: false,
-                          autoFocusInput: true,
-                        );
-                      },
-                      icon: const Icon(Icons.edit_outlined, size: 16),
-                      label: const Text("发表吐槽"),
-                    ),
-                    OutlinedButton.icon(
-                      onPressed: () {
-                        controller.showComment(hideControls: false);
-                      },
-                      icon: const Icon(Remix.chat_smile_2_line, size: 16),
-                      label: Text("全部吐槽 (${points.length})"),
-                    ),
-                    if (controller.hasNextChapter)
-                      OutlinedButton.icon(
-                        onPressed: controller.nextChapter,
-                        icon: const Icon(Remix.skip_forward_line, size: 16),
-                        label: const Text("下一话"),
-                      ),
-                  ],
-                ),
-                if (!controller.hasNextChapter) ...[
-                  AppStyle.vGap12,
-                  const Text(
-                    "已经是最新章节了",
-                    style: TextStyle(fontSize: 12, color: Colors.white38),
-                  ),
-                ],
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
 
       if (shrinkWrap) {
