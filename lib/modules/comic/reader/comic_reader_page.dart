@@ -52,43 +52,48 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                 ),
               ),
               Positioned.fill(
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          controller.leftHandMode
-                              ? controller.nextPage()
-                              : controller.forwardPage();
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          color: Colors.transparent,
+                child: Obx(() {
+                  if (controller.isOnViewPointPage) {
+                    return const SizedBox.shrink();
+                  }
+                  return Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            controller.leftHandMode
+                                ? controller.nextPage()
+                                : controller.forwardPage();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            color: Colors.transparent,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(flex: 8, child: Container()),
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          controller.leftHandMode
-                              ? controller.forwardPage()
-                              : controller.nextPage();
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          color: Colors.transparent,
+                      Expanded(flex: 8, child: Container()),
+                      Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            controller.leftHandMode
+                                ? controller.forwardPage()
+                                : controller.nextPage();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            color: Colors.transparent,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  );
+                }),
               ),
               Obx(
                 () => Offstage(
@@ -122,8 +127,13 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                         top: 4,
                         bottom: 4,
                       ),
-                      child: Obx(
-                        () => Row(
+                      child: Obx(() {
+                        final imageCount = controller.imagePageCount;
+                        final currentPage = controller.currentIndex.value + 1;
+                        final pageText = controller.isOnViewPointPage
+                            ? "吐槽"
+                            : "$currentPage / $imageCount";
+                        return Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             buildConnectivity(),
@@ -141,12 +151,12 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                             ),
                             AppStyle.hGap8,
                             Text(
-                              "${controller.currentIndex.value + 1} / ${controller.detail.value.pageUrls.length}",
+                              pageText,
                               style: const TextStyle(fontSize: 12, height: 1.0),
                             ),
                           ],
-                        ),
-                      ),
+                        );
+                      }),
                     ),
                   ),
                 ),
@@ -208,53 +218,55 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                           buildSilderBar(),
                           Material(
                             color: AppStyle.darkTheme.cardColor,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: IconButton(
-                                    onPressed: controller.forwardChapter,
-                                    icon: const Icon(Remix.skip_back_line),
+                            child: Obx(
+                              () => Row(
+                                children: [
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: controller.forwardChapter,
+                                      icon: const Icon(Remix.skip_back_line),
+                                    ),
                                   ),
-                                ),
-                                // Obx(
-                                //   () => Visibility(
-                                //     visible: controller.settings
-                                //         .comicReaderShowViewPoint.value,
-                                //     child: Expanded(
-                                //       child: IconButton(
-                                //         onPressed: controller.showComment,
-                                //         icon: Badge(
-                                //           label: Text(
-                                //             "${controller.viewPoints.length}",
-                                //             style: const TextStyle(
-                                //                 color: Colors.white),
-                                //           ),
-                                //           child: const Icon(
-                                //               Remix.chat_smile_2_line),
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ),
-                                //),
-                                Expanded(
-                                  child: IconButton(
-                                    onPressed: controller.showMenu,
-                                    icon: const Icon(Remix.file_list_line),
+                                  if (controller
+                                      .settings
+                                      .comicReaderShowViewPoint
+                                      .value)
+                                    Expanded(
+                                      child: IconButton(
+                                        onPressed: controller.showComment,
+                                        icon: Badge(
+                                          label: Text(
+                                            "${controller.viewPoints.length}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          child: const Icon(
+                                            Remix.chat_smile_2_line,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: controller.showMenu,
+                                      icon: const Icon(Remix.file_list_line),
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: IconButton(
-                                    onPressed: controller.showSettings,
-                                    icon: const Icon(Remix.settings_line),
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: controller.showSettings,
+                                      icon: const Icon(Remix.settings_line),
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: IconButton(
-                                    onPressed: controller.nextChapter,
-                                    icon: const Icon(Remix.skip_forward_line),
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: controller.nextChapter,
+                                      icon: const Icon(Remix.skip_forward_line),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -319,9 +331,9 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         itemCount: controller.detail.value.pageUrls.length,
         itemBuilder: (_, i) {
           var url = controller.detail.value.pageUrls[i];
-          // if (i == controller.detail.value.pageUrls.length - 1 && url == "TC") {
-          //   return buildViewPoints();
-          // }
+          if (url == ComicReaderController.kViewPointPageTag) {
+            return buildViewPoints();
+          }
           return PhotoView.customChild(
             wantKeepAlive: true,
             initialScale: 1.0,
@@ -373,11 +385,10 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         itemCount: controller.detail.value.pageUrls.length,
         itemPositionsListener: controller.itemPositionsListener,
         itemBuilder: (_, i) {
-          // if (i == controller.detail.value.pageUrls.length - 1 &&
-          //     controller.detail.value.pageUrls[i] == "TC") {
-          //   return buildViewPoints(shrinkWrap: true);
-          // }
           var url = controller.detail.value.pageUrls[i];
+          if (url == ComicReaderController.kViewPointPageTag) {
+            return buildViewPoints(shrinkWrap: true);
+          }
           return Container(
             constraints: const BoxConstraints(minHeight: 200),
             child: controller.detail.value.isLocal
@@ -391,21 +402,23 @@ class ComicReaderPage extends GetView<ComicReaderController> {
 
   Widget buildSilderBar() {
     return Obx(() {
-      var value = controller.currentIndex.value + 1.0;
-      var max = controller.detail.value.pageUrls.length.toDouble();
-      if (value > max) {
+      final total = controller.detail.value.pageUrls.length;
+      if (total <= 1) {
         return const SizedBox(height: 48);
       }
+      final max = total.toDouble();
+      final value = (controller.currentIndex.value + 1.0).clamp(1.0, max);
       return SizedBox(
         height: 48,
         child: Row(
           children: [
             Expanded(
               child: Slider(
+                min: 1.0,
                 value: value,
                 max: max,
                 onChanged: (e) {
-                  controller.jumpToPage((e - 1).toInt());
+                  controller.jumpToPage((e - 1).round());
                 },
               ),
             ),
@@ -416,69 +429,214 @@ class ComicReaderPage extends GetView<ComicReaderController> {
   }
 
   Widget buildViewPoints({bool shrinkWrap = false}) {
-    return Obx(
-      () => ListView(
-        shrinkWrap: shrinkWrap,
-        physics: shrinkWrap ? const NeverScrollableScrollPhysics() : null,
-        padding: EdgeInsets.zero,
-        children: [
-          ListTile(title: Text("吐槽(${controller.viewPoints.length})")),
-          Padding(
-            padding: AppStyle.edgeInsetsH12,
-            child: Wrap(
+    return Obx(() {
+      final points = controller.viewPoints;
+      final isOldStyle = controller.settings.comicReaderOldViewPoint.value;
+      final previewPoints = points.take(20).toList();
+      final chapterTitle = controller.detail.value.chapterTitle;
+
+      Widget body;
+      if (controller.viewPointsLoading.value && points.isEmpty) {
+        body = const Padding(
+          padding: EdgeInsets.symmetric(vertical: 48),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+                AppStyle.vGap12,
+                Text("正在加载本章吐槽...", style: TextStyle(color: Colors.grey)),
+              ],
+            ),
+          ),
+        );
+      } else if (controller.viewPointsError.value && points.isEmpty) {
+        body = Padding(
+          padding: const EdgeInsets.symmetric(vertical: 40),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text("吐槽加载失败", style: TextStyle(color: Colors.grey)),
+                AppStyle.vGap8,
+                OutlinedButton.icon(
+                  onPressed: controller.loadViewPoints,
+                  icon: const Icon(Remix.refresh_line, size: 16),
+                  label: const Text("重新加载"),
+                ),
+              ],
+            ),
+          ),
+        );
+      } else if (points.isEmpty) {
+        body = const Padding(
+          padding: EdgeInsets.symmetric(vertical: 48),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Remix.chat_smile_2_line, size: 36, color: Colors.white38),
+                AppStyle.vGap8,
+                Text(
+                  "本章还没有吐槽，来说点什么吧",
+                  style: TextStyle(color: Colors.white60, fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+        );
+      } else {
+        body = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: controller.viewPoints
-                  .take(10)
-                  .map(
-                    (e) => OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      onPressed: () {
-                        controller.likeViewPoint(e);
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            e.content,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.white,
-                            ),
+              children: previewPoints.map((e) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 7,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isOldStyle
+                        ? Colors.blue.withValues(alpha: 0.85)
+                        : Colors.white.withValues(alpha: 0.08),
+                    borderRadius: AppStyle.radius8,
+                    border: isOldStyle
+                        ? null
+                        : Border.all(
+                            color: Colors.white.withValues(alpha: 0.16),
+                            width: 1,
                           ),
-                          AppStyle.hGap12,
-                          const Icon(Remix.thumb_up_line, size: 16),
-                          AppStyle.hGap4,
-                          Obx(
-                            () => Text(
-                              "${e.num.value}",
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ),
-                        ],
+                  ),
+                  child: Text(
+                    e.content,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.white,
+                      height: 1.35,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            if (points.length > previewPoints.length) ...[
+              AppStyle.vGap12,
+              Text(
+                "仅展示前 ${previewPoints.length} 条，点击下方查看全部 ${points.length} 条吐槽",
+                style: const TextStyle(fontSize: 12, color: Colors.white54),
+              ),
+            ],
+          ],
+        );
+      }
+
+      final content = Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 640),
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+              16,
+              shrinkWrap ? 20 : 24,
+              16,
+              shrinkWrap ? 32 + AppStyle.bottomBarHeight : 24,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (shrinkWrap) ...[
+                  Divider(color: Colors.white.withValues(alpha: 0.12)),
+                  AppStyle.vGap12,
+                ],
+                if (chapterTitle.isNotEmpty)
+                  Text(
+                    "$chapterTitle · 本章已读完",
+                    style: const TextStyle(fontSize: 13, color: Colors.white54),
+                  ),
+                AppStyle.vGap4,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "本章吐槽 (${points.length})",
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  )
-                  .toList(),
+                    IconButton(
+                      tooltip: "刷新吐槽",
+                      onPressed: controller.loadViewPoints,
+                      icon: const Icon(
+                        Remix.refresh_line,
+                        size: 20,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+                AppStyle.vGap12,
+                body,
+                AppStyle.vGap24,
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 10,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        controller.showComment(
+                          hideControls: false,
+                          autoFocusInput: true,
+                        );
+                      },
+                      icon: const Icon(Icons.edit_outlined, size: 16),
+                      label: const Text("发表吐槽"),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () {
+                        controller.showComment(hideControls: false);
+                      },
+                      icon: const Icon(Remix.chat_smile_2_line, size: 16),
+                      label: Text("全部吐槽 (${points.length})"),
+                    ),
+                    if (controller.hasNextChapter)
+                      OutlinedButton.icon(
+                        onPressed: controller.nextChapter,
+                        icon: const Icon(Remix.skip_forward_line, size: 16),
+                        label: const Text("下一话"),
+                      ),
+                  ],
+                ),
+                if (!controller.hasNextChapter) ...[
+                  AppStyle.vGap12,
+                  const Text(
+                    "已经是最新章节了",
+                    style: TextStyle(fontSize: 12, color: Colors.white38),
+                  ),
+                ],
+              ],
             ),
           ),
-          Container(
-            alignment: Alignment.center,
-            width: 100,
-            margin: AppStyle.edgeInsetsA12,
-            child: OutlinedButton(
-              onPressed: () {
-                controller.showComment();
-              },
-              child: const Text("查看更多"),
-            ),
-          ),
-          AppStyle.vGap12,
-        ],
-      ),
-    );
+        ),
+      );
+
+      if (shrinkWrap) {
+        return content;
+      }
+      return SafeArea(
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: content,
+        ),
+      );
+    });
   }
 
   Widget buildConnectivity() {

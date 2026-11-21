@@ -25,7 +25,6 @@ import 'package:zaix/models/db/download_status.dart';
 import 'package:zaix/requests/common/api.dart';
 import 'package:zaix/requests/common/http_client.dart';
 import 'package:zaix/services/comic_download_service.dart';
-import 'package:zaix/services/user_service.dart';
 
 import '../models/comic/special_detail_model.dart';
 
@@ -416,48 +415,39 @@ class ComicRequest {
   Future<List<ComicViewPointModel>> viewPoints({
     required int comicId,
     required int chapterId,
+    int page = 0,
   }) async {
-    var list = <ComicViewPointModel>[];
     var result = await HttpClient.instance.getJson(
-      '/viewPoint/0/$comicId/$chapterId.json',
-    );
-    for (var item in result) {
-      list.add(ComicViewPointModel.fromJson(item));
-    }
-    return list;
-  }
-
-  /// 点赞观点、吐槽
-  Future<bool> likeViewPoint({required int comicId, required int id}) async {
-    await HttpClient.instance.postJson(
-      '/viewPoint/praise',
-      checkCode: true,
-      data: {
-        "sub_type": comicId,
-        "uid": UserService.instance.userId,
-        "vote_id": id,
+      '/viewpoint/list',
+      queryParameters: {
+        "type": 0,
+        "comicId": comicId,
+        "chapterId": chapterId,
+        "page": page,
       },
+      withDefaultParameter: false,
+      checkCode: true,
     );
-    return true;
+    return ComicViewPointModel.parseV4Response(result);
   }
 
-  /// 点赞观点、吐槽
+  /// 发表观点、吐槽
   Future<bool> sendViewPoint({
     required int comicId,
     required int chapterId,
     required String content,
-    required int page,
+    int page = 0,
   }) async {
     await HttpClient.instance.postJson(
-      '/viewPoint/addv2',
+      '/viewpoint/add',
+      formUrlEncoded: true,
+      needLogin: true,
       checkCode: true,
       data: {
-        "sub_type": comicId,
-        "uid": UserService.instance.userId,
-        "dmzj_token": UserService.instance.dmzjToken,
-        "page": page,
-        "type": 0,
-        "third_type": chapterId,
+        "type": "0",
+        "comicId": comicId.toString(),
+        "chapterId": chapterId.toString(),
+        "page": page.toString(),
         "content": content,
       },
     );

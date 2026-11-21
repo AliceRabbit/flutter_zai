@@ -97,8 +97,29 @@ class ComicReaderController extends BaseController {
   /// 翻页动画
   bool get pageAnimation => settings.comicReaderPageAnimation.value;
 
+  static const String kViewPointPageTag = "TC";
+
   /// 观点、吐槽
   RxList<ComicViewPointModel> viewPoints = RxList<ComicViewPointModel>();
+
+  /// 吐槽加载状态
+  var viewPointsLoading = false.obs;
+
+  /// 吐槽加载失败
+  var viewPointsError = false.obs;
+
+  bool get hasViewPointPage =>
+      detail.value.pageUrls.isNotEmpty &&
+      detail.value.pageUrls.last == kViewPointPageTag;
+
+  int get imagePageCount => hasViewPointPage
+      ? detail.value.pageUrls.length - 1
+      : detail.value.pageUrls.length;
+
+  bool get isOnViewPointPage =>
+      hasViewPointPage && currentIndex.value >= imagePageCount;
+
+  bool get hasNextChapter => chapterIndex.value < chapters.length - 1;
 
   /// 连接类型
   Rx<ConnectivityResult> connectivityType = Rx<ConnectivityResult>(
@@ -218,17 +239,22 @@ class ComicReaderController extends BaseController {
         //禁止观看VIP章节
         throw AppError("请使用动漫之家官方APP观看VIP章节");
       }
-      //loadViewPoints();
+      viewPoints.clear();
+      viewPointsError.value = false;
+      if (settings.comicReaderShowViewPoint.value) {
+        loadViewPoints();
+      }
 
       var result = await request.chapterDetail(
         comicId: comicId,
         chapterId: chapterId,
         useHD: AppSettingsService.instance.comicReaderHD.value,
       );
+      final pageUrls = List<String>.from(result.pageUrls);
       var his = DBService.instance.getComicHistory(comicId);
       if (his != null && his.chapterId == chapterId && his.page != 0) {
         var hisIndex = (his.page - 1) < 0 ? 0 : his.page - 1;
-        if (hisIndex >= result.pageUrls.length - 1) {
+        if (hisIndex >= pageUrls.length - 1) {
           hisIndex = 0;
         }
         initialIndex = hisIndex;
@@ -237,9 +263,10 @@ class ComicReaderController extends BaseController {
       }
       currentIndex.value = initialIndex;
       _lastPrecachedPage = null;
-      // if (settings.comicReaderShowViewPoint.value) {
-      //   result.pageUrls.add("TC");
-      // }
+      if (settings.comicReaderShowViewPoint.value) {
+        pageUrls.add(kViewPointPageTag);
+      }
+      result.pageUrls = pageUrls;
 
       detail.value = result;
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -257,18 +284,28 @@ class ComicReaderController extends BaseController {
   }
 
   /// 加载吐槽、观点
-  void loadViewPoints() async {
+  Future<void> loadViewPoints() async {
+    final targetChapterId = chapters[chapterIndex.value].chapterId;
     try {
-      viewPoints.clear();
+      viewPointsLoading.value = true;
+      viewPointsError.value = false;
       var result = await request.viewPoints(
         comicId: comicId,
-        chapterId: chapters[chapterIndex.value].chapterId,
+        chapterId: targetChapterId,
       );
-      result.sort((a, b) => b.num.value.compareTo(a.num.value));
+      if (chapters[chapterIndex.value].chapterId != targetChapterId) {
+        return;
+      }
       viewPoints.value = result;
     } catch (e) {
-      //SmartDialog.showToast("读取吐槽失败");
+      if (chapters[chapterIndex.value].chapterId == targetChapterId) {
+        viewPointsError.value = true;
+      }
       Log.logPrint(e.toString());
+    } finally {
+      if (chapters[chapterIndex.value].chapterId == targetChapterId) {
+        viewPointsLoading.value = false;
+      }
     }
   }
 
@@ -423,7 +460,7 @@ class ComicReaderController extends BaseController {
         continue;
       }
       final url = detail.value.pageUrls[index];
-      if (url == "TC") {
+      if (url == kViewPointPageTag) {
         continue;
       }
       final ImageProvider imageProvider = detail.value.isLocal
@@ -434,9 +471,21 @@ class ComicReaderController extends BaseController {
   }
 
   /// 查看吐槽
-  void showComment() {
-    setShowControls();
-    TextEditingController tucaoController = TextEditingController();
+  void showComment({bool hideControls = true, bool autoFocusInput = false}) {
+    if (hideControls && showControls.value) {
+      setShowControls();
+    }
+    if (viewPoints.isEmpty && !viewPointsLoading.value) {
+      loadViewPoints();
+    }
+    final tucaoController = TextEditingController();
+    Future<void> submitComment() async {
+      final success = await sendViewPoint(tucaoController.text);
+      if (success) {
+        tucaoController.clear();
+      }
+    }
+
     showModalBottomSheet(
       context: Get.context!,
       shape: const RoundedRectangleBorder(
@@ -451,134 +500,156 @@ class ComicReaderController extends BaseController {
       backgroundColor: AppStyle.darkTheme.scaffoldBackgroundColor,
       builder: (context) => Theme(
         data: AppStyle.darkTheme,
-        child: Column(
-          children: [
-            ListTile(
-              title: Text("吐槽(${viewPoints.length})"),
-              trailing: IconButton(
-                onPressed: Get.back,
-                icon: const Icon(Icons.close),
-              ),
-              contentPadding: AppStyle.edgeInsetsL12,
-            ),
-            Divider(height: 1.0, color: Colors.grey.withValues(alpha: .2)),
-            Expanded(
-              child: EasyRefresh(
-                header: const MaterialHeader(),
-                onRefresh: () async {
-                  loadViewPoints();
-                },
-                child: Obx(
-                  () => settings.comicReaderOldViewPoint.value
-                      ? SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.72,
+            child: Column(
+              children: [
+                ListTile(
+                  title: Obx(() => Text("吐槽(${viewPoints.length})")),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: loadViewPoints,
+                        icon: const Icon(Remix.refresh_line, size: 20),
+                      ),
+                      IconButton(
+                        onPressed: Get.back,
+                        icon: const Icon(Icons.close),
+                      ),
+                    ],
+                  ),
+                  contentPadding: AppStyle.edgeInsetsL12,
+                ),
+                Divider(height: 1.0, color: Colors.grey.withValues(alpha: .2)),
+                Expanded(
+                  child: EasyRefresh(
+                    header: const MaterialHeader(),
+                    onRefresh: loadViewPoints,
+                    child: Obx(() {
+                      if (viewPointsLoading.value && viewPoints.isEmpty) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (viewPointsError.value && viewPoints.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text(
+                                "吐槽加载失败",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                              AppStyle.vGap8,
+                              OutlinedButton(
+                                onPressed: loadViewPoints,
+                                child: const Text("重试"),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      if (viewPoints.isEmpty) {
+                        return ListView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          children: const [
+                            SizedBox(height: 120),
+                            Center(
+                              child: Text(
+                                "暂无吐槽，快来发表第一条吧",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      if (settings.comicReaderOldViewPoint.value) {
+                        return SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
                           child: Padding(
                             padding: AppStyle.edgeInsetsA12,
                             child: Wrap(
                               spacing: 8,
                               runSpacing: 8,
                               children: viewPoints.map<Widget>((item) {
-                                return InkWell(
-                                  onTap: () {
-                                    likeViewPoint(item);
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue,
-                                      borderRadius: AppStyle.radius8,
-                                    ),
-                                    child: Text(
-                                      item.content,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.withValues(alpha: 0.85),
+                                    borderRadius: AppStyle.radius8,
+                                  ),
+                                  child: Text(
+                                    item.content,
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 );
                               }).toList(),
                             ),
                           ),
-                        )
-                      : ListView.separated(
-                          padding: EdgeInsets.zero,
-                          itemCount: viewPoints.length,
-                          separatorBuilder: (_, i) => Divider(
-                            indent: 12,
-                            endIndent: 12,
-                            height: 1.0,
-                            color: Colors.grey.withValues(alpha: .2),
-                          ),
-                          itemBuilder: (_, i) {
-                            var item = viewPoints[i];
-                            return Padding(
-                              padding: AppStyle.edgeInsetsA12.copyWith(
-                                top: 8,
-                                bottom: 8,
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      item.content,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                  ),
-                                  AppStyle.hGap12,
-                                  TextButton.icon(
-                                    style: TextButton.styleFrom(
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    onPressed: () {
-                                      likeViewPoint(item);
-                                    },
-                                    icon: const Icon(
-                                      Remix.thumb_up_line,
-                                      size: 16,
-                                    ),
-                                    label: Obx(() => Text("${item.num.value}")),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                        );
+                      }
+                      return ListView.separated(
+                        padding: EdgeInsets.zero,
+                        itemCount: viewPoints.length,
+                        separatorBuilder: (_, i) => Divider(
+                          indent: 12,
+                          endIndent: 12,
+                          height: 1.0,
+                          color: Colors.grey.withValues(alpha: .2),
                         ),
-                ),
-              ),
-            ),
-            Container(
-              padding: AppStyle.edgeInsetsA8.copyWith(
-                bottom: 8 + AppStyle.bottomBarHeight,
-              ),
-              child: TextField(
-                controller: tucaoController,
-                onSubmitted: (e) {
-                  sendViewPoint(e);
-                },
-                decoration: InputDecoration(
-                  hintText: "发表吐槽",
-                  contentPadding: AppStyle.edgeInsetsH12,
-                  border: const OutlineInputBorder(),
-                  suffixIcon: TextButton(
-                    onPressed: () {
-                      sendViewPoint(tucaoController.text);
-                    },
-                    child: const Text("发布"),
+                        itemBuilder: (_, i) {
+                          final item = viewPoints[i];
+                          return Padding(
+                            padding: AppStyle.edgeInsetsA12.copyWith(
+                              top: 10,
+                              bottom: 10,
+                            ),
+                            child: Text(
+                              item.content,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }),
                   ),
                 ),
-              ),
+                Container(
+                  padding: AppStyle.edgeInsetsA8.copyWith(
+                    bottom: 8 + AppStyle.bottomBarHeight,
+                  ),
+                  child: TextField(
+                    controller: tucaoController,
+                    autofocus: autoFocusInput,
+                    textInputAction: TextInputAction.send,
+                    onSubmitted: (_) => submitComment(),
+                    decoration: InputDecoration(
+                      hintText: "发表吐槽",
+                      contentPadding: AppStyle.edgeInsetsH12,
+                      border: const OutlineInputBorder(),
+                      suffixIcon: TextButton(
+                        onPressed: submitComment,
+                        child: const Text("发布"),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
       routeSettings: const RouteSettings(name: "/modalBottomSheet"),
-    );
+    ).whenComplete(tucaoController.dispose);
   }
 
   /// 显示设置
@@ -706,27 +777,27 @@ class ComicReaderController extends BaseController {
                         title: const Text("显示状态信息"),
                       ),
                     ),
-                    // AppStyle.vGap12,
-                    // buildBGItem(
-                    //   child: SwitchListTile(
-                    //     value: settings.comicReaderShowViewPoint.value,
-                    //     onChanged: (e) {
-                    //       settings.setComicReaderShowViewPoint(e);
-                    //       setShowViewPoint(e);
-                    //     },
-                    //     title: const Text("显示吐槽"),
-                    //   ),
-                    // ),
-                    // AppStyle.vGap12,
-                    // buildBGItem(
-                    //   child: SwitchListTile(
-                    //     value: settings.comicReaderOldViewPoint.value,
-                    //     onChanged: (e) {
-                    //       settings.setComicReaderOldViewPoint(e);
-                    //     },
-                    //     title: const Text("旧板吐槽"),
-                    //   ),
-                    // ),
+                    AppStyle.vGap12,
+                    buildBGItem(
+                      child: SwitchListTile(
+                        value: settings.comicReaderShowViewPoint.value,
+                        onChanged: (e) {
+                          settings.setComicReaderShowViewPoint(e);
+                          setShowViewPoint(e);
+                        },
+                        title: const Text("显示吐槽"),
+                      ),
+                    ),
+                    AppStyle.vGap12,
+                    buildBGItem(
+                      child: SwitchListTile(
+                        value: settings.comicReaderOldViewPoint.value,
+                        onChanged: (e) {
+                          settings.setComicReaderOldViewPoint(e);
+                        },
+                        title: const Text("旧版吐槽"),
+                      ),
+                    ),
                     AppStyle.vGap12,
                     buildBGItem(
                       child: SwitchListTile(
@@ -784,27 +855,50 @@ class ComicReaderController extends BaseController {
   }
 
   void setShowViewPoint(bool value) {
+    if (detail.value.chapterId == 0) {
+      return;
+    }
     if (value) {
-      if (!detail.value.pageUrls.contains("TC")) {
+      if (!hasViewPointPage) {
         detail.update((val) {
-          val!.pageUrls.add("TC");
+          val!.pageUrls = [...val.pageUrls, kViewPointPageTag];
         });
       }
+      if (viewPoints.isEmpty && !viewPointsLoading.value) {
+        loadViewPoints();
+      }
     } else {
-      if (detail.value.pageUrls.contains("TC")) {
+      if (hasViewPointPage) {
+        final wasOnViewPointPage = isOnViewPointPage;
+        final targetPage = imagePageCount > 0 ? imagePageCount - 1 : 0;
+        if (wasOnViewPointPage) {
+          currentIndex.value = targetPage;
+        }
         detail.update((val) {
-          val!.pageUrls.remove("TC");
+          val!.pageUrls = val.pageUrls
+              .where((url) => url != kViewPointPageTag)
+              .toList();
         });
+        if (wasOnViewPointPage) {
+          Future.delayed(const Duration(milliseconds: 50), () {
+            jumpToPage(targetPage);
+          });
+        }
       }
     }
   }
 
   void uploadHistory() {
     var chapter = chapters[chapterIndex.value];
+    final totalImages = imagePageCount;
+    var page = currentIndex.value + 1;
+    if (totalImages > 0 && page > totalImages) {
+      page = totalImages;
+    }
     UserService.instance.updateComicHistory(
       comicId: comicId,
       chapterId: chapter.chapterId,
-      page: currentIndex.value + 1,
+      page: page,
       comicName: comicTitle,
       comicCover: comicCover,
       chapterName: chapter.chapterTitle,
@@ -840,37 +934,30 @@ class ComicReaderController extends BaseController {
     );
   }
 
-  void likeViewPoint(ComicViewPointModel item) async {
-    try {
-      await request.likeViewPoint(comicId: comicId, id: item.id);
-
-      item.num.value += 1;
-    } catch (e) {
-      SmartDialog.showToast(e.toString());
-    }
-  }
-
-  void sendViewPoint(String content) async {
+  Future<bool> sendViewPoint(String content) async {
+    final text = content.trim();
     if (!await UserService.instance.login()) {
       SmartDialog.showToast("请先登录");
-      return;
+      return false;
     }
-    if (content.isEmpty) {
+    if (text.isEmpty) {
       SmartDialog.showToast("内容不能为空");
-      return;
+      return false;
     }
-    Get.back();
     try {
       SmartDialog.showLoading();
       await request.sendViewPoint(
         comicId: comicId,
         chapterId: chapters[chapterIndex.value].chapterId,
-        content: content,
-        page: currentIndex.value + 1,
+        content: text,
+        page: 0,
       );
-      loadViewPoints();
+      SmartDialog.showToast("发表吐槽成功");
+      await loadViewPoints();
+      return true;
     } catch (e) {
       SmartDialog.showToast(e.toString());
+      return false;
     } finally {
       SmartDialog.dismiss(status: SmartStatus.loading);
     }
