@@ -1,98 +1,91 @@
-
-
-
 <p align="center">
-    <img width="128" src="/document/logo.png" alt="ZAI-X logo">
-</p>
-<h2 align="center">ZAI-X</h2>
-
-<p align="center">
-使用Flutter编写的再漫画跨平台第三方客户端
+  <img width="116" src="document/logo.png" alt="ZAI-X Logo">
 </p>
 
-![浅色模式](/document/screenshot_light.jpg)
+<h1 align="center">ZAI-X</h1>
 
-![深色模式](/document/screenshot_dark.jpg)
+<p align="center">
+  清爽、跨平台的<a href="https://zaimanhua.com">再漫画</a>第三方开源客户端，使用 Flutter 构建
+</p>
 
-## 二次开发说明
+<p align="center">
+  <a href="https://github.com/AliceRabbit/flutter_zai/releases/latest">
+    <img src="https://img.shields.io/github/v/release/AliceRabbit/flutter_zai?include_prereleases&label=Release&color=2f81f7" alt="Latest Release">
+  </a>
+  <a href="https://github.com/AliceRabbit/flutter_zai/releases">
+    <img src="https://img.shields.io/badge/Platform-Android%20%7C%20Windows%20%7C%20iOS%20%7C%20macOS%20%7C%20Linux-555" alt="Platforms">
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/github/license/AliceRabbit/flutter_zai?label=License&color=3fb950" alt="License">
+  </a>
+</p>
 
-- 本仓库基于[原仓库 xiaoyaocz/flutter_dmzj](https://github.com/xiaoyaocz/flutter_dmzj) 的 [zaimanhua 分支](https://github.com/xiaoyaocz/flutter_dmzj/tree/zaimanhua) 进行二次开发。
+<p align="center">
+  <a href="#下载与安装">下载安装</a> ·
+  <a href="#功能亮点">功能亮点</a> ·
+  <a href="#界面预览">界面预览</a> ·
+  <a href="#项目说明与致谢">项目致谢</a> ·
+  <a href="#参与开发与自行编译">开发者指南</a>
+</p>
 
-- 当前仓库由 AliceRabbit 独立维护，用于个人后续功能迭代与发布。
+---
 
-- 感谢原作者 [xiaoyaocz](https://github.com/xiaoyaocz) 及原项目贡献者的开源工作。
+## 功能亮点
 
-## 开发与测试环境
+- **漫画 · 轻小说 · 动漫资讯一站式浏览**  
+  支持首页推荐、最新更新、分类筛选、排行榜与全站搜索，轻松发现想看的作品。
+- **贴合习惯的阅读体验**  
+  - **漫画阅读**：支持优先加载高清图、从左到右 / 从右到左 / 竖向条漫三种阅读方向、全屏阅读、翻页动画、操作反转与吐槽显示。
+  - **轻小说阅读**：支持横竖向阅读切换、字体大小与行距自由调节、多套护眼主题即时预览。
+- **账号同步与本地管理**  
+  支持登录再漫画账号，同步个人订阅、每日一键签到、查看和发表评论；未登录也可使用本机阅读记录与本机收藏，追更不丢进度。
+- **离线缓存下载**  
+  支持漫画与轻小说批量下载管理，可自定义并发任务数和移动流量下载开关，无网环境也能流畅阅读。
+- **主题切换与多端布局适配**  
+  内置浅色 / 深色两种外观主题；自动适配手机竖屏与平板、桌面端宽屏分栏界面。
 
-项目固定使用 Flutter 3.44.8（Dart 3.12.2）。Windows 下推荐使用仓库提供的
-PowerShell 脚本安装隔离的 SDK，避免全局 Flutter 版本影响构建结果：
+## 下载与安装
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\tool\bootstrap.ps1
-.\tool\verify.ps1
-```
+前往 [**GitHub Releases**](https://github.com/AliceRabbit/flutter_zai/releases/latest) 获取最新版本：
 
-SDK 会安装到被 Git 忽略的 `.tooling/flutter`，下载完成后会校验 SHA-256。
-Flutter、Android 和 Protobuf 工具下载均优先调用 `aria2c`（支持并发与断点续传），
-仅在 aria2 不可用或失败时回退到 `curl`。
-依赖包使用官方 `pub.dev`，Flutter SDK 和构建产物在中国大陆网络下默认使用
-CFUG 镜像；如需全部使用 Google Storage：
+| 平台 | 系统要求 | 安装方式 |
+| :--- | :--- | :--- |
+| **Android** | Android 7.0 及以上 | 在 Releases 下载 `.apk` 安装包，点击安装即可 |
+| **Windows** | Windows 10 / 11 | 在 Releases 下载 `.zip` 压缩包，解压后直接运行（若提供 `.msix` 也可双击安装） |
+| **iOS / macOS / Linux** | iOS 13.0+ / macOS 10.15+ / Linux | 暂不提供官方预编译包，请参考[开发与构建指南](document/DEVELOPMENT.md)自行编译 |
 
-```powershell
-.\tool\bootstrap.ps1 -UseGoogleStorage
-```
+> **提示**：安装后可在应用内 **「我的 → 检查更新」** 随时获取新版本动态；使用中遇到问题或有改进建议，欢迎前往 [Issues](https://github.com/AliceRabbit/flutter_zai/issues) 反馈。
 
-首次进行 Android 本地编译时，执行：
+## 界面预览
 
-```powershell
-.\tool\bootstrap-android.ps1
-```
+**浅色模式**
 
-该脚本会优先使用 aria2，下载并校验项目内隔离的 Eclipse Temurin JDK 17、
-Android SDK Command-line Tools，以及 Flutter 3.44 固定使用的 NDK 28.2；
-SDK 35/36、Build Tools 36.0.0、Platform Tools 37.0.0 和 CMake 3.22.1
-由新版 `android sdk` CLI 按精确版本安装。SDK 35 用于仍固定以 API 35 编译的
-传递插件，避免 Gradle 在构建时临时补装。首次运行会显示 Google 的官方条款，
-所有缓存、Android 用户数据和 Gradle 数据均保存在被 Git 忽略的 `.tooling`
-目录。
+![浅色模式](document/screenshot_light.jpg)
 
-常用命令：
+**深色模式**
 
-```powershell
-.\tool\flutter.ps1 run
-.\tool\dart.ps1 format lib test
-.\tool\generate-hive.ps1
-.\tool\generate-protos.ps1
-.\tool\verify.ps1 -BuildTarget android
-.\tool\verify.ps1 -BuildTarget windows
-```
+![深色模式](document/screenshot_dark.jpg)
 
-- 单元测试和静态分析只需要 Git 与项目内 Flutter SDK。
-- Android 本地编译环境可由 `tool/bootstrap-android.ps1` 一次性配置。
-- Windows 本地编译需要 Visual Studio Build Tools 的“使用 C++ 的桌面开发”
-  工作负载；可在管理员 PowerShell 中执行
-  `.\tool\bootstrap-windows.ps1 -Install -UpdateVisualStudio` 进行更新、安装和校验。
-- iOS 最低支持 13.0，macOS 最低支持 10.15，Android 最低支持 API 24。
-- iOS 和 macOS 使用 Flutter 3.44 默认的
-  [Swift Package Manager](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-app-developers)
-  集成；当前原生插件均支持 SwiftPM，仓库不再依赖处于维护模式的 CocoaPods。
-- GitHub Actions 会使用相同的 Flutter 版本执行格式检查、分析、测试，以及
-  Android、Windows、Linux、iOS 和 macOS 调试构建。
-- Tag 发布的 Windows MSIX 使用仓库 Secrets
-  `ZAI_WINDOWS_CERTIFICATE_BASE64`（PFX 的 Base64）和
-  `ZAI_WINDOWS_CERTIFICATE_PASSWORD` 做代码签名；证书 Subject 必须为
-  `CN=AliceRabbit`。Fastforge 不再使用随工具分发的测试证书。
+## 项目说明与致谢
 
-## 声明
+- 本项目基于 [xiaoyaocz/flutter_dmzj](https://github.com/xiaoyaocz/flutter_dmzj) 的 [zaimanhua 分支](https://github.com/xiaoyaocz/flutter_dmzj/tree/zaimanhua) 进行二次开发，现由 [AliceRabbit](https://github.com/AliceRabbit) 独立维护与持续更新。
+- 衷心感谢原作者 [xiaoyaocz](https://github.com/xiaoyaocz) 及原项目所有贡献者的开源付出。
 
-- 本项目为[再漫画](https://zaimanhua.com)第三方开源APP
+## 参与开发与自行编译
 
-- 本项目仅用于学习交流编程技术，严禁将本项目用于商业目的。如有任何商业行为，均与本项目无关。
+如果你想在本地运行源码、为 iOS / macOS / Linux 自行编译安装包，或向本项目提交改进，请查看完整的技术文档：
 
-- 本项目内所有资源版权均归属于其著作者或原站点所有
+- [开发与构建指南（document/DEVELOPMENT.md）](document/DEVELOPMENT.md)
 
-- 如果本项目存在侵犯您的相关权益的情况，请及时与开发者联系，开发者将会及时删除有关内容。
+文档内包含隔离版 Flutter SDK 安装脚本、Android / Windows 编译环境配置、代码生成、CI 及打包签名等详细说明。
 
-## License
+## 免责声明
 
-[GPL-3.0 License](https://github.com/AliceRabbit/flutter_zai/blob/main/LICENSE)，禁止用于任何商业用途
+- 本项目为[再漫画](https://zaimanhua.com)第三方开源客户端，与官方无任何关联。
+- 本项目仅供编程技术学习与交流使用，**严禁用于任何商业用途**；因任何商业或不当使用行为产生的后果，均与本项目无关。
+- 应用内展示的所有资源版权均归属于其原作者或原站点所有。
+- 如本项目存在侵犯您合法权益的情况，请及时联系开发者，我们将第一时间删除相关内容。
+
+## 开源协议
+
+本项目基于 [GPL-3.0 License](LICENSE) 开源，禁止用于任何商业用途。

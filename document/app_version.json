@@ -1,7 +1,7 @@
 {
-    "version": "2.0.2",
-    "version_num": 20002,
-    "version_desc": "修复发表评论时出现 404 的问题；更新评论登录认证和回复参数，正确显示提交失败原因。",
+    "version": "2.0.3",
+    "version_num": 20003,
+    "version_desc": "新增经典漫画章节末尾吐槽页，对接再漫画 v4 章节吐槽查询与发表接口，恢复阅读器底栏吐槽角标、完整吐槽面板及设置开关；优化吐槽页点击热区、页码显示与阅读历史记录。",
     "prerelease": false,
-    "download_url": "https://github.com/AliceRabbit/flutter_zai/releases/tag/zaix/v2.0.2"
+    "download_url": "https://github.com/AliceRabbit/flutter_zai/releases/tag/zaix/v2.0.3"
 }
